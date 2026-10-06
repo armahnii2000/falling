@@ -1057,6 +1057,86 @@ class AirBubbleGame {
     ctx.restore();
   }
 
+  // Renders a sleek heads-up capsule pill overlay showing exact primary R, G, B counts
+  renderRGBPillOverlay(ctx, b, yPos, maxWidth) {
+    const r = (b && b.r) || 0;
+    const g = (b && b.g) || 0;
+    const bVal = (b && b.b) || 0;
+
+    // Collect active channel counts
+    const channels = [];
+    if (r > 0) channels.push({ key: 'R', count: r, color: '#ff3b30' });
+    if (g > 0) channels.push({ key: 'G', count: g, color: '#30d158' });
+    if (bVal > 0) channels.push({ key: 'B', count: bVal, color: '#00e5ff' });
+
+    if (channels.length === 0) return;
+
+    ctx.save();
+
+    // Scale slightly for larger blocks
+    const refW = maxWidth || 50;
+    const scale = Math.min(1.3, Math.max(0.85, refW / 64));
+    const dotR = 2.8 * scale;
+    const fontSize = Math.max(7.5, Math.min(11, 8.5 * scale));
+    const itemGap = 5.5 * scale;
+    const sidePad = 5.0 * scale;
+    const pillH = Math.max(12, Math.min(18, 14.5 * scale));
+
+    ctx.font = `bold ${fontSize}px monospace`;
+
+    // Measure exact widths
+    let contentW = 0;
+    const itemData = channels.map(ch => {
+      const textW = ctx.measureText(`${ch.count}`).width;
+      const itemW = dotR * 2 + 2.5 * scale + textW;
+      contentW += itemW;
+      return { ch, itemW, textW };
+    });
+    contentW += itemGap * (channels.length - 1);
+
+    const pillW = Math.min(refW * 0.94, contentW + sidePad * 2);
+    const pillX = -pillW / 2;
+    const pillY = yPos - pillH / 2;
+
+    // 1. Dark translucent capsule container
+    ctx.fillStyle = 'rgba(4, 10, 22, 0.90)';
+    ctx.beginPath();
+    ctx.roundRect(pillX, pillY, pillW, pillH, pillH / 2);
+    ctx.fill();
+
+    // 2. Crisp subtle outer rim
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.45)';
+    ctx.lineWidth = 1.0;
+    ctx.stroke();
+
+    // 3. Render items with glowing color dots and bold counts
+    let curX = pillX + (pillW - contentW) / 2;
+    for (const item of itemData) {
+      const dotCenterX = curX + dotR;
+      const dotCenterY = yPos;
+
+      // Color dot with glow
+      ctx.fillStyle = item.ch.color;
+      ctx.shadowColor = item.ch.color;
+      ctx.shadowBlur = 4 * scale;
+      ctx.beginPath();
+      ctx.arc(dotCenterX, dotCenterY, dotR, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.shadowBlur = 0;
+
+      // Number text
+      ctx.fillStyle = '#ffffff';
+      ctx.textAlign = 'left';
+      ctx.textBaseline = 'middle';
+      const textX = dotCenterX + dotR + 2.5 * scale;
+      ctx.fillText(`${item.ch.count}`, textX, yPos);
+
+      curX += item.itemW + itemGap;
+    }
+
+    ctx.restore();
+  }
+
   renderBubble(ctx, b) {
     const tierInfo = TIERS[b.tier - 1] || TIERS[0];
     const colorInfo = this.getBubbleColor(b);
@@ -1117,7 +1197,7 @@ class AirBubbleGame {
       ctx.font = `900 ${numSize}px -apple-system, BlinkMacSystemFont, sans-serif`;
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
-      const numY = (b.size >= 34 ? -5 : 0);
+      const numY = (b.size >= 34 ? -6 : 0);
 
       // Subtle light stroke guaranteeing legibility on pure blue/red boxes
       ctx.strokeStyle = 'rgba(255, 255, 255, 0.88)';
@@ -1130,20 +1210,9 @@ class AirBubbleGame {
       ctx.fillText(`${b.tier}`, 0, numY);
       ctx.restore();
 
-      // Chromatic balance % or name below number - SOLID BLACK TEXT
+      // RGB Pill Overlay showing exact constituent R, G, B counts
       if (b.size >= 34) {
-        ctx.save();
-        ctx.font = `bold ${Math.max(7, Math.min(10, b.size * 0.17))}px monospace`;
-        ctx.textAlign = 'center';
-        ctx.textBaseline = 'middle';
-        const labelText = colorInfo.isWhite ? '⚪ 100%' : (colorInfo.balance > 0 ? `${colorInfo.balance}%` : colorInfo.colorName);
-        ctx.strokeStyle = 'rgba(255, 255, 255, 0.82)';
-        ctx.lineWidth = 1.6;
-        ctx.lineJoin = 'round';
-        ctx.strokeText(labelText, 0, b.size * 0.24);
-        ctx.fillStyle = '#000000';
-        ctx.fillText(labelText, 0, b.size * 0.24);
-        ctx.restore();
+        this.renderRGBPillOverlay(ctx, b, b.size * 0.24, b.size);
       }
     } else {
       // ⚪ RENDER CLASSIC CIRCLE
@@ -1170,7 +1239,7 @@ class AirBubbleGame {
       ctx.font = `900 ${circleNumSize}px -apple-system, BlinkMacSystemFont, sans-serif`;
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
-      const circleNumY = (b.radius >= 22 ? -4 : 0);
+      const circleNumY = (b.radius >= 22 ? -5 : 0);
 
       ctx.strokeStyle = 'rgba(255, 255, 255, 0.88)';
       ctx.lineWidth = Math.max(2, Math.round(b.radius * 0.08));
@@ -1181,19 +1250,9 @@ class AirBubbleGame {
       ctx.fillText(`${b.tier}`, 0, circleNumY);
       ctx.restore();
 
+      // RGB Pill Overlay for circle mode
       if (b.radius >= 22) {
-        ctx.save();
-        ctx.font = `bold ${Math.max(7, Math.min(9, b.radius * 0.3))}px monospace`;
-        ctx.textAlign = 'center';
-        ctx.textBaseline = 'middle';
-        const labelText = colorInfo.isWhite ? '⚪ 100%' : `${colorInfo.balance}%`;
-        ctx.strokeStyle = 'rgba(255, 255, 255, 0.82)';
-        ctx.lineWidth = 1.6;
-        ctx.lineJoin = 'round';
-        ctx.strokeText(labelText, 0, b.radius * 0.38);
-        ctx.fillStyle = '#000000';
-        ctx.fillText(labelText, 0, b.radius * 0.38);
-        ctx.restore();
+        this.renderRGBPillOverlay(ctx, b, b.radius * 0.38, b.radius * 2);
       }
     }
 
@@ -1335,10 +1394,14 @@ class AirBubbleGame {
         ctx.strokeStyle = 'rgba(255, 255, 255, 0.9)';
         ctx.lineWidth = 2.0;
         ctx.lineJoin = 'round';
-        ctx.strokeText(`${this.readyBubble.tier}`, 0, 0);
+        ctx.strokeText(`${this.readyBubble.tier}`, 0, (this.readyBubble.tier >= 2 ? -5 : 0));
         ctx.fillStyle = '#000000';
-        ctx.fillText(`${this.readyBubble.tier}`, 0, 0);
+        ctx.fillText(`${this.readyBubble.tier}`, 0, (this.readyBubble.tier >= 2 ? -5 : 0));
         ctx.restore();
+
+        if (this.readyBubble.tier >= 2) {
+          this.renderRGBPillOverlay(ctx, this.readyBubble, previewSize * 0.24, previewSize);
+        }
       } else {
         ctx.fillStyle = colorInfo.css;
         ctx.beginPath();
@@ -1356,10 +1419,14 @@ class AirBubbleGame {
         ctx.strokeStyle = 'rgba(255, 255, 255, 0.9)';
         ctx.lineWidth = 2.0;
         ctx.lineJoin = 'round';
-        ctx.strokeText(`${this.readyBubble.tier}`, 0, 0);
+        ctx.strokeText(`${this.readyBubble.tier}`, 0, (this.readyBubble.tier >= 2 ? -5 : 0));
         ctx.fillStyle = '#000000';
-        ctx.fillText(`${this.readyBubble.tier}`, 0, 0);
+        ctx.fillText(`${this.readyBubble.tier}`, 0, (this.readyBubble.tier >= 2 ? -5 : 0));
         ctx.restore();
+
+        if (this.readyBubble.tier >= 2) {
+          this.renderRGBPillOverlay(ctx, this.readyBubble, previewSize * 0.24, previewSize);
+        }
       }
       ctx.restore();
     }
@@ -1404,10 +1471,14 @@ class AirBubbleGame {
     ctx.strokeStyle = 'rgba(255, 255, 255, 0.9)';
     ctx.lineWidth = 2.0;
     ctx.lineJoin = 'round';
-    ctx.strokeText(`${this.nextBubble.tier}`, 0, 0);
+    ctx.strokeText(`${this.nextBubble.tier}`, 0, (this.nextBubble.tier >= 2 ? -5 : 0));
     ctx.fillStyle = '#000000';
-    ctx.fillText(`${this.nextBubble.tier}`, 0, 0);
+    ctx.fillText(`${this.nextBubble.tier}`, 0, (this.nextBubble.tier >= 2 ? -5 : 0));
     ctx.restore();
+
+    if (this.nextBubble.tier >= 2) {
+      this.renderRGBPillOverlay(ctx, this.nextBubble, previewSize * 0.24, previewSize);
+    }
 
     ctx.restore();
   }
