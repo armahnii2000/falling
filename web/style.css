@@ -235,6 +235,196 @@ html, body {
   height: 36px;
 }
 
+/* ==========================================================================
+   CUMULATIVE COLOR SPECTRUM HERO (HUGE CIRCLE ON THE RIGHT)
+   ========================================================================== */
+#cumulative-color-hero {
+  background: var(--bg-card);
+  border: 1px solid var(--border-card);
+  border-radius: 16px;
+  padding: 16px 14px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.4);
+}
+
+.hero-top-row {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.hero-tag {
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.8px;
+  color: var(--accent-cyan);
+  text-transform: uppercase;
+}
+
+.hero-badge {
+  font-size: 0.68rem;
+  font-weight: 700;
+  font-family: monospace;
+  padding: 2px 8px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  color: #ffffff;
+  transition: all 0.2s ease;
+}
+
+.hero-orb-wrap {
+  margin: 8px 0 14px 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+/* THE HUGE CIRCLE DISPLAYING CURRENT CUMULATIVE COLOR & NUMBER */
+#cumulative-color-orb {
+  width: 170px;
+  height: 170px;
+  border-radius: 50%;
+  background: #18283e;
+  border: 3.5px solid rgba(255, 255, 255, 0.85);
+  box-shadow: 0 0 35px rgba(0, 229, 255, 0.35), inset 0 3px 10px rgba(255, 255, 255, 0.7), inset 0 -8px 16px rgba(0, 0, 0, 0.5);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  cursor: default;
+  user-select: none;
+  transition: background-color 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Realistic glass specular reflection crescent */
+#cumulative-color-orb::before {
+  content: '';
+  position: absolute;
+  top: 5px;
+  left: 15%;
+  width: 70%;
+  height: 44%;
+  border-radius: 50% / 40%;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.45) 0%, rgba(255, 255, 255, 0.0) 100%);
+  pointer-events: none;
+}
+
+#cumulative-orb-number {
+  font-size: 3.4rem;
+  font-weight: 900;
+  line-height: 1;
+  letter-spacing: -1.5px;
+  color: #ffffff;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  transition: color 0.2s ease;
+  z-index: 1;
+}
+
+#cumulative-orb-label {
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.85);
+  margin-top: 4px;
+  z-index: 1;
+  transition: color 0.2s ease;
+}
+
+#cumulative-orb-color-name {
+  font-size: 0.74rem;
+  font-weight: 800;
+  color: rgba(255, 255, 255, 0.95);
+  margin-top: 3px;
+  z-index: 1;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
+  transition: color 0.2s ease;
+}
+
+/* Channel Pills Row (R, G, B breakdown) */
+.hero-channels-row {
+  display: flex;
+  width: 100%;
+  gap: 8px;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.channel-pill {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  padding: 6px 4px;
+  border-radius: 8px;
+  background: rgba(0, 0, 0, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  font-family: monospace;
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.pill-r { border-color: rgba(255, 59, 48, 0.45); }
+.pill-g { border-color: rgba(48, 209, 88, 0.45); }
+.pill-b { border-color: rgba(0, 229, 255, 0.45); }
+
+.pill-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+.pill-r .pill-dot { background: #ff3b30; box-shadow: 0 0 6px #ff3b30; }
+.pill-g .pill-dot { background: #30d158; box-shadow: 0 0 6px #30d158; }
+.pill-b .pill-dot { background: #00e5ff; box-shadow: 0 0 6px #00e5ff; }
+
+.pill-label { color: var(--text-dim); }
+.pill-val { color: #ffffff; font-weight: 800; }
+
+/* Whiteness Progress Bar */
+#hero-whiteness-bar-wrap {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.bar-label-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.66rem;
+  color: var(--text-dim);
+  font-weight: 700;
+}
+
+.bar-track {
+  width: 100%;
+  height: 6px;
+  background: rgba(0, 0, 0, 0.45);
+  border-radius: 3px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+#hero-whiteness-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #ffd60a 0%, #00e5ff 60%, #ffffff 100%);
+  border-radius: 3px;
+  transition: width 0.3s ease;
+  box-shadow: 0 0 8px rgba(255, 255, 255, 0.5);
+}
+
 /* Mode Bar */
 .segmented-control {
   display: flex;
@@ -622,6 +812,36 @@ html, body {
 .qr-url {
   font-size: 0.75rem;
   color: var(--accent-cyan);
+}
+
+/* Mobile responsive scaling for cumulative hero */
+@media (max-width: 767px) {
+  #cumulative-color-hero {
+    order: 1.5;
+    margin: 4px 8px;
+    padding: 8px 12px;
+    border-radius: 12px;
+  }
+  #cumulative-color-orb {
+    width: 86px;
+    height: 86px;
+    border-width: 2.5px;
+  }
+  #cumulative-orb-number {
+    font-size: 2.1rem;
+    letter-spacing: -0.5px;
+  }
+  #cumulative-orb-label {
+    font-size: 0.52rem;
+    margin-top: 2px;
+  }
+  #cumulative-orb-color-name {
+    font-size: 0.62rem;
+    margin-top: 1px;
+  }
+  .hero-channels-row {
+    margin-bottom: 6px;
+  }
 }
 
 /* ==========================================================================

@@ -69,6 +69,7 @@ class AirBubbleGame {
     this.uiPressure = document.getElementById('val-pressure');
     this.uiPressureStatus = document.getElementById('val-pressure-status');
     this.uiBlocks = document.getElementById('val-blocks');
+    this.uiMergesCount = document.getElementById('val-merges-count');
     this.uiPushCounter = document.getElementById('push-counter');
     this.uiDangerBanner = document.getElementById('danger-banner');
     this.uiDangerTimer = document.getElementById('danger-timer-val');
@@ -145,7 +146,7 @@ class AirBubbleGame {
         css: '#888888',
         glow: 'rgba(255,255,255,0.2)',
         border: 'rgba(255,255,255,0.4)',
-        text: '#ffffff',
+        text: '#000000',
         balance: 0,
         isWhite: false,
         R: 128, G: 128, B: 128,
@@ -164,9 +165,8 @@ class AirBubbleGame {
     const balance = Math.round((min / max) * 100);
     const isWhite = (balance >= 95 && r > 0 && g > 0 && bVal > 0);
 
-    // Perceived luminance for high-contrast legible text
-    const lum = (0.299 * R + 0.587 * G + 0.114 * B) / 255;
-    const text = lum > 0.62 ? '#060d1b' : '#ffffff';
+    // Box numbers strictly black text as requested
+    const text = '#000000';
 
     let colorName = '';
     if (isWhite) {
@@ -760,8 +760,14 @@ class AirBubbleGame {
       }
     }
 
-    // Update RGB Harvest HUD
-    if (this.uiBlocks) {
+    // Update Merges Count / RGB Harvest HUD
+    if (this.uiMergesCount) {
+      this.uiMergesCount.textContent = this.totalMerges;
+      const blocksSub = document.getElementById('val-blocks-sub');
+      if (blocksSub) {
+        blocksSub.textContent = `${this.totalMerges} MERGES`;
+      }
+    } else if (this.uiBlocks) {
       this.uiBlocks.textContent = `R:${this.cumulativeR} G:${this.cumulativeG} B:${this.cumulativeB}`;
       this.uiBlocks.style.color = '#ffffff';
       const blocksSub = document.getElementById('val-blocks-sub');
@@ -770,6 +776,9 @@ class AirBubbleGame {
         blocksSub.textContent = `${totalUnits} UNITS TOTAL`;
       }
     }
+
+    // Update Huge Cumulative Color Hero Circle on the Right
+    this.updateCumulativeHero();
   }
 
   render() {
@@ -934,11 +943,22 @@ class AirBubbleGame {
     const lampY = gy + 27;
     const lampR = Math.min(12, (gw - 12) / 2);
 
-    const maxGlobal = Math.max(this.cumulativeR, this.cumulativeG, this.cumulativeB, 1);
-    const globalR = Math.round((this.cumulativeR / maxGlobal) * 255);
-    const globalG = Math.round((this.cumulativeG / maxGlobal) * 255);
-    const globalB = Math.round((this.cumulativeB / maxGlobal) * 255);
-    const globalMixColor = (this.cumulativeR === 0 && this.cumulativeG === 0 && this.cumulativeB === 0)
+    let effR = this.cumulativeR;
+    let effG = this.cumulativeG;
+    let effB = this.cumulativeB;
+    const totalUnits = effR + effG + effB;
+    if (totalUnits === 0 && this.physics && this.physics.bubbles && this.physics.bubbles.length > 0) {
+      for (const b of this.physics.bubbles) {
+        effR += (b.r || 0);
+        effG += (b.g || 0);
+        effB += (b.b || 0);
+      }
+    }
+    const maxGlobal = Math.max(effR, effG, effB, 1);
+    const globalR = Math.round((effR / maxGlobal) * 255);
+    const globalG = Math.round((effG / maxGlobal) * 255);
+    const globalB = Math.round((effB / maxGlobal) * 255);
+    const globalMixColor = (effR === 0 && effG === 0 && effB === 0)
       ? '#22334d'
       : `rgb(${globalR}, ${globalG}, ${globalB})`;
 
@@ -1072,8 +1092,8 @@ class AirBubbleGame {
       ctx.lineWidth = colorInfo.isWhite ? 3.0 : 1.8;
       ctx.stroke();
 
-      // Inner n×n Sub-grid Lines
-      ctx.strokeStyle = colorInfo.text === '#ffffff' ? 'rgba(255, 255, 255, 0.18)' : 'rgba(0, 0, 0, 0.18)';
+      // Inner n×n Sub-grid Lines (clean subtle contrast)
+      ctx.strokeStyle = 'rgba(0, 0, 0, 0.22)';
       ctx.lineWidth = 1;
       const subStep = b.size / b.tier;
 
@@ -1091,23 +1111,39 @@ class AirBubbleGame {
         ctx.stroke();
       }
 
-      // Center Tier Number Badge
-      ctx.fillStyle = colorInfo.text;
-      ctx.font = `bold ${Math.max(10, Math.min(22, b.size * 0.42))}px -apple-system, sans-serif`;
+      // Center Tier Number Badge - SOLID BLACK TEXT WITH CRISP MICRO-RIM
+      ctx.save();
+      const numSize = Math.max(10, Math.min(24, b.size * 0.44));
+      ctx.font = `900 ${numSize}px -apple-system, BlinkMacSystemFont, sans-serif`;
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
-      ctx.fillText(`${b.tier}`, 0, (b.size >= 34 ? -5 : 0));
+      const numY = (b.size >= 34 ? -5 : 0);
 
-      // Chromatic balance % or name below number
+      // Subtle light stroke guaranteeing legibility on pure blue/red boxes
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.88)';
+      ctx.lineWidth = Math.max(2, Math.round(b.size * 0.05));
+      ctx.lineJoin = 'round';
+      ctx.strokeText(`${b.tier}`, 0, numY);
+
+      // Solid black text fill
+      ctx.fillStyle = '#000000';
+      ctx.fillText(`${b.tier}`, 0, numY);
+      ctx.restore();
+
+      // Chromatic balance % or name below number - SOLID BLACK TEXT
       if (b.size >= 34) {
+        ctx.save();
         ctx.font = `bold ${Math.max(7, Math.min(10, b.size * 0.17))}px monospace`;
-        if (colorInfo.isWhite) {
-          ctx.fillText('⚪ 100%', 0, b.size * 0.24);
-        } else if (colorInfo.balance > 0) {
-          ctx.fillText(`${colorInfo.balance}%`, 0, b.size * 0.24);
-        } else {
-          ctx.fillText(colorInfo.colorName, 0, b.size * 0.24);
-        }
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        const labelText = colorInfo.isWhite ? '⚪ 100%' : (colorInfo.balance > 0 ? `${colorInfo.balance}%` : colorInfo.colorName);
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.82)';
+        ctx.lineWidth = 1.6;
+        ctx.lineJoin = 'round';
+        ctx.strokeText(labelText, 0, b.size * 0.24);
+        ctx.fillStyle = '#000000';
+        ctx.fillText(labelText, 0, b.size * 0.24);
+        ctx.restore();
       }
     } else {
       // ⚪ RENDER CLASSIC CIRCLE
@@ -1128,15 +1164,36 @@ class AirBubbleGame {
       ctx.lineWidth = colorInfo.isWhite ? 3.0 : 2.0;
       ctx.stroke();
 
-      ctx.fillStyle = colorInfo.text;
-      ctx.font = `bold ${Math.max(10, Math.min(20, b.radius * 0.72))}px sans-serif`;
+      // Circle Tier Number Badge - SOLID BLACK TEXT WITH CRISP MICRO-RIM
+      ctx.save();
+      const circleNumSize = Math.max(10, Math.min(22, b.radius * 0.72));
+      ctx.font = `900 ${circleNumSize}px -apple-system, BlinkMacSystemFont, sans-serif`;
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
-      ctx.fillText(`${b.tier}`, 0, (b.radius >= 22 ? -4 : 0));
+      const circleNumY = (b.radius >= 22 ? -4 : 0);
+
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.88)';
+      ctx.lineWidth = Math.max(2, Math.round(b.radius * 0.08));
+      ctx.lineJoin = 'round';
+      ctx.strokeText(`${b.tier}`, 0, circleNumY);
+
+      ctx.fillStyle = '#000000';
+      ctx.fillText(`${b.tier}`, 0, circleNumY);
+      ctx.restore();
 
       if (b.radius >= 22) {
+        ctx.save();
         ctx.font = `bold ${Math.max(7, Math.min(9, b.radius * 0.3))}px monospace`;
-        ctx.fillText(colorInfo.isWhite ? '⚪ 100%' : `${colorInfo.balance}%`, 0, b.radius * 0.38);
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        const labelText = colorInfo.isWhite ? '⚪ 100%' : `${colorInfo.balance}%`;
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.82)';
+        ctx.lineWidth = 1.6;
+        ctx.lineJoin = 'round';
+        ctx.strokeText(labelText, 0, b.radius * 0.38);
+        ctx.fillStyle = '#000000';
+        ctx.fillText(labelText, 0, b.radius * 0.38);
+        ctx.restore();
       }
     }
 
@@ -1271,11 +1328,17 @@ class AirBubbleGame {
         ctx.lineWidth = 2.0;
         ctx.stroke();
 
-        ctx.fillStyle = colorInfo.text;
-        ctx.font = 'bold 12px sans-serif';
+        ctx.save();
+        ctx.font = '900 13px -apple-system, BlinkMacSystemFont, sans-serif';
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.9)';
+        ctx.lineWidth = 2.0;
+        ctx.lineJoin = 'round';
+        ctx.strokeText(`${this.readyBubble.tier}`, 0, 0);
+        ctx.fillStyle = '#000000';
         ctx.fillText(`${this.readyBubble.tier}`, 0, 0);
+        ctx.restore();
       } else {
         ctx.fillStyle = colorInfo.css;
         ctx.beginPath();
@@ -1286,11 +1349,17 @@ class AirBubbleGame {
         ctx.lineWidth = 2.0;
         ctx.stroke();
 
-        ctx.fillStyle = colorInfo.text;
-        ctx.font = 'bold 12px sans-serif';
+        ctx.save();
+        ctx.font = '900 13px -apple-system, BlinkMacSystemFont, sans-serif';
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.9)';
+        ctx.lineWidth = 2.0;
+        ctx.lineJoin = 'round';
+        ctx.strokeText(`${this.readyBubble.tier}`, 0, 0);
+        ctx.fillStyle = '#000000';
         ctx.fillText(`${this.readyBubble.tier}`, 0, 0);
+        ctx.restore();
       }
       ctx.restore();
     }
@@ -1328,11 +1397,18 @@ class AirBubbleGame {
       ctx.stroke();
     }
 
-    ctx.fillStyle = colorInfo.text;
-    ctx.font = 'bold 12px sans-serif';
+    ctx.save();
+    ctx.font = '900 13px -apple-system, BlinkMacSystemFont, sans-serif';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.9)';
+    ctx.lineWidth = 2.0;
+    ctx.lineJoin = 'round';
+    ctx.strokeText(`${this.nextBubble.tier}`, 0, 0);
+    ctx.fillStyle = '#000000';
     ctx.fillText(`${this.nextBubble.tier}`, 0, 0);
+    ctx.restore();
+
     ctx.restore();
   }
 
@@ -1341,14 +1417,14 @@ class AirBubbleGame {
     if (!container) return;
     container.innerHTML = '';
     const evoExamples = [
-      { tier: 1, name: "🔴/🟢/🔵 Primary", color: "#ff3b30", text: "#ffffff" },
-      { tier: 2, name: "🟡/🟣/🔷 Dual Mix", color: "#ffd60a", text: "#060d1b" },
-      { tier: 3, name: "🌈 Tri-Chroma", color: "#c56cf0", text: "#ffffff" },
-      { tier: 4, name: "☀️ Harmonic", color: "#ff9f1a", text: "#060d1b" },
-      { tier: 5, name: "💎 Prism Lumen", color: "#00e5ff", text: "#060d1b" },
-      { tier: 6, name: "🔮 Near-White", color: "#f1f2f6", text: "#060d1b" },
-      { tier: 8, name: "⚪ Solar White", color: "#ffffff", text: "#060d1b" },
-      { tier: 12, name: "☀️ Singularity", color: "#ffffff", text: "#060d1b" }
+      { tier: 1, name: "🔴/🟢/🔵 Primary", color: "#ff3b30", text: "#000000" },
+      { tier: 2, name: "🟡/🟣/🔷 Dual Mix", color: "#ffd60a", text: "#000000" },
+      { tier: 3, name: "🌈 Tri-Chroma", color: "#c56cf0", text: "#000000" },
+      { tier: 4, name: "☀️ Harmonic", color: "#ff9f1a", text: "#000000" },
+      { tier: 5, name: "💎 Prism Lumen", color: "#00e5ff", text: "#000000" },
+      { tier: 6, name: "🔮 Near-White", color: "#f1f2f6", text: "#000000" },
+      { tier: 8, name: "⚪ Solar White", color: "#ffffff", text: "#000000" },
+      { tier: 12, name: "☀️ Singularity", color: "#ffffff", text: "#000000" }
     ];
     evoExamples.forEach(t => {
       const item = document.createElement('div');
@@ -1359,6 +1435,141 @@ class AirBubbleGame {
       `;
       container.appendChild(item);
     });
+  }
+
+  updateCumulativeHero() {
+    const orb = document.getElementById('cumulative-color-orb');
+    const orbNum = document.getElementById('cumulative-orb-number');
+    const orbLabel = document.getElementById('cumulative-orb-label');
+    const orbName = document.getElementById('cumulative-orb-color-name');
+    const badge = document.getElementById('hero-balance-badge');
+    const pillR = document.getElementById('val-pill-r');
+    const pillG = document.getElementById('val-pill-g');
+    const pillB = document.getElementById('val-pill-b');
+    const barFill = document.getElementById('hero-whiteness-fill');
+    const barPct = document.getElementById('hero-whiteness-pct');
+
+    if (!orb || !orbNum) return;
+
+    const cumR = this.cumulativeR;
+    const cumG = this.cumulativeG;
+    const cumB = this.cumulativeB;
+    const totalUnits = cumR + cumG + cumB;
+
+    // Effective RGB for chromatic preview:
+    // If no merges have occurred yet, preview the chamber's active bubbles so the hero orb is responsive immediately!
+    let effR = cumR;
+    let effG = cumG;
+    let effB = cumB;
+    let isStandby = false;
+
+    if (totalUnits === 0) {
+      if (this.physics && this.physics.bubbles && this.physics.bubbles.length > 0) {
+        for (const b of this.physics.bubbles) {
+          effR += (b.r || 0);
+          effG += (b.g || 0);
+          effB += (b.b || 0);
+        }
+      } else {
+        isStandby = true;
+      }
+    }
+
+    const maxVal = Math.max(effR, effG, effB);
+    let R = 24, G = 38, B = 60;
+    let balance = 0;
+    let isWhite = false;
+    let colorName = 'Standby';
+
+    if (!isStandby && maxVal > 0) {
+      R = Math.round((effR / maxVal) * 255);
+      G = Math.round((effG / maxVal) * 255);
+      B = Math.round((effB / maxVal) * 255);
+      const minVal = Math.min(effR, effG, effB);
+      balance = Math.round((minVal / maxVal) * 100);
+      isWhite = (balance >= 95 && effR > 0 && effG > 0 && effB > 0);
+
+      if (isWhite) {
+        colorName = '⚪ Pure White Light';
+      } else if (effR > 0 && effG === 0 && effB === 0) {
+        colorName = '🔴 Pure Red';
+      } else if (effG > 0 && effR === 0 && effB === 0) {
+        colorName = '🟢 Pure Green';
+      } else if (effB > 0 && effR === 0 && effG === 0) {
+        colorName = '🔵 Pure Blue';
+      } else if (effR === effG && effB === 0) {
+        colorName = '🟡 Yellow (R+G)';
+      } else if (effR === effB && effG === 0) {
+        colorName = '🟣 Magenta (R+B)';
+      } else if (effG === effB && effR === 0) {
+        colorName = '🔷 Cyan (G+B)';
+      } else if (balance >= 75) {
+        colorName = 'Near-White Light';
+      } else if (effR >= effG && effR >= effB) {
+        colorName = effG > effB ? 'Warm Amber' : 'Rose Violet';
+      } else if (effG >= effR && effG >= effB) {
+        colorName = effR > effB ? 'Lime Green' : 'Aquamarine';
+      } else {
+        colorName = effR > effG ? 'Deep Violet' : 'Electric Cyan';
+      }
+    }
+
+    // Set huge circle background color and radiant glow
+    if (isStandby) {
+      orb.style.backgroundColor = '#162438';
+      orb.style.boxShadow = '0 0 24px rgba(0, 229, 255, 0.2), inset 0 2px 8px rgba(255, 255, 255, 0.4), inset 0 -6px 14px rgba(0, 0, 0, 0.5)';
+      orb.style.borderColor = 'rgba(255, 255, 255, 0.35)';
+    } else if (isWhite) {
+      orb.style.backgroundColor = '#ffffff';
+      orb.style.boxShadow = '0 0 55px rgba(255, 255, 255, 0.95), 0 0 100px rgba(255, 255, 255, 0.55), inset 0 0 24px #ffffff';
+      orb.style.borderColor = '#ffffff';
+    } else {
+      orb.style.backgroundColor = `rgb(${R}, ${G}, ${B})`;
+      orb.style.boxShadow = `0 0 45px rgba(${R}, ${G}, ${B}, 0.8), 0 0 85px rgba(${R}, ${G}, ${B}, 0.4), inset 0 3px 10px rgba(255, 255, 255, 0.75), inset 0 -8px 16px rgba(0, 0, 0, 0.5)`;
+      orb.style.borderColor = (balance >= 70) ? '#ffffff' : `rgba(${Math.min(255, R + 60)}, ${Math.min(255, G + 60)}, ${Math.min(255, B + 60)}, 0.95)`;
+    }
+
+    // Display cumulative number in the circle
+    orbNum.textContent = totalUnits;
+
+    // Luminance-adaptive text contrast inside the orb
+    const lum = (0.299 * R + 0.587 * G + 0.114 * B) / 255;
+    const isLightBackground = !isStandby && lum > 0.55;
+    const orbTextColor = isLightBackground ? '#000000' : '#ffffff';
+
+    orbNum.style.color = orbTextColor;
+    if (isLightBackground) {
+      orbNum.style.textShadow = '0 1px 2px rgba(255, 255, 255, 0.8)';
+    } else {
+      orbNum.style.textShadow = '0 2px 8px rgba(0, 0, 0, 0.85)';
+    }
+
+    if (orbLabel) {
+      orbLabel.textContent = totalUnits === 0 ? 'READY TO HARVEST' : 'CUMULATIVE UNITS';
+      orbLabel.style.color = isLightBackground ? 'rgba(0, 0, 0, 0.75)' : 'rgba(255, 255, 255, 0.85)';
+    }
+
+    if (orbName) {
+      orbName.textContent = colorName;
+      orbName.style.color = orbTextColor;
+      orbName.style.textShadow = isLightBackground ? 'none' : '0 1px 4px rgba(0, 0, 0, 0.8)';
+    }
+
+    // Top status badge
+    if (badge) {
+      badge.textContent = isWhite ? '⚪ 100% WHITE!' : (totalUnits > 0 ? `${balance}% BALANCED` : '⚪ READY');
+      badge.style.color = isWhite ? '#ffffff' : (balance >= 50 ? '#00e5ff' : '#ffd60a');
+      badge.style.borderColor = isWhite ? '#ffffff' : (balance >= 50 ? '#00e5ff' : 'rgba(255, 255, 255, 0.2)');
+    }
+
+    // Channel pills
+    if (pillR) pillR.textContent = cumR;
+    if (pillG) pillG.textContent = cumG;
+    if (pillB) pillB.textContent = cumB;
+
+    // Progress bar
+    if (barFill) barFill.style.width = `${balance}%`;
+    if (barPct) barPct.textContent = `${balance}%`;
   }
 
   generateQRCode() {

@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>A.I.r Bubbles — n×n Grid Edition</title>
-  <link rel="stylesheet" href="style.css?v=14">
+  <link rel="stylesheet" href="style.css?v=15">
 </head>
 <body>
   <div id="app-container">
@@ -60,19 +60,63 @@
             <div class="stat-sub" id="val-combo">COMBO x1</div>
           </div>
           <div class="stat-card" id="card-pressure">
-            <div class="stat-label">WHITE EQUILIBRIUM</div>
+            <div class="stat-label">PEAK EQUILIBRIUM</div>
             <div class="stat-value" id="val-pressure">⚪ 0%</div>
             <div class="stat-sub" id="val-pressure-status">PEAK: TIER 1</div>
           </div>
           <div class="stat-card" id="card-blocks">
-            <div class="stat-label">RGB HARVEST</div>
-            <div class="stat-value" id="val-blocks" style="font-size: 0.92rem; font-family: monospace;">R:0 G:0 B:0</div>
-            <div class="stat-sub" id="val-blocks-sub">0 UNITS TOTAL</div>
+            <div class="stat-label">TOTAL MERGES</div>
+            <div class="stat-value" id="val-merges-count">0</div>
+            <div class="stat-sub" id="val-blocks-sub">0 HARVESTS</div>
           </div>
           <div class="stat-card" id="card-next">
             <div class="stat-label">NEXT</div>
             <div id="next-preview-box">
               <canvas id="next-canvas" width="60" height="60"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <!-- Huge Cumulative Color Hero Circle on the Right -->
+        <div id="cumulative-color-hero">
+          <div class="hero-top-row">
+            <span class="hero-tag">CUMULATIVE SPECTRUM</span>
+            <span class="hero-badge" id="hero-balance-badge">⚪ 0% WHITE</span>
+          </div>
+
+          <div class="hero-orb-wrap">
+            <div id="cumulative-color-orb" title="Current Cumulative Optical Color">
+              <div id="cumulative-orb-number">0</div>
+              <div id="cumulative-orb-label">CUMULATIVE UNITS</div>
+              <div id="cumulative-orb-color-name">STANDBY</div>
+            </div>
+          </div>
+
+          <div class="hero-channels-row">
+            <div class="channel-pill pill-r" id="pill-r">
+              <span class="pill-dot"></span>
+              <span class="pill-label">R:</span>
+              <span class="pill-val" id="val-pill-r">0</span>
+            </div>
+            <div class="channel-pill pill-g" id="pill-g">
+              <span class="pill-dot"></span>
+              <span class="pill-label">G:</span>
+              <span class="pill-val" id="val-pill-g">0</span>
+            </div>
+            <div class="channel-pill pill-b" id="pill-b">
+              <span class="pill-dot"></span>
+              <span class="pill-label">B:</span>
+              <span class="pill-val" id="val-pill-b">0</span>
+            </div>
+          </div>
+
+          <div id="hero-whiteness-bar-wrap">
+            <div class="bar-label-row">
+              <span>Whiteness Balance</span>
+              <span id="hero-whiteness-pct">0%</span>
+            </div>
+            <div class="bar-track">
+              <div id="hero-whiteness-fill" style="width: 0%;"></div>
             </div>
           </div>
         </div>
@@ -160,8 +204,8 @@
     </div>
   </div>
 
-  <script src="audio.js?v=14"></script>
-  <script src="physics.js?v=14"></script>
-  <script src="game.js?v=14"></script>
+  <script src="audio.js?v=15"></script>
+  <script src="physics.js?v=15"></script>
+  <script src="game.js?v=15"></script>
 </body>
 </html>
