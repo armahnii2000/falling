@@ -1678,8 +1678,16 @@ class AirBubbleGame {
       orb.style.borderColor = (balance >= 70) ? '#ffffff' : `rgba(${Math.min(255, R + 60)}, ${Math.min(255, G + 60)}, ${Math.min(255, B + 60)}, 0.95)`;
     }
 
-    // Display cumulative number in the circle
+    // Display cumulative number in the circle with dynamic font scaling to prevent clipping
     orbNum.textContent = totalUnits;
+    const isMobile = window.innerWidth < 768;
+    if (totalUnits >= 1000) {
+      orbNum.style.fontSize = isMobile ? '1.45rem' : '1.8rem';
+    } else if (totalUnits >= 100) {
+      orbNum.style.fontSize = isMobile ? '1.75rem' : '2.15rem';
+    } else {
+      orbNum.style.fontSize = isMobile ? '2.1rem' : '2.6rem';
+    }
 
     // Luminance-adaptive text contrast inside the orb
     const lum = (0.299 * R + 0.587 * G + 0.114 * B) / 255;
