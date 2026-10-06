@@ -1,26 +1,29 @@
 # Air Bubble — Fork Jumpstart & Context
 
 ## Project Overview
-- **Working Directory:** `/Users/georgearmah/air-bubble`
-- **Engine:** Summer Engine (Godot 4.3+ compatible)
-- **Concept:** *A.I.r bubbles* — Inverted-buoyancy Suika Game ("Watermelon Game") physics puzzle where bubbles float upward, merge into 11 number tiers, and fill "Lake Ellem" (satirizing the AI startup hype cycle).
-- **Core Mechanics:**
-  - 11 Tiers with 1:1 math ($N+N \to N+1$, awarding $N+1$ points).
-  - Bubbles float UP toward surface ceiling.
-  - Tier 11 is an Apex Titan (permanent obstacle, does not pop).
-  - Overflow danger line at bottom vent (3s countdown to Game Over).
-  - Fully procedural audio and visual styling in GDScript (zero cloud spend).
-- **Complete Handoff & Continuity Guide:**
-  - See [`LLM_HANDOFF.md`](file:///Users/georgearmah/air-bubble/LLM_HANDOFF.md) for full architecture, CLI commands, and next roadmap tasks.
+- **Working Directory:** `/Users/georgearmah/air-bubble-experiment-2`
+- **Git Branch:** `experiment/experiment-2` (forked from `experiment/nn-grid-thermal-edition` at `3af19cb`)
+- **Parent Conversation Fork:** `a9cc8ba9-a0ae-484e-8f39-dd1eae6e27a6`
+- **Engine:** Summer Engine (Godot 4.3+ compatible) & Web Engine / Monte Carlo test harness
+- **Web Prototype Port:** `8086` (`python3 web/server.py`)
+- **Concept:** *A.I.r bubbles* — Inverted-buoyancy Suika Game physics puzzle + n×n Grid & Thermal Defusal mechanics.
 
-## Running the Project
-- To open in Summer Engine editor:
+## Running the Web Prototype (Phone & Desktop)
+- Start the server:
   ```bash
-  SUMMER_ENGINE_PROJECT="/Users/georgearmah/air-bubble" npx -y summer-engine@latest run /Users/georgearmah/air-bubble
+  python3 /Users/georgearmah/air-bubble-experiment-2/web/server.py
   ```
-- To start/stop game:
+- **Desktop:** http://localhost:8086
+- **Local Wi-Fi (Phone):** http://192.168.1.225:8086
+
+## Running Summer Engine (Godot)
+- Open in Summer Engine editor:
   ```bash
-  SUMMER_ENGINE_PROJECT="/Users/georgearmah/air-bubble" npx -y summer-engine@latest tool summer_play
-  SUMMER_ENGINE_PROJECT="/Users/georgearmah/air-bubble" npx -y summer-engine@latest tool summer_stop
+  SUMMER_ENGINE_PROJECT="/Users/georgearmah/air-bubble-experiment-2" npx -y summer-engine@latest run /Users/georgearmah/air-bubble-experiment-2
+  ```
+- Start/stop game:
+  ```bash
+  SUMMER_ENGINE_PROJECT="/Users/georgearmah/air-bubble-experiment-2" npx -y summer-engine@latest tool summer_play
+  SUMMER_ENGINE_PROJECT="/Users/georgearmah/air-bubble-experiment-2" npx -y summer-engine@latest tool summer_stop
   ```
 
