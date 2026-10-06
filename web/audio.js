@@ -256,6 +256,35 @@ class SoundEngine {
     osc.start(t);
     osc.stop(t + 0.65);
   }
+
+  // Celestial shimmering arpeggio when Pure White (100% RGB balance) is achieved!
+  playWhiteEquilibriumChime() {
+    if (this.muted) return;
+    this.ensureContext();
+    if (!this.ctx) return;
+
+    const t = this.ctx.currentTime;
+    // C5, E5, G5, B5, C6 shimmering harmonic ladder
+    const notes = [523.25, 659.25, 783.99, 987.77, 1046.50];
+
+    notes.forEach((freq, idx) => {
+      const delay = idx * 0.06;
+      const osc = this.ctx.createOscillator();
+      const gain = this.ctx.createGain();
+
+      osc.type = 'triangle';
+      osc.frequency.setValueAtTime(freq, t + delay);
+
+      gain.gain.setValueAtTime(0.28, t + delay);
+      gain.gain.exponentialRampToValueAtTime(0.001, t + delay + 1.4);
+
+      osc.connect(gain);
+      gain.connect(this.ctx.destination);
+
+      osc.start(t + delay);
+      osc.stop(t + delay + 1.45);
+    });
+  }
 }
 
 window.soundEngine = new SoundEngine();

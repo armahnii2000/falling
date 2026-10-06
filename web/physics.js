@@ -65,12 +65,18 @@ class PhysicsEngine {
     this.dangerY = this.chamber.y + (this.rows - 4.5) * this.cellSize;
   }
 
-  createBubble(tier, tempType, x, y, vy = -780) {
+  createBubble(tier, colorData, x, y, vy = -780) {
     const size = tier * this.cellSize;
+    const rCount = (typeof colorData === 'object' && colorData !== null) ? (colorData.r || 0) : (colorData === 'hot' ? tier : 0);
+    const gCount = (typeof colorData === 'object' && colorData !== null) ? (colorData.g || 0) : 0;
+    const bCount = (typeof colorData === 'object' && colorData !== null) ? (colorData.b || 0) : (colorData === 'cold' ? tier : 0);
+
     const b = {
       id: this.nextId++,
       tier: tier,
-      tempType: tempType, // 'normal', 'hot', 'cold'
+      r: rCount,
+      g: gCount,
+      b: bCount,
       x: x,
       y: y,
       vx: (Math.random() - 0.5) * 40,
@@ -86,8 +92,8 @@ class PhysicsEngine {
       wobbleX: 1.0,
       wobbleY: 1.0,
       wobbleVel: 0,
-      isSingularity: (tier === 12),
-      singularityTimer: (tier === 12 ? 0.6 : 0)
+      isSingularity: (tier >= 12),
+      singularityTimer: (tier >= 12 ? 0.6 : 0)
     };
     return b;
   }
@@ -388,4 +394,9 @@ class PhysicsEngine {
   }
 }
 
-window.PhysicsEngine = PhysicsEngine;
+if (typeof window !== 'undefined') {
+  window.PhysicsEngine = PhysicsEngine;
+}
+if (typeof module !== 'undefined' && module.exports) {
+  module.exports = PhysicsEngine;
+}

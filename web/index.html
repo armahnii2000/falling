@@ -12,12 +12,12 @@
     <header id="header-bar">
       <div class="header-left">
         <h1 class="logo">A.I.r BUBBLES</h1>
-        <div class="subtitle">n×n Grid Edition · Lake Ellem</div>
+        <div class="subtitle">RGB White Equilibrium Edition · Lake Ellem</div>
       </div>
       <div class="header-right">
         <a href="presentation.html" target="_blank" class="icon-btn" title="View Gameplay Ratio Presentation" style="text-decoration: none;">📊</a>
         <button id="btn-sound" class="icon-btn" title="Toggle Sound">🔊</button>
-        <button id="btn-info" class="icon-btn" title="How to Play / Compare Dynamics">ℹ️</button>
+        <button id="btn-info" class="icon-btn" title="How to Play / RGB Equilibrium Rules">ℹ️</button>
         <button id="btn-restart" class="icon-btn" title="Restart Run">🔄</button>
       </div>
     </header>
@@ -60,14 +60,14 @@
             <div class="stat-sub" id="val-combo">COMBO x1</div>
           </div>
           <div class="stat-card" id="card-pressure">
-            <div class="stat-label">CORE PRESSURE</div>
-            <div class="stat-value" id="val-pressure">30.0 / 35 PSI</div>
-            <div class="stat-sub" id="val-pressure-status">GOAL: 0 · MAX: 35</div>
+            <div class="stat-label">WHITE EQUILIBRIUM</div>
+            <div class="stat-value" id="val-pressure">⚪ 0%</div>
+            <div class="stat-sub" id="val-pressure-status">PEAK: TIER 1</div>
           </div>
           <div class="stat-card" id="card-blocks">
-            <div class="stat-label">BLOCKS LAUNCHED</div>
-            <div class="stat-value" id="val-blocks">0</div>
-            <div class="stat-sub" id="val-blocks-sub">UNLIMITED SUPPLY</div>
+            <div class="stat-label">RGB HARVEST</div>
+            <div class="stat-value" id="val-blocks" style="font-size: 0.92rem; font-family: monospace;">R:0 G:0 B:0</div>
+            <div class="stat-sub" id="val-blocks-sub">0 UNITS TOTAL</div>
           </div>
           <div class="stat-card" id="card-next">
             <div class="stat-label">NEXT</div>
@@ -126,14 +126,20 @@
     <div id="info-modal" class="modal hidden">
       <div class="modal-card info-card">
         <button class="modal-close" id="btn-close-info">&times;</button>
-        <h2>Gameplay Dynamics: n×n Grid vs Circles</h2>
+        <h2>🎨 Additive RGB Synthesis to Pure White Light</h2>
         <div class="info-content">
           <div class="info-section">
-            <h3>🟦 What changes with n×n Squares?</h3>
+            <h3>🌈 The Additive Light Mixing Rules</h3>
             <ul>
-              <li><strong>No Roll-Off:</strong> Circles slide down crevices. Squares have flat horizontal and vertical faces that stack into columns and bridges.</li>
-              <li><strong>Push-Out Expansion:</strong> Two $n \times n$ squares merge into an $(n+1) \times (n+1)$ square. Because $n+1 > n$, the new square is wider and taller, forcefully <em>pushing adjacent stacks outward and downward</em>!</li>
-              <li><strong>Size 12 Singularity:</strong> Reaching the $12 \times 12$ square (144 cells, ~75% of chamber width) triggers an epic fanfare and disappears, causing all buoyant blocks below to surge upward!</li>
+              <li><strong>Pure Primaries Spawn:</strong> Launched blocks roll randomly as 🔴 <strong>Red</strong>, 🟢 <strong>Green</strong>, or 🔵 <strong>Blue</strong> with low tiers (1, 2, or 3).</li>
+              <li><strong>Suika Merge by Number Only:</strong> Any two blocks of the <em>same Tier number</em> merge into Tier $N + 1$, regardless of color!</li>
+              <li><strong>Accurate Chromatic Mixing:</strong> When two blocks merge, their internal RGB units add together ($r_1+r_2, g_1+g_2, b_1+b_2$). The resulting block's color is the true optical blend:
+                <br>• 🔴 Red + 🟢 Green = 🟡 <strong>Yellow</strong> (or 🟠 Amber)
+                <br>• 🔴 Red + 🔵 Blue = 🟣 <strong>Magenta</strong>
+                <br>• 🟢 Green + 🔵 Blue = 🔷 <strong>Cyan</strong>
+                <br>• Equal R, G, B = ⚪ <strong>Pure Radiant White!</strong>
+              </li>
+              <li><strong>The Objective:</strong> Build the largest possible bubble while keeping your RGB units in <strong>perfect equilibrium</strong> to achieve <strong>⚪ 100% White Light</strong>!</li>
             </ul>
           </div>
           <div class="info-section">
@@ -141,21 +147,13 @@
             <p><strong>Desktop:</strong> Use <strong>A / D</strong> or <strong>Arrow keys</strong> to aim, and <strong>Space / W</strong> to launch. Drag mouse directly on the grid or slider to aim.</p>
             <p><strong>Mobile:</strong> Drag along the slider track or touch the chamber to aim, then tap <strong>LAUNCH</strong>.</p>
           </div>
-          <div class="info-section">
-            <h3>📊 Playtest Research & Balance Dossier</h3>
-            <p style="margin-bottom: 8px;">Explore the full research dossier and interactive presentation generated from 21,600 automated playtest runs:</p>
-            <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-              <a href="presentation.html" target="_blank" style="display: inline-block; padding: 6px 12px; background: rgba(0, 229, 255, 0.15); border: 1px solid rgba(0, 229, 255, 0.4); border-radius: 6px; color: #00e5ff; font-weight: bold; font-size: 0.8rem; text-decoration: none;">📊 Interactive Presentation Deck</a>
-              <a href="research.html" target="_blank" style="display: inline-block; padding: 6px 12px; background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 6px; color: #f1f5f9; font-weight: bold; font-size: 0.8rem; text-decoration: none;">🔬 Full Playtest Report</a>
-            </div>
-          </div>
           <div class="info-section qr-section">
             <h3>📱 Play on Your Phone</h3>
             <p>Scan with your phone's camera on the same Wi-Fi:</p>
             <div id="qr-holder">
               <img id="qr-img" src="qr.png" alt="Scan to play on phone" width="160" height="160" style="border-radius: 8px; background: white; padding: 6px; box-shadow: 0 4px 12px rgba(0,0,0,0.5);">
             </div>
-            <p class="qr-url"><code id="qr-url-text">http://192.168.1.225:8085</code></p>
+            <p class="qr-url"><code id="qr-url-text">http://192.168.1.225:8086</code></p>
           </div>
         </div>
       </div>

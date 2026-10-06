@@ -3,18 +3,18 @@
 // Lake Ellem score reservoir, and tactile push-out dynamics.
 
 const TIERS = [
-  { tier: 1,  name: "Token",       sub: "Unchecked Token",      color: "#00d2d3", text: "#003b3c" },
-  { tier: 2,  name: "Context",     sub: "4k Window",            color: "#10ac84", text: "#023e2d" },
-  { tier: 3,  name: "Colab",       sub: "Free GPU GPU",         color: "#2ed573", text: "#0c4e25" },
-  { tier: 4,  name: "H100",        sub: "Silicon Gold",         color: "#ffa502", text: "#523200" },
-  { tier: 5,  name: "Server",      sub: "Liquid Cooled",        color: "#ff7f50", text: "#581b04" },
-  { tier: 6,  name: "Diesel",      sub: "Backup Gen",           color: "#ff4757", text: "#55070f" },
-  { tier: 7,  name: "Dark Fiber",  sub: "Oceanic Glass",        color: "#ff3838", text: "#540606" },
-  { tier: 8,  name: "SMR",         sub: "Nuclear Fission",      color: "#c56cf0", text: "#3d1054" },
-  { tier: 9,  name: "Hyperscale",  sub: "Idaho MegaDC",         color: "#7158e2", text: "#1b114d" },
-  { tier: 10, name: "Stargate",    sub: "1M Cluster",           color: "#3d3d3d", text: "#ffffff", border: "#67e6dc" },
-  { tier: 11, name: "Unicorn",     sub: "Paper Valuation",      color: "#f1c40f", text: "#4d3a00", border: "#ffffff" },
-  { tier: 12, name: "Singularity", sub: "Dyson Swarm (Max 12)", color: "#ffffff", text: "#d35400", border: "#ff3838" }
+  { tier: 1,  name: "Photon",       sub: "Primary Spark" },
+  { tier: 2,  name: "Chroma",       sub: "Dual Spectrum" },
+  { tier: 3,  name: "Prism",        sub: "Tri-Color Mix" },
+  { tier: 4,  name: "Spectra",      sub: "Harmonic Wave" },
+  { tier: 5,  name: "Lumen",        sub: "Amplified Light" },
+  { tier: 6,  name: "Candela",      sub: "Focused Beam" },
+  { tier: 7,  name: "Aurora",       sub: "Atmospheric Glow" },
+  { tier: 8,  name: "Corona",       sub: "Stellar Halo" },
+  { tier: 9,  name: "Helios",       sub: "Solar Core" },
+  { tier: 10, name: "Supernova",    sub: "Radiant Burst" },
+  { tier: 11, name: "Quasar",       sub: "Hyperluminal Apex" },
+  { tier: 12, name: "White Singularity", sub: "100% Equilibrium" }
 ];
 
 class AirBubbleGame {
@@ -29,11 +29,7 @@ class AirBubbleGame {
 
     // Game state
     this.score = 0;
-    this.startingPressure = 30.0;
-    this.pressure = 30.0;
-    this.maxPressure = 35.0; // Overpressure blowout
-    this.targetPressure = 0.0; // Defusal goal
-    this.blocksLaunched = 0; // Unlimited coolants supply
+    this.blocksLaunched = 0;
     this.combo = 1;
     this.lastMergeTime = 0;
     this.comboWindow = 0.95; // seconds
@@ -44,6 +40,14 @@ class AirBubbleGame {
     this.isPaused = false;
     this.dangerTimer = 3.0;
     this.settleTimer = 0.0;
+
+    // RGB Chromatic Equilibrium State
+    this.cumulativeR = 0;
+    this.cumulativeG = 0;
+    this.cumulativeB = 0;
+    this.bestBalance = 0;
+    this.bestBalanceTier = 1;
+    this.whiteBubblesCreated = 0;
 
     // Launcher state
     this.launcherX = 0;
@@ -86,6 +90,7 @@ class AirBubbleGame {
     this.setupInputs();
     this.setupUI();
     this.renderEvolutionStrip();
+    this.renderNextPreview();
     this.generateQRCode();
 
     // Start loop
@@ -129,25 +134,105 @@ class AirBubbleGame {
     }
   }
 
-  rollSpawnTier() {
-    const r = Math.random() * 100;
-    if (r < 45) return 1;
-    if (r < 75) return 2;
-    if (r < 92) return 3;
-    if (r < 98) return 4;
-    return 5;
+  getBubbleColor(b) {
+    const r = (b && b.r) || 0;
+    const g = (b && b.g) || 0;
+    const bVal = (b && b.b) || 0;
+    const max = Math.max(r, g, bVal);
+
+    if (max === 0) {
+      return {
+        css: '#888888',
+        glow: 'rgba(255,255,255,0.2)',
+        border: 'rgba(255,255,255,0.4)',
+        text: '#ffffff',
+        balance: 0,
+        isWhite: false,
+        R: 128, G: 128, B: 128,
+        colorName: 'Void'
+      };
+    }
+
+    // Optical RGB light mix: scaled relative to dominant channel
+    const R = Math.round((r / max) * 255);
+    const G = Math.round((g / max) * 255);
+    const B = Math.round((bVal / max) * 255);
+
+    const min = Math.min(r, g, bVal);
+    // Chromatic Balance / Whiteness percentage:
+    // When min == max (and min > 0), all 3 channels are identical -> 100% White!
+    const balance = Math.round((min / max) * 100);
+    const isWhite = (balance >= 95 && r > 0 && g > 0 && bVal > 0);
+
+    // Perceived luminance for high-contrast legible text
+    const lum = (0.299 * R + 0.587 * G + 0.114 * B) / 255;
+    const text = lum > 0.62 ? '#060d1b' : '#ffffff';
+
+    let colorName = '';
+    if (isWhite) {
+      colorName = 'White Light';
+    } else if (r > 0 && g === 0 && bVal === 0) {
+      colorName = 'Pure Red';
+    } else if (g > 0 && r === 0 && bVal === 0) {
+      colorName = 'Pure Green';
+    } else if (bVal > 0 && r === 0 && g === 0) {
+      colorName = 'Pure Blue';
+    } else if (r === g && bVal === 0) {
+      colorName = 'Yellow (R+G)';
+    } else if (r === bVal && g === 0) {
+      colorName = 'Magenta (R+B)';
+    } else if (g === bVal && r === 0) {
+      colorName = 'Cyan (G+B)';
+    } else if (balance >= 75) {
+      colorName = 'Near-White';
+    } else if (r >= g && r >= bVal) {
+      colorName = g > bVal ? 'Warm Amber' : 'Rose Violet';
+    } else if (g >= r && g >= bVal) {
+      colorName = r > bVal ? 'Lime Green' : 'Aquamarine';
+    } else {
+      colorName = r > g ? 'Deep Violet' : 'Electric Cyan';
+    }
+
+    return {
+      css: `rgb(${R}, ${G}, ${B})`,
+      glow: isWhite ? 'rgba(255, 255, 255, 0.95)' : `rgba(${R}, ${G}, ${B}, 0.85)`,
+      border: isWhite ? '#ffffff' : (balance > 60 ? 'rgba(255, 255, 255, 0.9)' : `rgba(${Math.min(255, R + 50)}, ${Math.min(255, G + 50)}, ${Math.min(255, B + 50)}, 0.85)`),
+      text: text,
+      balance: balance,
+      isWhite: isWhite,
+      R: R,
+      G: G,
+      B: B,
+      rCount: r,
+      gCount: g,
+      bCount: bVal,
+      colorName: colorName
+    };
   }
 
-  rollTempType() {
+  rollSpawnTier() {
+    const r = Math.random() * 100;
+    if (r < 55) return 1;
+    if (r < 85) return 2;
+    return 3;
+  }
+
+  rollSpawnColor() {
     const r = Math.random();
-    if (r < 0.60) return 'hot';   // 60% Hot (6 in 10)
-    return 'cold';                // 40% Cold (4 in 10, 0% Normal)
+    if (r < 0.3333) return 'red';
+    if (r < 0.6666) return 'green';
+    return 'blue';
   }
 
   rollSpawn() {
+    const tier = this.rollSpawnTier();
+    const color = this.rollSpawnColor();
     return {
-      tier: this.rollSpawnTier(),
-      tempType: this.rollTempType()
+      tier: tier,
+      colorName: color,
+      r: color === 'red' ? tier : 0,
+      g: color === 'green' ? tier : 0,
+      b: color === 'blue' ? tier : 0
     };
   }
 
@@ -269,7 +354,12 @@ class AirBubbleGame {
 
     const b = this.physics.createBubble(
       this.readyBubble.tier,
-      this.readyBubble.tempType,
+      {
+        r: this.readyBubble.r,
+        g: this.readyBubble.g,
+        b: this.readyBubble.b,
+        colorName: this.readyBubble.colorName
+      },
       this.launcherX,
       spawnY,
       -820 // Upward launch speed
@@ -279,10 +369,9 @@ class AirBubbleGame {
     // Camera punch
     this.cameraTrauma = Math.min(1.0, this.cameraTrauma + 0.15);
 
-    // Spawn launcher bubbles at elongated vent nozzle tip
-    const moteColor = this.readyBubble.tempType === 'hot'
-      ? 'rgba(255, 69, 58, 0.85)'
-      : (this.readyBubble.tempType === 'cold' ? 'rgba(0, 229, 255, 0.85)' : 'rgba(0, 229, 255, 0.6)');
+    // Spawn launcher bubbles at elongated vent nozzle tip using bubble color
+    const colorInfo = this.getBubbleColor(this.readyBubble);
+    const moteColor = colorInfo.glow;
 
     for (let i = 0; i < 8; i++) {
       this.particles.push({
@@ -316,40 +405,40 @@ class AirBubbleGame {
     }
     this.lastMergeTime = this.gameTime;
 
-    // 2. Score calculation: resulting tier * combo
-    const pts = nextTier * this.combo;
+    // 2. Cumulative RGB Unit Addition (Color Inheritance)
+    const newR = (b1.r || 0) + (b2.r || 0);
+    const newG = (b1.g || 0) + (b2.g || 0);
+    const newB = (b1.b || 0) + (b2.b || 0);
+
+    // Global gauge harvest addition
+    this.cumulativeR += (b1.r || 0) + (b2.r || 0);
+    this.cumulativeG += (b1.g || 0) + (b2.g || 0);
+    this.cumulativeB += (b1.b || 0) + (b2.b || 0);
+
+    // Evaluate color & chromatic equilibrium
+    const colorInfo = this.getBubbleColor({ r: newR, g: newG, b: newB });
+
+    // Track best white equilibrium
+    if (colorInfo.balance > this.bestBalance || (colorInfo.balance === this.bestBalance && nextTier > this.bestBalanceTier)) {
+      this.bestBalance = colorInfo.balance;
+      this.bestBalanceTier = nextTier;
+    }
+    if (colorInfo.isWhite) {
+      this.whiteBubblesCreated++;
+    }
+
+    // 3. Score calculation: resulting tier * combo + Whiteness Purity Bonus
+    const basePts = nextTier * this.combo * 10;
+    const whitenessMult = 1.0 + (colorInfo.balance / 100) * 2.0; // Up to 3x multiplier for pure white!
+    const pts = Math.round(basePts * whitenessMult);
     this.score += pts;
 
-    // 3. Pressure rules (GAME_RULES.md 11-17)
-    let pressureDelta = 0;
-    const t1 = b1.tempType;
-    const t2 = b2.tempType;
-
-    if (t1 === 'hot' && t2 === 'hot') {
-      pressureDelta = 2 * b1.tier;
-      this.sound.playSteam();
-    } else if ((t1 === 'hot' && t2 === 'normal') || (t1 === 'normal' && t2 === 'hot')) {
-      pressureDelta = 1 * b1.tier;
-      this.sound.playSteam();
-    } else if (t1 === 'cold' && t2 === 'cold') {
-      pressureDelta = -2 * b1.tier;
-      this.sound.playFrost();
-    } else if ((t1 === 'cold' && t2 === 'normal') || (t1 === 'normal' && t2 === 'cold')) {
-      pressureDelta = -1 * b1.tier;
-      this.sound.playFrost();
+    // Audio chime: Celestial harmony if pure white, else regular harmonic scale
+    if (colorInfo.isWhite) {
+      this.sound.playWhiteEquilibriumChime();
+    } else {
+      this.sound.playMerge(nextTier, this.combo);
     }
-    // hot + cold = 0, normal + normal = 0
-
-    const prevPressure = this.pressure;
-    this.pressure = Math.max(0.0, this.pressure + pressureDelta);
-
-    // Warning alert ping only when pressure reaches 20 PSI
-    if (this.pressure >= 20.0 && prevPressure < 20.0) {
-      this.sound.playWarningPing();
-    }
-
-    // Audio chime
-    this.sound.playMerge(nextTier, this.combo);
 
     // Midpoint
     const midX = (b1.x + b2.x) / 2;
@@ -358,10 +447,10 @@ class AirBubbleGame {
     // Remove old bubbles
     this.physics.bubbles = this.physics.bubbles.filter(b => b.id !== b1.id && b.id !== b2.id);
 
-    // 4. Spawn new (n+1) bubble
+    // 4. Spawn new (n+1) bubble with inherited RGB counts
     const newBubble = this.physics.createBubble(
       nextTier,
-      'normal', // children come out normal per rule
+      { r: newR, g: newG, b: newB },
       midX,
       midY,
       (b1.vy + b2.vy) * 0.4
@@ -369,78 +458,63 @@ class AirBubbleGame {
     newBubble.wobbleX = 1.35; // Expand spring
     this.physics.bubbles.push(newBubble);
 
-    // 5. THE KEY PUSH-OUT MECHANIC:
-    // When a bigger square appears, it pushes all neighbors out of its footprint!
+    // 5. THE KEY PUSH-OUT MECHANIC
     this.physics.applyPushOut(newBubble);
 
-    // Visual shockwave
+    // Visual shockwave in merged color
     this.shockwaves.push({
       x: midX,
       y: midY,
       r: newBubble.size / 2,
-      maxR: newBubble.size * 1.6,
-      color: TIERS[nextTier - 1]?.color || '#ffffff',
-      life: 0.35,
-      maxLife: 0.35
+      maxR: newBubble.size * 1.8,
+      color: colorInfo.isWhite ? '#ffffff' : colorInfo.css,
+      life: colorInfo.isWhite ? 0.6 : 0.35,
+      maxLife: colorInfo.isWhite ? 0.6 : 0.35
     });
 
     // Score Popup
     const comboText = this.combo > 1 ? ` COMBO x${this.combo}!` : '';
+    let popText = `+${pts}${comboText}`;
+    let popColor = '#ffd700';
+
+    if (colorInfo.isWhite) {
+      popText = `+${pts} ⚪ PURE WHITE! (100%)`;
+      popColor = '#ffffff';
+    } else if (colorInfo.balance >= 50) {
+      popText = `+${pts} ☀️ EQUILIBRIUM (${colorInfo.balance}%)`;
+      popColor = '#00e5ff';
+    }
+
     this.popups.push({
       x: midX,
       y: midY - 20,
-      text: `+${pts}${comboText}`,
-      color: '#ffd700',
-      size: nextTier === 12 ? 22 : 16,
-      life: 1.0
+      text: popText,
+      color: popColor,
+      size: colorInfo.isWhite ? 20 : (nextTier >= 10 ? 18 : 15),
+      life: colorInfo.isWhite ? 1.4 : 1.0
     });
 
-    if (pressureDelta > 0) {
-      this.popups.push({
-        x: midX + 25,
-        y: midY - 5,
-        text: `+${pressureDelta} PSI`,
-        color: '#ff453a',
-        size: 13,
-        life: 0.9
-      });
-    } else if (pressureDelta < 0) {
-      this.popups.push({
-        x: midX + 25,
-        y: midY - 5,
-        text: `${pressureDelta} PSI`,
-        color: '#30d158',
-        size: 13,
-        life: 0.9
-      });
-    }
-
     // Camera trauma
-    this.cameraTrauma = Math.min(1.0, this.cameraTrauma + 0.3 + (nextTier * 0.04));
+    this.cameraTrauma = Math.min(1.0, this.cameraTrauma + (colorInfo.isWhite ? 0.5 : 0.25) + (nextTier * 0.04));
 
-    // Particle fountain to Lake Ellem
-    for (let i = 0; i < 10 + nextTier * 2; i++) {
+    // Particle fountain to Lake Ellem using bubble's authentic color
+    const particleCount = colorInfo.isWhite ? 35 + nextTier * 3 : 12 + nextTier * 2;
+    for (let i = 0; i < particleCount; i++) {
       this.particles.push({
         x: midX + (Math.random() - 0.5) * 20,
         y: midY + (Math.random() - 0.5) * 20,
-        vx: (Math.random() - 0.5) * 160,
-        vy: -100 - Math.random() * 200,
-        r: 3 + Math.random() * 3,
-        color: TIERS[nextTier - 1]?.color || '#ffd700',
-        life: 0.6 + Math.random() * 0.4
+        vx: (Math.random() - 0.5) * (colorInfo.isWhite ? 240 : 160),
+        vy: -100 - Math.random() * (colorInfo.isWhite ? 280 : 200),
+        r: colorInfo.isWhite ? 3 + Math.random() * 5 : 2.5 + Math.random() * 3,
+        color: colorInfo.isWhite ? (i % 2 === 0 ? '#ffffff' : '#ffd700') : colorInfo.css,
+        life: 0.6 + Math.random() * 0.5
       });
     }
 
-    // Check Defusal Victory (<= 0.0 PSI reached!)
-    if (this.pressure <= 0.0 && !this.isWon && !this.isGameOver) {
-      this.pressure = 0.0;
-      this.triggerDefusedVictory();
+    // Check Victory (e.g. Tier 8+ with >= 90% white balance, or Tier 12 Singularity)
+    if (nextTier >= 8 && colorInfo.balance >= 90 && !this.isWon && !this.isGameOver) {
+      this.triggerWhiteVictory(newBubble, colorInfo);
       return;
-    }
-
-    // Check Overpressure Blowout (>= 35.0 PSI)
-    if (this.pressure >= this.maxPressure && !this.isGameOver && !this.isWon) {
-      this.triggerOverpressure();
     }
   }
 
@@ -489,49 +563,34 @@ class AirBubbleGame {
     });
   }
 
-  triggerDefusedVictory() {
+  triggerWhiteVictory(b, colorInfo) {
     this.isWon = true;
     this.isGameOver = true;
-    this.sound.playSingularity();
-    this.cameraTrauma = 0.7;
+    this.sound.playWhiteEquilibriumChime();
+    this.cameraTrauma = 0.85;
 
     const chamber = this.physics.chamber;
-    for (let i = 0; i < 70; i++) {
-      const angle = (Math.PI * 2 * i) / 70;
-      const spd = 140 + Math.random() * 260;
+    for (let i = 0; i < 80; i++) {
+      const angle = (Math.PI * 2 * i) / 80;
+      const spd = 160 + Math.random() * 320;
       this.particles.push({
-        x: chamber.x + chamber.w / 2,
-        y: chamber.y + chamber.h / 2,
+        x: b.x,
+        y: b.y,
         vx: Math.cos(angle) * spd,
         vy: Math.sin(angle) * spd,
-        r: 3 + Math.random() * 4,
-        color: ['#00e5ff', '#30d158', '#ffd700', '#ffffff'][i % 4],
-        life: 1.6
+        r: 3 + Math.random() * 5,
+        color: ['#ffffff', '#00e5ff', '#ffd700', '#ff3838', '#30d158'][i % 5],
+        life: 1.8
       });
     }
 
     const badge = document.getElementById('game-over-badge');
-    badge.textContent = 'CORE DEFUSED! (0.0 PSI)';
-    badge.style.background = 'rgba(48, 209, 88, 0.2)';
-    badge.style.borderColor = '#30d158';
-    badge.style.color = '#30d158';
-    document.getElementById('game-over-title').textContent = 'Thermal Core Stabilized!';
-    document.getElementById('game-over-desc').textContent = `Mission Accomplished! You successfully cooled the hydrothermal core down from 30.0 PSI to 0.0 PSI using ${this.blocksLaunched} blocks.`;
-    this.showGameOverModal();
-  }
-
-  triggerOverpressure() {
-    this.isGameOver = true;
-    this.sound.playOverheat();
-    this.cameraTrauma = 1.0;
-
-    const badge = document.getElementById('game-over-badge');
-    badge.textContent = 'CRITICAL BLOWOUT (35.0 PSI)';
-    badge.style.background = 'rgba(255, 69, 58, 0.2)';
-    badge.style.borderColor = '#ff453a';
-    badge.style.color = '#ff453a';
-    document.getElementById('game-over-title').textContent = 'The System Has Exploded';
-    document.getElementById('game-over-desc').textContent = 'Thermal spikes reached 35.0 PSI. The hydrothermal vent cluster suffered catastrophic decompression.';
+    badge.textContent = `WHITE EQUILIBRIUM ACHIEVED (${colorInfo.balance}%)`;
+    badge.style.background = 'rgba(255, 255, 255, 0.25)';
+    badge.style.borderColor = '#ffffff';
+    badge.style.color = '#ffffff';
+    document.getElementById('game-over-title').textContent = 'Pure White Light Synthesized!';
+    document.getElementById('game-over-desc').textContent = `Magnificent achievement! You cultivated a giant Tier ${b.tier} bubble with ${colorInfo.balance}% White light equilibrium across ${this.blocksLaunched} launches.`;
     this.showGameOverModal();
   }
 
@@ -545,16 +604,16 @@ class AirBubbleGame {
     badge.style.background = 'rgba(255, 69, 58, 0.2)';
     badge.style.borderColor = '#ff453a';
     badge.style.color = '#ff453a';
-    document.getElementById('game-over-title').textContent = 'The Seabed Has Jammed';
-    document.getElementById('game-over-desc').textContent = 'Bubbles stacked down past the hydrothermal vent danger line for over 3 seconds.';
+    document.getElementById('game-over-title').textContent = 'The Chamber Has Jammed';
+    document.getElementById('game-over-desc').textContent = `Bubbles stacked down past the seabed danger line for over 3 seconds. Peak balance achieved: ${this.bestBalance}% on Tier ${this.bestBalanceTier}.`;
     this.showGameOverModal();
   }
 
   showGameOverModal() {
     document.getElementById('modal-final-score').textContent = this.score;
-    document.getElementById('modal-peak-tier').textContent = `${this.peakTier} (${TIERS[this.peakTier - 1]?.name || ''})`;
+    document.getElementById('modal-peak-tier').textContent = `Tier ${this.peakTier} (${TIERS[this.peakTier - 1]?.name || ''}) · ⚪ ${this.bestBalance}%`;
     document.getElementById('modal-total-merges').textContent = this.totalMerges;
-    document.getElementById('modal-total-pushouts').textContent = this.physics.pushoutCount;
+    document.getElementById('modal-total-pushouts').textContent = `R:${this.cumulativeR} G:${this.cumulativeG} B:${this.cumulativeB}`;
     document.getElementById('game-over-modal').classList.remove('hidden');
   }
 
@@ -562,13 +621,18 @@ class AirBubbleGame {
     this.isGameOver = false;
     this.isWon = false;
     this.score = 0;
-    this.pressure = 30.0;
     this.blocksLaunched = 0;
     this.combo = 1;
     this.totalMerges = 0;
     this.peakTier = 1;
     this.dangerTimer = 3.0;
     this.settleTimer = 0.0;
+    this.cumulativeR = 0;
+    this.cumulativeG = 0;
+    this.cumulativeB = 0;
+    this.bestBalance = 0;
+    this.bestBalanceTier = 1;
+    this.whiteBubblesCreated = 0;
     this.physics.bubbles = [];
     this.physics.pushoutCount = 0;
     this.particles = [];
@@ -677,36 +741,34 @@ class AirBubbleGame {
     this.uiCombo.textContent = this.combo > 1 ? `COMBO x${this.combo}` : 'COMBO x1';
     this.uiPushCounter.textContent = this.physics.pushoutCount;
 
-    // Update Pressure HUD (Reversed: starts at 30.0 PSI, goal is 0.0 PSI, max is 35.0 PSI)
+    // Update White Equilibrium HUD
     if (this.uiPressure) {
-      this.uiPressure.textContent = `${this.pressure.toFixed(1)} / 35 PSI`;
-      if (this.pressure <= 0.0) {
-        this.uiPressureStatus.textContent = '✅ DEFUSED (0.0)';
-        this.uiPressureStatus.className = 'stat-sub';
-        this.uiPressure.style.color = '#30d158';
-      } else if (this.pressure >= 30.0) {
-        this.uiPressureStatus.textContent = '🔥 BURST RISK (MAX: 35)';
-        this.uiPressureStatus.className = 'stat-sub warning';
-        this.uiPressure.style.color = '#ff3b30';
-      } else if (this.pressure >= 20.0) {
-        this.uiPressureStatus.textContent = '⚠️ ELEVATED (MAX: 35)';
-        this.uiPressureStatus.className = 'stat-sub warning';
-        this.uiPressure.style.color = '#ffd60a';
-      } else if (this.pressure >= 10.0) {
-        this.uiPressureStatus.textContent = '⚡ STABILIZING';
-        this.uiPressureStatus.className = 'stat-sub';
+      this.uiPressure.textContent = `⚪ ${this.bestBalance}%`;
+      if (this.bestBalance >= 90) {
+        this.uiPressure.style.color = '#ffffff';
+        this.uiPressure.style.textShadow = '0 0 10px rgba(255, 255, 255, 0.9)';
+      } else if (this.bestBalance >= 50) {
         this.uiPressure.style.color = '#00e5ff';
+        this.uiPressure.style.textShadow = 'none';
       } else {
-        this.uiPressureStatus.textContent = '❄️ COOLING DOWN';
-        this.uiPressureStatus.className = 'stat-sub';
-        this.uiPressure.style.color = '#30d158';
+        this.uiPressure.style.color = '#ffd60a';
+        this.uiPressure.style.textShadow = 'none';
+      }
+
+      if (this.uiPressureStatus) {
+        this.uiPressureStatus.textContent = `PEAK: TIER ${this.bestBalanceTier}`;
       }
     }
 
-    // Update Blocks Launched HUD (Unlimited supply)
+    // Update RGB Harvest HUD
     if (this.uiBlocks) {
-      this.uiBlocks.textContent = `${this.blocksLaunched}`;
-      this.uiBlocks.style.color = '#00e5ff';
+      this.uiBlocks.textContent = `R:${this.cumulativeR} G:${this.cumulativeG} B:${this.cumulativeB}`;
+      this.uiBlocks.style.color = '#ffffff';
+      const blocksSub = document.getElementById('val-blocks-sub');
+      if (blocksSub) {
+        const totalUnits = this.cumulativeR + this.cumulativeG + this.cumulativeB;
+        blocksSub.textContent = `${totalUnits} UNITS TOTAL`;
+      }
     }
   }
 
@@ -731,8 +793,8 @@ class AirBubbleGame {
     // 1. Draw Rectangular Chamber Background & Grid (Clean, no warning text on grid)
     this.renderChamber(ctx, chamber);
 
-    // 2. Draw Vertical Pressure Gauge to the Side of the Grid
-    this.renderPressureGauge(ctx, this.physics.gauge);
+    // 2. Draw Vertical RGB Spectrum Gauge to the Side of the Grid
+    this.renderRGBGauge(ctx, this.physics.gauge);
 
     // 3. Draw Bubbles
     for (const b of this.physics.bubbles) {
@@ -842,8 +904,8 @@ class AirBubbleGame {
     ctx.restore();
   }
 
-  // Vertical Pressure Gauge to the side of the grid
-  renderPressureGauge(ctx, gauge) {
+  // Vertical RGB Spectrum Gauge to the side of the grid
+  renderRGBGauge(ctx, gauge) {
     if (!gauge) return;
     const gx = gauge.x;
     const gy = gauge.y;
@@ -852,7 +914,7 @@ class AirBubbleGame {
 
     ctx.save();
 
-    // 1. Manometer Column Frame
+    // 1. Gauge Frame
     ctx.fillStyle = '#081324';
     ctx.strokeStyle = 'rgba(64, 128, 200, 0.45)';
     ctx.lineWidth = 1.5;
@@ -861,153 +923,115 @@ class AirBubbleGame {
     ctx.fill();
     ctx.stroke();
 
-    // Top Header: PSI
+    // Top Header
     ctx.fillStyle = '#8b9bb4';
     ctx.font = 'bold 8px -apple-system, sans-serif';
     ctx.textAlign = 'center';
-    ctx.fillText('PSI', gx + gw / 2, gy + 11);
+    ctx.fillText('RGB MIX', gx + gw / 2, gy + 11);
 
-    // 2. Glass Tube
-    const tubeX = gx + 6;
-    const tubeY = gy + 18;
-    const tubeW = Math.max(10, gw - 12);
-    const tubeH = gh - 46;
-    const tubeBottom = tubeY + tubeH;
+    // 2. Prism Lamp (Global Cumulative Mixed Color Orb)
+    const lampX = gx + gw / 2;
+    const lampY = gy + 27;
+    const lampR = Math.min(12, (gw - 12) / 2);
 
-    // Tube background
-    ctx.fillStyle = '#03070f';
-    ctx.beginPath();
-    ctx.roundRect(tubeX, tubeY, tubeW, tubeH, 4);
-    ctx.fill();
-    ctx.strokeStyle = 'rgba(255, 255, 255, 0.12)';
-    ctx.lineWidth = 1;
-    ctx.stroke();
+    const maxGlobal = Math.max(this.cumulativeR, this.cumulativeG, this.cumulativeB, 1);
+    const globalR = Math.round((this.cumulativeR / maxGlobal) * 255);
+    const globalG = Math.round((this.cumulativeG / maxGlobal) * 255);
+    const globalB = Math.round((this.cumulativeB / maxGlobal) * 255);
+    const globalMixColor = (this.cumulativeR === 0 && this.cumulativeG === 0 && this.cumulativeB === 0)
+      ? '#22334d'
+      : `rgb(${globalR}, ${globalG}, ${globalB})`;
 
-    // 3. Fluid column (0 to 35.0 PSI scale)
-    const maxGauge = 35.0;
-    const clampedPressure = Math.min(maxGauge, Math.max(0.0, this.pressure));
-    const fillRatio = clampedPressure / maxGauge;
-    const fillH = tubeH * fillRatio;
-    const fluidTop = tubeBottom - fillH;
-
-    if (fillH > 0) {
-      ctx.save();
-      const grad = ctx.createLinearGradient(0, tubeBottom, 0, fluidTop);
-      if (this.pressure >= 30.0) {
-        // Critical burst zone (30 - 35 PSI)
-        grad.addColorStop(0, '#ffd60a');
-        grad.addColorStop(1, '#ff3b30');
-        ctx.shadowColor = '#ff3b30';
-        ctx.shadowBlur = 12;
-      } else if (this.pressure >= 20.0) {
-        // Warning elevated state
-        grad.addColorStop(0, '#00e5ff');
-        grad.addColorStop(1, '#ffd60a');
-        ctx.shadowColor = '#ffd60a';
-        ctx.shadowBlur = 8;
-      } else {
-        // Nominal cooling state
-        grad.addColorStop(0, '#30d158');
-        grad.addColorStop(1, '#00e5ff');
-      }
-
-      ctx.fillStyle = grad;
-      ctx.beginPath();
-      ctx.roundRect(tubeX + 1, fluidTop, tubeW - 2, fillH, [2, 2, 3, 3]);
-      ctx.fill();
-      ctx.restore();
-    }
-
-    // 4. Tick Marks & Numbers (35 at top, 30 start, 20 warning, 10, 0 at bottom)
-    const y35 = tubeY;
-    const y30 = tubeBottom - (tubeH * (30 / maxGauge));
-    const y20 = tubeBottom - (tubeH * (20 / maxGauge));
-    const y10 = tubeBottom - (tubeH * (10 / maxGauge));
-    const y0 = tubeBottom;
-
-    // Line 35 (Blowout redline limit)
-    ctx.strokeStyle = '#ff3b30';
-    ctx.lineWidth = 2.0;
-    ctx.beginPath();
-    ctx.moveTo(tubeX - 2, y35);
-    ctx.lineTo(tubeX + tubeW + 2, y35);
-    ctx.stroke();
-
-    // Line 30 (Starting pressure level)
-    ctx.strokeStyle = '#ff7f50';
-    ctx.lineWidth = 1.5;
-    ctx.beginPath();
-    ctx.moveTo(tubeX, y30);
-    ctx.lineTo(tubeX + tubeW, y30);
-    ctx.stroke();
-
-    // Line 20 (Warning threshold)
-    ctx.strokeStyle = '#ffd60a';
-    ctx.lineWidth = 1.5;
-    ctx.beginPath();
-    ctx.moveTo(tubeX, y20);
-    ctx.lineTo(tubeX + tubeW, y20);
-    ctx.stroke();
-
-    // Line 10 (Cooling threshold)
-    ctx.strokeStyle = 'rgba(0, 229, 255, 0.5)';
-    ctx.lineWidth = 1;
-    ctx.beginPath();
-    ctx.moveTo(tubeX, y10);
-    ctx.lineTo(tubeX + tubeW, y10);
-    ctx.stroke();
-
-    // Line 0 (Target Goal line)
-    ctx.strokeStyle = '#30d158';
-    ctx.lineWidth = 2;
-    ctx.beginPath();
-    ctx.moveTo(tubeX - 2, y0);
-    ctx.lineTo(tubeX + tubeW + 2, y0);
-    ctx.stroke();
-
-    // Tick labels
-    ctx.font = 'bold 7px sans-serif';
-    ctx.textAlign = 'center';
-
-    // 35 MAX BURST
-    ctx.fillStyle = '#ff3b30';
-    ctx.fillText('35', gx + gw / 2, y35 + 8);
-
-    // 30 START
-    ctx.fillStyle = '#ff7f50';
-    ctx.fillText('30', gx + gw / 2, y30 - 2);
-
-    // 20
-    ctx.fillStyle = '#ffd60a';
-    ctx.fillText('20', gx + gw / 2, y20 - 2);
-
-    // 10
-    ctx.fillStyle = '#00e5ff';
-    ctx.fillText('10', gx + gw / 2, y10 - 2);
-
-    // 0
-    ctx.fillStyle = '#30d158';
-    ctx.fillText('0', gx + gw / 2, y0 - 3);
-
-    // 5. Live Digital Readout at bottom of gauge frame
     ctx.save();
-    if (this.pressure <= 0.0) {
-      ctx.fillStyle = '#30d158';
-      ctx.shadowColor = '#30d158';
-      ctx.shadowBlur = 6;
-      ctx.font = 'bold 8px sans-serif';
-      ctx.textAlign = 'center';
-      ctx.fillText('DEFUSED', gx + gw / 2, gy + gh - 8);
-    } else {
-      ctx.fillStyle = this.pressure >= 30.0 ? '#ff3b30' : (this.pressure >= 20.0 ? '#ffd60a' : '#00e5ff');
-      if (this.pressure >= 30.0) {
-        ctx.shadowColor = '#ff3b30';
+    ctx.shadowColor = globalMixColor;
+    ctx.shadowBlur = 12;
+    ctx.fillStyle = globalMixColor;
+    ctx.beginPath();
+    ctx.arc(lampX, lampY, lampR, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.strokeStyle = '#ffffff';
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
+
+    // Specular highlight on glass lens
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.65)';
+    ctx.beginPath();
+    ctx.arc(lampX - lampR * 0.35, lampY - lampR * 0.35, lampR * 0.35, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
+
+    // 3. Three Vertical Fluid Channels (Red, Green, Blue)
+    const channelsTop = gy + 46;
+    const channelsH = gh - 96;
+    const colW = Math.max(6, Math.floor((gw - 18) / 3));
+    const pad = 3;
+    const totalColsW = colW * 3 + pad * 2;
+    const startX = gx + (gw - totalColsW) / 2;
+
+    const channels = [
+      { key: 'R', count: this.cumulativeR, color: '#ff3b30', bg: 'rgba(255, 59, 48, 0.12)' },
+      { key: 'G', count: this.cumulativeG, color: '#30d158', bg: 'rgba(48, 209, 88, 0.12)' },
+      { key: 'B', count: this.cumulativeB, color: '#00e5ff', bg: 'rgba(0, 229, 255, 0.12)' }
+    ];
+
+    const maxCapacity = Math.max(25, maxGlobal);
+
+    channels.forEach((ch, i) => {
+      const cx = startX + i * (colW + pad);
+      const cy = channelsTop;
+
+      // Channel background slot
+      ctx.fillStyle = ch.bg;
+      ctx.beginPath();
+      ctx.roundRect(cx, cy, colW, channelsH, 3);
+      ctx.fill();
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.08)';
+      ctx.lineWidth = 1;
+      ctx.stroke();
+
+      // Fluid fill level
+      const fillRatio = Math.min(1.0, ch.count / maxCapacity);
+      const fillH = channelsH * fillRatio;
+      const fillY = cy + channelsH - fillH;
+
+      if (fillH > 0) {
+        ctx.save();
+        ctx.fillStyle = ch.color;
+        ctx.shadowColor = ch.color;
         ctx.shadowBlur = 6;
+        ctx.beginPath();
+        ctx.roundRect(cx, fillY, colW, fillH, [0, 0, 3, 3]);
+        ctx.fill();
+        ctx.restore();
       }
+
+      // Channel Letter Label (R, G, B) below column
+      ctx.fillStyle = ch.color;
       ctx.font = 'bold 8px monospace';
       ctx.textAlign = 'center';
-      ctx.fillText(`${this.pressure.toFixed(1)}`, gx + gw / 2, gy + gh - 8);
+      ctx.fillText(ch.key, cx + colW / 2, cy + channelsH + 11);
+
+      // Channel count number
+      ctx.fillStyle = '#ffffff';
+      ctx.font = 'bold 7px monospace';
+      ctx.fillText(`${ch.count}`, cx + colW / 2, cy + channelsH + 20);
+    });
+
+    // 4. Peak Bubble Whiteness Readout at bottom
+    ctx.save();
+    const balanceColor = this.bestBalance >= 90 ? '#ffffff' : (this.bestBalance >= 50 ? '#00e5ff' : '#8b9bb4');
+    ctx.fillStyle = balanceColor;
+    if (this.bestBalance >= 90) {
+      ctx.shadowColor = '#ffffff';
+      ctx.shadowBlur = 8;
     }
+    ctx.font = 'bold 8px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText(`⚪ ${this.bestBalance}%`, gx + gw / 2, gy + gh - 14);
+
+    ctx.font = 'bold 7px sans-serif';
+    ctx.fillStyle = '#8b9bb4';
+    ctx.fillText(`PEAK T${this.bestBalanceTier}`, gx + gw / 2, gy + gh - 4);
     ctx.restore();
 
     ctx.restore();
@@ -1015,6 +1039,7 @@ class AirBubbleGame {
 
   renderBubble(ctx, b) {
     const tierInfo = TIERS[b.tier - 1] || TIERS[0];
+    const colorInfo = this.getBubbleColor(b);
     const isGrid = (this.physics.mode === 'grid');
 
     ctx.save();
@@ -1022,36 +1047,33 @@ class AirBubbleGame {
     ctx.scale(b.wobbleX, b.wobbleY);
 
     if (isGrid) {
-      // 🟦 RENDER n×n SUBDIVIDED GRID BOX
+      // 🟦 RENDER n×n SUBDIVIDED CHROMATIC GRID BOX
       const hw = b.hw;
       const hh = b.hh;
       const r = Math.min(6, b.hw * 0.2);
 
-      // Outer glow for hot (red) / cold (blue) / singularity
-      if (b.tempType === 'hot') {
-        ctx.shadowColor = '#ff453a'; // Vibrant Red
-        ctx.shadowBlur = 14;
-      } else if (b.tempType === 'cold') {
-        ctx.shadowColor = '#00e5ff'; // Vibrant Icy Blue
-        ctx.shadowBlur = 14;
-      } else if (b.isSingularity) {
-        ctx.shadowColor = '#ffd700';
-        ctx.shadowBlur = 20;
+      // Chromatic glow or radiant white halo
+      if (colorInfo.isWhite) {
+        ctx.shadowColor = '#ffffff';
+        ctx.shadowBlur = 22;
+      } else {
+        ctx.shadowColor = colorInfo.glow;
+        ctx.shadowBlur = colorInfo.balance >= 50 ? 16 : 10;
       }
 
-      // Box body
-      ctx.fillStyle = tierInfo.color;
+      // Box body with authentic optical mix
+      ctx.fillStyle = colorInfo.css;
       ctx.beginPath();
       ctx.roundRect(-hw, -hh, b.size, b.size, r);
       ctx.fill();
 
-      // Border: Hot is Red, Cold is Icy Blue, Normal is default
-      ctx.strokeStyle = b.tempType === 'hot' ? '#ff3b30' : (b.tempType === 'cold' ? '#00e5ff' : (tierInfo.border || 'rgba(255,255,255,0.4)'));
-      ctx.lineWidth = b.tempType !== 'normal' ? 3.0 : 1.5;
+      // Border: Glowing white or saturated edge
+      ctx.strokeStyle = colorInfo.border;
+      ctx.lineWidth = colorInfo.isWhite ? 3.0 : 1.8;
       ctx.stroke();
 
       // Inner n×n Sub-grid Lines
-      ctx.strokeStyle = 'rgba(0, 0, 0, 0.18)';
+      ctx.strokeStyle = colorInfo.text === '#ffffff' ? 'rgba(255, 255, 255, 0.18)' : 'rgba(0, 0, 0, 0.18)';
       ctx.lineWidth = 1;
       const subStep = b.size / b.tier;
 
@@ -1069,42 +1091,53 @@ class AirBubbleGame {
         ctx.stroke();
       }
 
-      // Center number badge
-      ctx.fillStyle = tierInfo.text;
+      // Center Tier Number Badge
+      ctx.fillStyle = colorInfo.text;
       ctx.font = `bold ${Math.max(10, Math.min(22, b.size * 0.42))}px -apple-system, sans-serif`;
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
-      ctx.fillText(`${b.tier}`, 0, (b.size >= 36 ? -4 : 0));
+      ctx.fillText(`${b.tier}`, 0, (b.size >= 34 ? -5 : 0));
 
-      // Label below number if large enough
-      if (b.size >= 48) {
-        ctx.font = `bold ${Math.max(8, Math.min(11, b.size * 0.16))}px sans-serif`;
-        ctx.fillText(tierInfo.name, 0, b.size * 0.24);
+      // Chromatic balance % or name below number
+      if (b.size >= 34) {
+        ctx.font = `bold ${Math.max(7, Math.min(10, b.size * 0.17))}px monospace`;
+        if (colorInfo.isWhite) {
+          ctx.fillText('⚪ 100%', 0, b.size * 0.24);
+        } else if (colorInfo.balance > 0) {
+          ctx.fillText(`${colorInfo.balance}%`, 0, b.size * 0.24);
+        } else {
+          ctx.fillText(colorInfo.colorName, 0, b.size * 0.24);
+        }
       }
     } else {
       // ⚪ RENDER CLASSIC CIRCLE
-      if (b.tempType === 'hot') {
-        ctx.shadowColor = '#ff453a';
-        ctx.shadowBlur = 14;
-      } else if (b.tempType === 'cold') {
-        ctx.shadowColor = '#00e5ff';
-        ctx.shadowBlur = 14;
+      if (colorInfo.isWhite) {
+        ctx.shadowColor = '#ffffff';
+        ctx.shadowBlur = 22;
+      } else {
+        ctx.shadowColor = colorInfo.glow;
+        ctx.shadowBlur = 12;
       }
 
-      ctx.fillStyle = tierInfo.color;
+      ctx.fillStyle = colorInfo.css;
       ctx.beginPath();
       ctx.arc(0, 0, b.radius, 0, Math.PI * 2);
       ctx.fill();
 
-      ctx.strokeStyle = b.tempType === 'hot' ? '#ff3b30' : (b.tempType === 'cold' ? '#00e5ff' : 'rgba(255,255,255,0.5)');
-      ctx.lineWidth = b.tempType !== 'normal' ? 3.0 : 2.0;
+      ctx.strokeStyle = colorInfo.border;
+      ctx.lineWidth = colorInfo.isWhite ? 3.0 : 2.0;
       ctx.stroke();
 
-      ctx.fillStyle = tierInfo.text;
-      ctx.font = `bold ${Math.max(10, Math.min(20, b.radius * 0.75))}px sans-serif`;
+      ctx.fillStyle = colorInfo.text;
+      ctx.font = `bold ${Math.max(10, Math.min(20, b.radius * 0.72))}px sans-serif`;
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
-      ctx.fillText(`${b.tier}`, 0, 0);
+      ctx.fillText(`${b.tier}`, 0, (b.radius >= 22 ? -4 : 0));
+
+      if (b.radius >= 22) {
+        ctx.font = `bold ${Math.max(7, Math.min(9, b.radius * 0.3))}px monospace`;
+        ctx.fillText(colorInfo.isWhite ? '⚪ 100%' : `${colorInfo.balance}%`, 0, b.radius * 0.38);
+      }
     }
 
     ctx.restore();
@@ -1218,48 +1251,42 @@ class AirBubbleGame {
 
     // Ready bubble preview floating right over the elongated vent nozzle
     if (this.readyBubble) {
-      const tierInfo = TIERS[this.readyBubble.tier - 1] || TIERS[0];
+      const colorInfo = this.getBubbleColor(this.readyBubble);
 
       ctx.save();
       ctx.translate(lx, py);
-      ctx.globalAlpha = 0.9;
+      ctx.globalAlpha = 0.95;
 
-      // Thermal glow on ready bubble if hot (red) or cold (blue)
-      if (this.readyBubble.tempType === 'hot') {
-        ctx.shadowColor = '#ff453a';
-        ctx.shadowBlur = 14;
-      } else if (this.readyBubble.tempType === 'cold') {
-        ctx.shadowColor = '#00e5ff';
-        ctx.shadowBlur = 14;
-      }
+      ctx.shadowColor = colorInfo.glow;
+      ctx.shadowBlur = 14;
 
       if (this.physics.mode === 'grid') {
         const hw = previewSize / 2;
-        ctx.fillStyle = tierInfo.color;
+        ctx.fillStyle = colorInfo.css;
         ctx.beginPath();
         ctx.roundRect(-hw, -hw, previewSize, previewSize, 4);
         ctx.fill();
 
-        ctx.strokeStyle = this.readyBubble.tempType === 'hot' ? '#ff3b30' : (this.readyBubble.tempType === 'cold' ? '#00e5ff' : '#ffffff');
-        ctx.lineWidth = this.readyBubble.tempType !== 'normal' ? 2.5 : 1.5;
+        ctx.strokeStyle = colorInfo.border;
+        ctx.lineWidth = 2.0;
         ctx.stroke();
 
-        ctx.fillStyle = tierInfo.text;
+        ctx.fillStyle = colorInfo.text;
         ctx.font = 'bold 12px sans-serif';
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
         ctx.fillText(`${this.readyBubble.tier}`, 0, 0);
       } else {
-        ctx.fillStyle = tierInfo.color;
+        ctx.fillStyle = colorInfo.css;
         ctx.beginPath();
         ctx.arc(0, 0, previewSize / 2, 0, Math.PI * 2);
         ctx.fill();
 
-        ctx.strokeStyle = this.readyBubble.tempType === 'hot' ? '#ff3b30' : (this.readyBubble.tempType === 'cold' ? '#00e5ff' : '#ffffff');
-        ctx.lineWidth = this.readyBubble.tempType !== 'normal' ? 2.5 : 1.5;
+        ctx.strokeStyle = colorInfo.border;
+        ctx.lineWidth = 2.0;
         ctx.stroke();
 
-        ctx.fillStyle = tierInfo.text;
+        ctx.fillStyle = colorInfo.text;
         ctx.font = 'bold 12px sans-serif';
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
@@ -1274,41 +1301,34 @@ class AirBubbleGame {
     ctx.clearRect(0, 0, 60, 60);
     if (!this.nextBubble) return;
 
-    const tierInfo = TIERS[this.nextBubble.tier - 1] || TIERS[0];
+    const colorInfo = this.getBubbleColor(this.nextBubble);
     const previewSize = Math.min(36, 12 + this.nextBubble.tier * 5);
     const hw = previewSize / 2;
 
     ctx.save();
     ctx.translate(30, 30);
 
-    // Thermal glow for hot (red) or cold (blue)
-    if (this.nextBubble.tempType === 'hot') {
-      ctx.shadowColor = '#ff453a';
-      ctx.shadowBlur = 10;
-    } else if (this.nextBubble.tempType === 'cold') {
-      ctx.shadowColor = '#00e5ff';
-      ctx.shadowBlur = 10;
-    }
-
-    ctx.fillStyle = tierInfo.color;
+    ctx.shadowColor = colorInfo.glow;
+    ctx.shadowBlur = 10;
+    ctx.fillStyle = colorInfo.css;
 
     if (this.physics.mode === 'grid') {
       ctx.beginPath();
       ctx.roundRect(-hw, -hw, previewSize, previewSize, 3);
       ctx.fill();
-      ctx.strokeStyle = this.nextBubble.tempType === 'hot' ? '#ff3b30' : (this.nextBubble.tempType === 'cold' ? '#00e5ff' : '#ffffff');
-      ctx.lineWidth = this.nextBubble.tempType !== 'normal' ? 2.5 : 1.5;
+      ctx.strokeStyle = colorInfo.border;
+      ctx.lineWidth = 2.0;
       ctx.stroke();
     } else {
       ctx.beginPath();
       ctx.arc(0, 0, hw, 0, Math.PI * 2);
       ctx.fill();
-      ctx.strokeStyle = this.nextBubble.tempType === 'hot' ? '#ff3b30' : (this.nextBubble.tempType === 'cold' ? '#00e5ff' : '#ffffff');
-      ctx.lineWidth = this.nextBubble.tempType !== 'normal' ? 2.5 : 1.5;
+      ctx.strokeStyle = colorInfo.border;
+      ctx.lineWidth = 2.0;
       ctx.stroke();
     }
 
-    ctx.fillStyle = tierInfo.text;
+    ctx.fillStyle = colorInfo.text;
     ctx.font = 'bold 12px sans-serif';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
@@ -1318,20 +1338,31 @@ class AirBubbleGame {
 
   renderEvolutionStrip() {
     const container = document.getElementById('evo-scroll-container');
+    if (!container) return;
     container.innerHTML = '';
-    TIERS.forEach(t => {
+    const evoExamples = [
+      { tier: 1, name: "🔴/🟢/🔵 Primary", color: "#ff3b30", text: "#ffffff" },
+      { tier: 2, name: "🟡/🟣/🔷 Dual Mix", color: "#ffd60a", text: "#060d1b" },
+      { tier: 3, name: "🌈 Tri-Chroma", color: "#c56cf0", text: "#ffffff" },
+      { tier: 4, name: "☀️ Harmonic", color: "#ff9f1a", text: "#060d1b" },
+      { tier: 5, name: "💎 Prism Lumen", color: "#00e5ff", text: "#060d1b" },
+      { tier: 6, name: "🔮 Near-White", color: "#f1f2f6", text: "#060d1b" },
+      { tier: 8, name: "⚪ Solar White", color: "#ffffff", text: "#060d1b" },
+      { tier: 12, name: "☀️ Singularity", color: "#ffffff", text: "#060d1b" }
+    ];
+    evoExamples.forEach(t => {
       const item = document.createElement('div');
       item.className = 'evo-item';
       item.innerHTML = `
-        <div class="evo-badge" style="background:${t.color}; color:${t.text};">${t.tier}</div>
-        <div class="evo-name">${t.tier}×${t.tier} ${t.name}</div>
+        <div class="evo-badge" style="background:${t.color}; color:${t.text}; box-shadow: 0 0 8px ${t.color};">${t.tier}</div>
+        <div class="evo-name">${t.name}</div>
       `;
       container.appendChild(item);
     });
   }
 
   generateQRCode() {
-    const url = `http://192.168.1.225:8085`;
+    const url = `http://192.168.1.225:8086`;
     const label = document.getElementById('qr-url-text');
     if (label) label.textContent = url;
   }
