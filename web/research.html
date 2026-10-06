@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>A.I.r Bubbles — Comprehensive Playtest & Mechanics Research</title>
+  <script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"></script>
+  <style>
+    :root {
+      --background: #070d18;
+      --card: #0d1726;
+      --border: rgba(64, 128, 200, 0.22);
+      --foreground: #f1f5f9;
+      --muted: #94a3b8;
+      --primary: #00e5ff;
+    }
+    body {
+      background: var(--background);
+      color: var(--foreground);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+  </style>
+</head>
+<body class="p-4 md:p-10 min-h-screen">
+  <div class="max-w-4xl mx-auto space-y-8">
+    
+    <!-- Navigation Bar -->
+    <header class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-6 border-b border-[var(--border)]">
+      <div>
+        <div class="flex items-center gap-2 mb-1">
+          <span class="px-2.5 py-0.5 rounded-full text-xs font-bold tracking-wider bg-cyan-500/10 text-cyan-400 border border-cyan-500/30 uppercase">Research Report</span>
+          <span class="text-xs text-[var(--muted)]">Precedents & 21,600 Match Simulations</span>
+        </div>
+        <h1 class="text-2xl sm:text-3xl font-extrabold tracking-tight text-white">A.I.r Bubbles Research Dossier</h1>
+      </div>
+      <div class="flex items-center gap-2">
+        <a href="/" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition">🎮 Back to Game</a>
+        <a href="/presentation.html" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-cyan-500/20 hover:bg-cyan-500/30 text-cyan-300 border border-cyan-500/40 transition">📊 Slide Deck</a>
+      </div>
+    </header>
+
+    <!-- Executive Summary Card -->
+    <div class="p-5 rounded-2xl bg-[#0d1726] border border-cyan-500/30 shadow-lg shadow-cyan-950/20 space-y-3">
+      <div class="flex items-center gap-2 text-cyan-400 font-bold text-sm uppercase tracking-wider">
+        <span>⚡ Executive Summary</span>
+      </div>
+      <p class="text-slate-300 text-sm leading-relaxed">
+        This document consolidates both dimensions of game research for <em>A.I.r Bubbles (n×n Grid Edition)</em>:
+      </p>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs text-slate-300 pt-1">
+        <div class="p-3 rounded-xl bg-slate-900/60 border border-slate-800">
+          <strong class="text-white block mb-1">1. Market & Genre Precedent Analysis</strong>
+          Exploration of games featuring inverted buoyancy, rigid square physical push-out, thermal/pressure defusal gauges, and timing-based squeezes.
+        </div>
+        <div class="p-3 rounded-xl bg-slate-900/60 border border-slate-800">
+          <strong class="text-white block mb-1">2. Empirical Monte-Carlo Simulation</strong>
+          Results from 21,600 simulated matches evaluating 12 spawn ratio profiles across Novice, Competent, and Expert player models.
+        </div>
+      </div>
+    </div>
+
+    <!-- PART 1: GENRE PRECEDENTS -->
+    <section class="space-y-6">
+      <div class="border-b border-slate-800 pb-2">
+        <span class="text-xs uppercase font-bold tracking-widest text-cyan-400">Section 1</span>
+        <h2 class="text-xl font-bold text-white">Genre & Market Precedents Beyond Suika Game</h2>
+      </div>
+
+      <!-- Precedent 1 -->
+      <div class="p-5 rounded-xl bg-[#0a1322] border border-slate-800 space-y-4">
+        <h3 class="text-base font-bold text-cyan-300">1. Inverted Gravity & Upward Buoyancy Physics</h3>
+        <p class="text-sm text-slate-300 leading-relaxed">
+          Standard drop-merge games (<em>Suika Game</em>, <em>Drop7</em>, <em>Fruit Ninja Merge</em>) rely almost exclusively on downward gravity. Upward vertical accumulation is rarely implemented:
+        </p>
+        <ul class="space-y-2 text-xs text-slate-300">
+          <li class="p-2.5 rounded-lg bg-slate-900/80 border border-slate-800">
+            <strong class="text-white">Aqua Rush (Namco, 1999 — Arcade / System 12):</strong> Underwater block puzzle where multi-column bubble clusters rise upward from the seabed toward the surface. Players align columns to clear horizontal lines ("Rushes"). The definitive historical arcade precedent.
+          </li>
+          <li class="p-2.5 rounded-lg bg-slate-900/80 border border-slate-800">
+            <strong class="text-white">Nelly Jellies (MightyBig, 2023/2024 — itch.io / Mobile):</strong> Billed as a "reverse-gravity jelly merge puzzle." Players launch squishy jellies upward from the bottom of an aquarium. Jellies float upward and merge upon contact, hanging down from the surface ceiling.
+          </li>
+          <li class="p-2.5 rounded-lg bg-slate-900/80 border border-slate-800">
+            <strong class="text-white">Puzzle Uo Poko (Cave / Jaleco, 1998 — Arcade):</strong> Submersible firing buoyant bubbles upward with an analog plunger. Popped clusters free buoyant bubbles to rise to the ceiling.
+          </li>
+        </ul>
+      </div>
+
+      <!-- Precedent 2 -->
+      <div class="p-5 rounded-xl bg-[#0a1322] border border-slate-800 space-y-4">
+        <h3 class="text-base font-bold text-cyan-300">2. Square/Box n×n Merge Mechanics with Physical Displacement</h3>
+        <p class="text-sm text-slate-300 leading-relaxed">
+          In circular merge games, objects easily roll off one another. Using rigid squares fundamentally alters the dynamics:
+        </p>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs text-slate-300">
+          <div class="p-3 rounded-lg bg-slate-900/80 border border-slate-800">
+            <strong class="text-white block mb-1">Frictional Locking & Arching</strong>
+            Planar contact edges and 90° vertices form bridges and vertical columns that do not naturally settle into dips without lateral nudges.
+          </div>
+          <div class="p-3 rounded-lg bg-slate-900/80 border border-slate-800">
+            <strong class="text-white block mb-1">Planar Hydraulic Wedge Push-Out</strong>
+            When two n×n squares merge into an (n+1)×(n+1) square, the expanded bounding box exerts direct lateral normal forces on adjacent stacks, violently shoving neighbors aside.
+          </div>
+        </div>
+        <ul class="space-y-2 text-xs text-slate-300">
+          <li class="p-2.5 rounded-lg bg-slate-900/80 border border-slate-800">
+            <strong class="text-white">Chain Cube 2048 3D (Mobile):</strong> Cubes launch and merge with physics impulse, knocking adjacent cubes outward and sideways.
+          </li>
+          <li class="p-2.5 rounded-lg bg-slate-900/80 border border-slate-800">
+            <strong class="text-white">Lumines (Q Entertainment, 2004) & Chime (2010):</strong> Constructing contiguous monochrome 2×2 square blocks that expand across the matrix.
+          </li>
+        </ul>
+      </div>
+
+      <!-- Precedent 3 -->
+      <div class="p-5 rounded-xl bg-[#0a1322] border border-slate-800 space-y-4">
+        <h3 class="text-base font-bold text-cyan-300">3. Temperature / Pressure Resource Gauges & Defusal Win-Condition</h3>
+        <p class="text-sm text-slate-300 leading-relaxed">
+          Standard merge games are passive survival challenges. Introducing an active gauge creates dual-axis tension:
+        </p>
+        <ul class="space-y-2 text-xs text-slate-300">
+          <li class="p-2.5 rounded-lg bg-slate-900/80 border border-slate-800">
+            <strong class="text-white">Magma Reactra (2025/2026):</strong> Molten lava orbs where merging spreads heat, requiring players to manage real-time chamber pressure before catastrophic detonations occur.
+          </li>
+          <li class="p-2.5 rounded-lg bg-slate-900/80 border border-slate-800">
+            <strong class="text-white">Wetrix (Zed Two, 1998 — N64/PC):</strong> Fireballs boil water away to reduce overflow risk; Ice blocks freeze water into un-drainable hazards.
+          </li>
+          <li class="p-2.5 rounded-lg bg-slate-900/80 border border-slate-800">
+            <strong class="text-white">Mr. Driller (Namco, 1999):</strong> Defusal pressure driven by a depleting air gauge (100% → 0%), providing a frantic race against the clock over falling-block physics.
+          </li>
+        </ul>
+      </div>
+
+      <!-- Precedent 4 -->
+      <div class="p-5 rounded-xl bg-[#0a1322] border border-slate-800 space-y-4">
+        <h3 class="text-base font-bold text-cyan-300">4. Timing-Based Squeeze / Dimensional Deformation</h3>
+        <ul class="space-y-2 text-xs text-slate-300">
+          <li class="p-2.5 rounded-lg bg-slate-900/80 border border-slate-800">
+            <strong class="text-white">sobosuba (keepeetron, August 2026):</strong> Drop-merge game with ultra-squishy soft-body blobs that compress and deform under pressure to squeeze through tight gaps.
+          </li>
+          <li class="p-2.5 rounded-lg bg-slate-900/80 border border-slate-800">
+            <strong class="text-white">Jelly Shift (SayGames):</strong> Dynamic aspect-ratio shifting: swiping up makes blocks tall and narrow to slip through vertical slits.
+          </li>
+        </ul>
+      </div>
+
+      <!-- Novelty Table -->
+      <div class="overflow-x-auto rounded-xl border border-slate-800">
+        <table class="w-full text-xs text-left text-slate-300">
+          <thead class="bg-slate-900/80 text-slate-200 border-b border-slate-800">
+            <tr>
+              <th class="p-3">Core Mechanic</th>
+              <th class="p-3">Suika Game</th>
+              <th class="p-3">Aqua Rush</th>
+              <th class="p-3">Chain Cube</th>
+              <th class="p-3">Wetrix</th>
+              <th class="p-3">sobosuba</th>
+              <th class="p-3 text-cyan-400 font-bold">A.I.r Bubbles</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-slate-800/60 bg-[#070d18]">
+            <tr>
+              <td class="p-3 font-medium text-white">Inverted Buoyancy</td>
+              <td class="p-3 text-red-400">❌</td>
+              <td class="p-3 text-green-400">✅</td>
+              <td class="p-3 text-red-400">❌</td>
+              <td class="p-3 text-red-400">❌</td>
+              <td class="p-3 text-red-400">❌</td>
+              <td class="p-3 text-green-400 font-bold">✅</td>
+            </tr>
+            <tr>
+              <td class="p-3 font-medium text-white">Rigid n×n Square Merge</td>
+              <td class="p-3 text-red-400">❌</td>
+              <td class="p-3 text-red-400">❌</td>
+              <td class="p-3 text-green-400">✅</td>
+              <td class="p-3 text-red-400">❌</td>
+              <td class="p-3 text-red-400">❌</td>
+              <td class="p-3 text-green-400 font-bold">✅</td>
+            </tr>
+            <tr>
+              <td class="p-3 font-medium text-white">Planar Physical Push-Out</td>
+              <td class="p-3 text-amber-400">⚠️</td>
+              <td class="p-3 text-red-400">❌</td>
+              <td class="p-3 text-green-400">✅</td>
+              <td class="p-3 text-red-400">❌</td>
+              <td class="p-3 text-green-400">✅</td>
+              <td class="p-3 text-green-400 font-bold">✅</td>
+            </tr>
+            <tr>
+              <td class="p-3 font-medium text-white">Thermal Defusal Gauge (30→0 PSI)</td>
+              <td class="p-3 text-red-400">❌</td>
+              <td class="p-3 text-red-400">❌</td>
+              <td class="p-3 text-red-400">❌</td>
+              <td class="p-3 text-green-400">✅</td>
+              <td class="p-3 text-red-400">❌</td>
+              <td class="p-3 text-green-400 font-bold">✅</td>
+            </tr>
+            <tr>
+              <td class="p-3 font-medium text-white">Timed Squeeze Potential</td>
+              <td class="p-3 text-red-400">❌</td>
+              <td class="p-3 text-red-400">❌</td>
+              <td class="p-3 text-red-400">❌</td>
+              <td class="p-3 text-red-400">❌</td>
+              <td class="p-3 text-green-400">✅</td>
+              <td class="p-3 text-green-400 font-bold">✅</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- PART 2: MONTE CARLO SIMULATION -->
+    <section class="space-y-6">
+      <div class="border-b border-slate-800 pb-2">
+        <span class="text-xs uppercase font-bold tracking-widest text-cyan-400">Section 2</span>
+        <h2 class="text-xl font-bold text-white">Empirical Monte-Carlo Simulation Results (N=21,600)</h2>
+      </div>
+
+      <!-- Mathematical Asymmetry Banner -->
+      <div class="p-4 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-200 text-xs leading-relaxed">
+        <strong class="font-bold text-amber-300 block mb-1">The Critical +5 PSI vs. -30 PSI Structural Asymmetry:</strong>
+        Starting at 30.0 PSI, players only have <strong>+5.0 PSI</strong> of margin before blowout (≥35.0 PSI), but require <strong>-30.0 PSI</strong> of relief to win (≤0.0 PSI). Because the blowout ceiling is 6× tighter than the victory runway, Hot blocks cannot exceed 30% without causing severe 70%+ blowout rates.
+      </div>
+
+      <!-- Simulation Table -->
+      <div class="overflow-x-auto rounded-xl border border-slate-800">
+        <table class="w-full text-xs text-left text-slate-300">
+          <thead class="bg-slate-900/80 text-slate-200 border-b border-slate-800">
+            <tr>
+              <th class="p-3">Profile Name</th>
+              <th class="p-3">Ratio (🔥:❄️:⚪)</th>
+              <th class="p-3">Win Rate</th>
+              <th class="p-3">Blowout Rate</th>
+              <th class="p-3">Avg Launches</th>
+              <th class="p-3">Tension Index</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-slate-800/60 bg-[#070d18]">
+            <tr>
+              <td class="p-3 font-semibold text-white">Zen / Cozy</td>
+              <td class="p-3 font-mono text-cyan-300">1 : 5 : 4</td>
+              <td class="p-3 text-green-400 font-bold">98.8%</td>
+              <td class="p-3 text-slate-400">1.2%</td>
+              <td class="p-3">42.6</td>
+              <td class="p-3 text-slate-400">42.3%</td>
+            </tr>
+            <tr>
+              <td class="p-3 font-semibold text-white">Mainstream Core</td>
+              <td class="p-3 font-mono text-cyan-300">2 : 5 : 3</td>
+              <td class="p-3 text-green-400 font-bold">91.8%</td>
+              <td class="p-3 text-slate-400">6.8%</td>
+              <td class="p-3">51.5</td>
+              <td class="p-3 text-slate-400">46.7%</td>
+            </tr>
+            <tr class="bg-cyan-500/5">
+              <td class="p-3 font-semibold text-cyan-300">Balanced Arcade</td>
+              <td class="p-3 font-mono text-cyan-300">2 : 4 : 4</td>
+              <td class="p-3 text-cyan-400 font-bold">76.8%</td>
+              <td class="p-3 text-amber-400">14.8%</td>
+              <td class="p-3">65.4</td>
+              <td class="p-3 text-cyan-300">52.4%</td>
+            </tr>
+            <tr>
+              <td class="p-3 font-semibold text-white">Speedrun Sprint</td>
+              <td class="p-3 font-mono text-cyan-300">2 : 7 : 1</td>
+              <td class="p-3 text-green-400 font-bold">97.2%</td>
+              <td class="p-3 text-slate-400">2.8%</td>
+              <td class="p-3">33.1</td>
+              <td class="p-3 text-slate-400">45.0%</td>
+            </tr>
+            <tr class="bg-purple-500/5 border-l-2 border-purple-400">
+              <td class="p-3 font-semibold text-purple-300">Dynamic Tension (Active Live)</td>
+              <td class="p-3 font-mono text-purple-300 font-bold">3 : 5 : 2</td>
+              <td class="p-3 text-purple-400 font-bold">72.3%</td>
+              <td class="p-3 text-amber-400">20.3%</td>
+              <td class="p-3">59.5</td>
+              <td class="p-3 text-purple-300 font-bold">55.0%</td>
+            </tr>
+            <tr>
+              <td class="p-3 font-semibold text-white">Bomb Squad (Hardcore)</td>
+              <td class="p-3 font-mono text-cyan-300">3 : 4 : 3</td>
+              <td class="p-3 text-amber-400 font-bold">32.7%</td>
+              <td class="p-3 text-red-400">46.8%</td>
+              <td class="p-3">60.1</td>
+              <td class="p-3 text-amber-300">71.5%</td>
+            </tr>
+            <tr>
+              <td class="p-3 font-semibold text-white">Symmetric Clash</td>
+              <td class="p-3 font-mono text-cyan-300">4 : 4 : 2</td>
+              <td class="p-3 text-red-400 font-bold">9.5%</td>
+              <td class="p-3 text-red-400">74.0%</td>
+              <td class="p-3">50.6</td>
+              <td class="p-3 text-red-300">84.6%</td>
+            </tr>
+            <tr>
+              <td class="p-3 font-semibold text-white">Reactor Meltdown</td>
+              <td class="p-3 font-mono text-cyan-300">5 : 4 : 1</td>
+              <td class="p-3 text-red-400 font-bold">2.3%</td>
+              <td class="p-3 text-red-400">92.3%</td>
+              <td class="p-3">31.2</td>
+              <td class="p-3 text-red-300">93.8%</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Mode Recommendations Cards -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2">
+        <div class="p-4 rounded-xl bg-slate-900 border border-slate-800 space-y-2">
+          <div class="text-xs uppercase font-bold text-green-400">Mode A · Casual Onboarding</div>
+          <div class="text-lg font-extrabold text-white">2 : 5 : 3</div>
+          <p class="text-xs text-slate-400 leading-relaxed">
+            91.8% win rate, 6.8% blowout. Fast-paced, forgiving onboarding experience for touchscreens.
+          </p>
+        </div>
+        <div class="p-4 rounded-xl bg-slate-900 border border-slate-800 space-y-2">
+          <div class="text-xs uppercase font-bold text-cyan-400">Mode B · Standard Arcade</div>
+          <div class="text-lg font-extrabold text-white">2 : 4 : 4</div>
+          <p class="text-xs text-slate-400 leading-relaxed">
+            76.8% win rate, 14.8% blowout. 65 launches allows reaching Tier 6–7 high-value squares safely.
+          </p>
+        </div>
+        <div class="p-4 rounded-xl bg-slate-900 border border-purple-500/40 space-y-2">
+          <div class="text-xs uppercase font-bold text-purple-400">Mode C · Adrenaline (Active)</div>
+          <div class="text-lg font-extrabold text-white">3 : 5 : 2</div>
+          <p class="text-xs text-slate-400 leading-relaxed">
+            72.3% win rate, 20.3% blowout. 55% time in danger zone, requiring active Hot/Cold neutralization.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="pt-8 pb-12 border-t border-slate-800 text-center text-xs text-slate-500 space-y-2">
+      <div>A.I.r Bubbles Research & Design · Continuous Integration</div>
+      <div class="flex justify-center gap-4 text-cyan-400">
+        <a href="/" class="hover:underline">Play Live Game</a>
+        <span>·</span>
+        <a href="/presentation.html" class="hover:underline">Interactive Presentation Deck</a>
+      </div>
+    </footer>
+
+  </div>
+</body>
+</html>

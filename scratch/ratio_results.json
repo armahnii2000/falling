@@ -1,0 +1,314 @@
+{
+  "2:4:4 (Current)": {
+    "novice": {
+      "win_rate": 73.0,
+      "blowout_rate": 17.3,
+      "overflow_rate": 0.0,
+      "avg_blocks": 65.9,
+      "avg_peak_tier": 6.5,
+      "avg_tension": 53.3
+    },
+    "competent": {
+      "win_rate": 76.8,
+      "blowout_rate": 14.8,
+      "overflow_rate": 0.0,
+      "avg_blocks": 65.4,
+      "avg_peak_tier": 6.6,
+      "avg_tension": 52.4
+    },
+    "expert": {
+      "win_rate": 73.3,
+      "blowout_rate": 17.2,
+      "overflow_rate": 0.0,
+      "avg_blocks": 64.6,
+      "avg_peak_tier": 6.5,
+      "avg_tension": 52.8
+    }
+  },
+  "1:5:4 (Gentle)": {
+    "novice": {
+      "win_rate": 98.5,
+      "blowout_rate": 1.5,
+      "overflow_rate": 0.0,
+      "avg_blocks": 42.4,
+      "avg_peak_tier": 6.1,
+      "avg_tension": 42.7
+    },
+    "competent": {
+      "win_rate": 98.8,
+      "blowout_rate": 1.2,
+      "overflow_rate": 0.0,
+      "avg_blocks": 42.6,
+      "avg_peak_tier": 6.2,
+      "avg_tension": 42.3
+    },
+    "expert": {
+      "win_rate": 98.3,
+      "blowout_rate": 1.7,
+      "overflow_rate": 0.0,
+      "avg_blocks": 41.1,
+      "avg_peak_tier": 6.2,
+      "avg_tension": 42.1
+    }
+  },
+  "1.5:4.5:4 (Chill)": {
+    "novice": {
+      "win_rate": 93.5,
+      "blowout_rate": 5.8,
+      "overflow_rate": 0.0,
+      "avg_blocks": 51.5,
+      "avg_peak_tier": 6.2,
+      "avg_tension": 46.1
+    },
+    "competent": {
+      "win_rate": 94.7,
+      "blowout_rate": 4.3,
+      "overflow_rate": 0.0,
+      "avg_blocks": 53.7,
+      "avg_peak_tier": 6.4,
+      "avg_tension": 45.2
+    },
+    "expert": {
+      "win_rate": 93.0,
+      "blowout_rate": 6.3,
+      "overflow_rate": 0.0,
+      "avg_blocks": 53.0,
+      "avg_peak_tier": 6.5,
+      "avg_tension": 46.6
+    }
+  },
+  "2:5:3 (Focused)": {
+    "novice": {
+      "win_rate": 89.3,
+      "blowout_rate": 9.0,
+      "overflow_rate": 0.0,
+      "avg_blocks": 51.7,
+      "avg_peak_tier": 6.2,
+      "avg_tension": 48.3
+    },
+    "competent": {
+      "win_rate": 91.8,
+      "blowout_rate": 6.8,
+      "overflow_rate": 0.0,
+      "avg_blocks": 51.5,
+      "avg_peak_tier": 6.4,
+      "avg_tension": 46.7
+    },
+    "expert": {
+      "win_rate": 91.5,
+      "blowout_rate": 7.7,
+      "overflow_rate": 0.0,
+      "avg_blocks": 49.7,
+      "avg_peak_tier": 6.4,
+      "avg_tension": 47.1
+    }
+  },
+  "2:6:2 (Cool Heavy)": {
+    "novice": {
+      "win_rate": 94.0,
+      "blowout_rate": 5.8,
+      "overflow_rate": 0.0,
+      "avg_blocks": 40.5,
+      "avg_peak_tier": 6.0,
+      "avg_tension": 47.3
+    },
+    "competent": {
+      "win_rate": 95.2,
+      "blowout_rate": 4.8,
+      "overflow_rate": 0.0,
+      "avg_blocks": 40.5,
+      "avg_peak_tier": 6.1,
+      "avg_tension": 45.4
+    },
+    "expert": {
+      "win_rate": 94.0,
+      "blowout_rate": 6.0,
+      "overflow_rate": 0.0,
+      "avg_blocks": 39.8,
+      "avg_peak_tier": 6.1,
+      "avg_tension": 46.0
+    }
+  },
+  "2:7:1 (Previous)": {
+    "novice": {
+      "win_rate": 98.0,
+      "blowout_rate": 2.0,
+      "overflow_rate": 0.0,
+      "avg_blocks": 34.1,
+      "avg_peak_tier": 5.9,
+      "avg_tension": 46.5
+    },
+    "competent": {
+      "win_rate": 97.2,
+      "blowout_rate": 2.8,
+      "overflow_rate": 0.0,
+      "avg_blocks": 33.1,
+      "avg_peak_tier": 6.0,
+      "avg_tension": 45.0
+    },
+    "expert": {
+      "win_rate": 98.0,
+      "blowout_rate": 2.0,
+      "overflow_rate": 0.0,
+      "avg_blocks": 32.8,
+      "avg_peak_tier": 6.0,
+      "avg_tension": 44.2
+    }
+  },
+  "2.5:4.5:3 (Brisk)": {
+    "novice": {
+      "win_rate": 72.3,
+      "blowout_rate": 20.5,
+      "overflow_rate": 0.0,
+      "avg_blocks": 62.4,
+      "avg_peak_tier": 6.4,
+      "avg_tension": 54.9
+    },
+    "competent": {
+      "win_rate": 73.5,
+      "blowout_rate": 18.3,
+      "overflow_rate": 0.0,
+      "avg_blocks": 63.3,
+      "avg_peak_tier": 6.5,
+      "avg_tension": 53.6
+    },
+    "expert": {
+      "win_rate": 73.8,
+      "blowout_rate": 18.7,
+      "overflow_rate": 0.0,
+      "avg_blocks": 62.3,
+      "avg_peak_tier": 6.5,
+      "avg_tension": 53.4
+    }
+  },
+  "3:4:3 (Tense)": {
+    "novice": {
+      "win_rate": 34.8,
+      "blowout_rate": 44.5,
+      "overflow_rate": 0.0,
+      "avg_blocks": 62.5,
+      "avg_peak_tier": 6.2,
+      "avg_tension": 70.2
+    },
+    "competent": {
+      "win_rate": 32.7,
+      "blowout_rate": 46.8,
+      "overflow_rate": 0.0,
+      "avg_blocks": 60.1,
+      "avg_peak_tier": 6.3,
+      "avg_tension": 71.5
+    },
+    "expert": {
+      "win_rate": 34.5,
+      "blowout_rate": 43.0,
+      "overflow_rate": 0.0,
+      "avg_blocks": 64.1,
+      "avg_peak_tier": 6.4,
+      "avg_tension": 68.6
+    }
+  },
+  "3:5:2 (Dynamic)": {
+    "novice": {
+      "win_rate": 65.8,
+      "blowout_rate": 26.5,
+      "overflow_rate": 0.0,
+      "avg_blocks": 56.1,
+      "avg_peak_tier": 6.2,
+      "avg_tension": 59.0
+    },
+    "competent": {
+      "win_rate": 72.3,
+      "blowout_rate": 20.3,
+      "overflow_rate": 0.0,
+      "avg_blocks": 59.5,
+      "avg_peak_tier": 6.4,
+      "avg_tension": 55.0
+    },
+    "expert": {
+      "win_rate": 66.0,
+      "blowout_rate": 27.3,
+      "overflow_rate": 0.0,
+      "avg_blocks": 54.8,
+      "avg_peak_tier": 6.3,
+      "avg_tension": 58.2
+    }
+  },
+  "3.5:4.5:2 (Hardcore)": {
+    "novice": {
+      "win_rate": 36.0,
+      "blowout_rate": 45.5,
+      "overflow_rate": 0.0,
+      "avg_blocks": 61.0,
+      "avg_peak_tier": 6.1,
+      "avg_tension": 70.1
+    },
+    "competent": {
+      "win_rate": 36.7,
+      "blowout_rate": 45.8,
+      "overflow_rate": 0.0,
+      "avg_blocks": 60.0,
+      "avg_peak_tier": 6.2,
+      "avg_tension": 70.0
+    },
+    "expert": {
+      "win_rate": 33.5,
+      "blowout_rate": 47.5,
+      "overflow_rate": 0.0,
+      "avg_blocks": 59.1,
+      "avg_peak_tier": 6.2,
+      "avg_tension": 71.4
+    }
+  },
+  "4:4:2 (Symmetric)": {
+    "novice": {
+      "win_rate": 8.7,
+      "blowout_rate": 78.2,
+      "overflow_rate": 0.0,
+      "avg_blocks": 44.8,
+      "avg_peak_tier": 5.7,
+      "avg_tension": 86.7
+    },
+    "competent": {
+      "win_rate": 9.5,
+      "blowout_rate": 74.0,
+      "overflow_rate": 0.0,
+      "avg_blocks": 50.6,
+      "avg_peak_tier": 6.0,
+      "avg_tension": 84.6
+    },
+    "expert": {
+      "win_rate": 11.3,
+      "blowout_rate": 74.2,
+      "overflow_rate": 0.0,
+      "avg_blocks": 46.9,
+      "avg_peak_tier": 5.9,
+      "avg_tension": 84.9
+    }
+  },
+  "5:4:1 (Meltdown)": {
+    "novice": {
+      "win_rate": 1.8,
+      "blowout_rate": 93.0,
+      "overflow_rate": 0.0,
+      "avg_blocks": 30.5,
+      "avg_peak_tier": 5.2,
+      "avg_tension": 94.7
+    },
+    "competent": {
+      "win_rate": 2.3,
+      "blowout_rate": 92.3,
+      "overflow_rate": 0.0,
+      "avg_blocks": 31.1,
+      "avg_peak_tier": 5.4,
+      "avg_tension": 94.2
+    },
+    "expert": {
+      "win_rate": 1.3,
+      "blowout_rate": 93.5,
+      "overflow_rate": 0.0,
+      "avg_blocks": 29.0,
+      "avg_peak_tier": 5.4,
+      "avg_tension": 95.5
+    }
+  }
+}

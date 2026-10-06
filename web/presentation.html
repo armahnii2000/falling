@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>A.I.r Bubbles — Gameplay Ratio Findings & Design Presentation</title>
+  <script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"></script>
+  <style>
+    :root {
+      --background: #070d18;
+      --card: #0d1726;
+      --border: rgba(64, 128, 200, 0.22);
+      --foreground: #f1f5f9;
+      --muted-foreground: #94a3b8;
+      --primary: #00e5ff;
+      --danger: #ff453a;
+      --warning: #ffd60a;
+      --success: #30d158;
+    }
+    body {
+      background: var(--background);
+      color: var(--foreground);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+    .slide { display: none; }
+    .slide.active { display: block; animation: fadeIn 0.25s ease-out; }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body class="p-4 md:p-8 min-h-screen flex flex-col justify-between">
+
+  <!-- Header & Navigation -->
+  <header class="max-w-5xl mx-auto w-full mb-6">
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-[var(--border)] pb-4">
+      <div>
+        <div class="flex items-center gap-2">
+          <span class="px-2.5 py-0.5 rounded-full text-xs font-bold tracking-wider bg-cyan-500/10 text-cyan-400 border border-cyan-500/30 uppercase">Empirical Study</span>
+          <span class="text-xs text-[var(--muted-foreground)]">21,600 Simulated Matches</span>
+        </div>
+        <h1 class="text-2xl md:text-3xl font-extrabold tracking-tight mt-1 text-white">
+          A.I.r Bubbles: Temperature Ratio Balancing
+        </h1>
+        <p class="text-sm text-[var(--muted-foreground)]">Finding the optimal Hot : Cold : Normal ratios for distinct game modes</p>
+      </div>
+
+      <!-- Slide Nav Tabs -->
+      <nav class="flex items-center gap-1.5 bg-[#0a1322] p-1.5 rounded-xl border border-[var(--border)]">
+        <button onclick="goToSlide(0)" class="tab-btn px-3 py-1.5 rounded-lg text-xs font-semibold transition-all bg-cyan-500/20 text-cyan-300" id="tab-0">1. Core Asymmetry</button>
+        <button onclick="goToSlide(1)" class="tab-btn px-3 py-1.5 rounded-lg text-xs font-semibold transition-all text-slate-400 hover:text-white" id="tab-1">2. Ratio Explorer</button>
+        <button onclick="goToSlide(2)" class="tab-btn px-3 py-1.5 rounded-lg text-xs font-semibold transition-all text-slate-400 hover:text-white" id="tab-2">3. Recommended Modes</button>
+        <button onclick="goToSlide(3)" class="tab-btn px-3 py-1.5 rounded-lg text-xs font-semibold transition-all text-slate-400 hover:text-white" id="tab-3">4. Dynamic DDA</button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Slide Container -->
+  <main class="max-w-5xl mx-auto w-full flex-1">
+
+    <!-- SLIDE 1: THE CORE ASYMMETRY -->
+    <section class="slide active" id="slide-0">
+      <div class="grid md:grid-cols-12 gap-6 items-stretch">
+        
+        <!-- Left: The Math Dilemma -->
+        <div class="md:col-span-7 bg-[var(--card)] border border-[var(--border)] rounded-2xl p-6 flex flex-col justify-between">
+          <div>
+            <div class="text-xs font-bold uppercase tracking-wider text-amber-400 mb-1">Key Theoretical Finding</div>
+            <h2 class="text-xl font-bold text-white mb-3">The $+5\text{ PSI}$ vs. $-30\text{ PSI}$ Asymmetry</h2>
+            <p class="text-sm text-[var(--muted-foreground)] leading-relaxed mb-4">
+              In our reversed defusal mechanics, victory and defeat have wildly unequal buffer margins:
+            </p>
+
+            <div class="space-y-3 mb-6">
+              <div class="p-3.5 rounded-xl bg-red-950/20 border border-red-500/30 flex items-center justify-between">
+                <div>
+                  <div class="text-xs font-bold text-red-400 uppercase">Defeat Buffer (Meltdown Headroom)</div>
+                  <div class="text-sm font-semibold text-white">Starting 30.0 PSI → 35.0 PSI Rupture</div>
+                </div>
+                <div class="text-xl font-black text-red-400">+5.0 PSI <span class="text-xs font-normal text-slate-400">(Razor Thin!)</span></div>
+              </div>
+
+              <div class="p-3.5 rounded-xl bg-cyan-950/20 border border-cyan-500/30 flex items-center justify-between">
+                <div>
+                  <div class="text-xs font-bold text-cyan-400 uppercase">Victory Distance (Defusal Target)</div>
+                  <div class="text-sm font-semibold text-white">Starting 30.0 PSI → 0.0 PSI Stabilized</div>
+                </div>
+                <div class="text-xl font-black text-cyan-400">-30.0 PSI <span class="text-xs font-normal text-slate-400">(6× Larger Gap!)</span></div>
+              </div>
+            </div>
+
+            <div class="p-4 rounded-xl bg-slate-900/60 border border-slate-800 text-xs text-slate-300 leading-relaxed">
+              💡 <strong>Why 1:1 Ratios Break:</strong> Because the rupture buffer is $6\times$ narrower than the defusal target, a symmetric 50/50 or 40/40 ratio results in a <strong>74%–93% blowout rate</strong>. Hot blocks must always remain a strictly controlled minority.
+            </div>
+          </div>
+
+          <div class="mt-6 pt-4 border-t border-slate-800 flex items-center justify-between text-xs text-slate-400">
+            <span>Simulation Sample: 21,600 games</span>
+            <button onclick="goToSlide(1)" class="px-3.5 py-1.5 rounded-lg bg-cyan-500 text-slate-950 font-bold hover:bg-cyan-400 transition-colors">
+              Next: Test Ratios →
+            </button>
+          </div>
+        </div>
+
+        <!-- Right: Visual Danger Tube Representation -->
+        <div class="md:col-span-5 bg-[var(--card)] border border-[var(--border)] rounded-2xl p-6 flex flex-col justify-between">
+          <div>
+            <h3 class="text-sm font-bold text-white uppercase tracking-wider mb-2">Pressure Column Physics</h3>
+            <p class="text-xs text-[var(--muted-foreground)] mb-4">Starting state leaves room for only 1 or 2 unchecked Hot merges before explosion:</p>
+
+            <div class="relative h-64 bg-slate-950 rounded-xl border border-slate-800 flex overflow-hidden p-2">
+              <div class="w-16 h-full bg-slate-900 rounded-lg relative flex flex-col justify-between p-1.5 border border-slate-700/50">
+                <!-- 35 PSI Line -->
+                <div class="w-full h-1 bg-red-500 shadow-[0_0_8px_#ff453a] flex items-center justify-end"></div>
+                <!-- 30 PSI Line -->
+                <div class="w-full h-0.5 bg-amber-400 flex items-center justify-end my-auto" style="top: 14%; position: absolute; left: 0; width: 100%;"></div>
+                <!-- Liquid Fill -->
+                <div class="w-full bg-gradient-to-t from-cyan-500 via-amber-500 to-red-500 rounded-b" style="height: 85.7%; position: absolute; bottom: 0; left: 0; right: 0; opacity: 0.85;"></div>
+                <!-- 0 PSI Line -->
+                <div class="w-full h-1 bg-emerald-500 z-10"></div>
+              </div>
+
+              <!-- Markers -->
+              <div class="flex-1 pl-4 flex flex-col justify-between text-xs py-1">
+                <div class="text-red-400 font-bold">35 PSI: Catastrophic Rupture</div>
+                <div class="text-amber-300 font-semibold text-[11px] -mt-10">30 PSI: Initial Start State (+5 margin)</div>
+                <div class="text-slate-400 text-[11px]">20 PSI: Warning Threshold</div>
+                <div class="text-cyan-400 text-[11px]">10 PSI: Cooling Phase</div>
+                <div class="text-emerald-400 font-bold">0 PSI: Core Defused (Target)</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="mt-4 text-[11px] text-slate-400 italic text-center">
+            Merging two Tier 2 Hot blocks adds +4.0 PSI — nearly causing instant meltdown from start!
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- SLIDE 2: INTERACTIVE RATIO EXPLORER -->
+    <section class="slide" id="slide-1">
+      <div class="bg-[var(--card)] border border-[var(--border)] rounded-2xl p-6">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-2 mb-6">
+          <div>
+            <h2 class="text-xl font-bold text-white">Interactive Empirical Ratio Explorer</h2>
+            <p class="text-xs text-[var(--muted-foreground)]">Select a ratio profile below to inspect empirical win rates, pacing, and tension from 600-run trials:</p>
+          </div>
+          <span class="text-xs px-3 py-1 rounded-full bg-slate-800 text-slate-300 font-mono">Model: Competent Player</span>
+        </div>
+
+        <!-- Ratio Selection Grid -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-2.5 mb-6">
+          <button onclick="selectProfile('current')" class="profile-btn active text-left p-3 rounded-xl border border-cyan-500/50 bg-cyan-950/20 transition-all hover:border-cyan-400" id="btn-current">
+            <div class="text-xs font-bold text-cyan-400 uppercase">2 : 4 : 4 (Current)</div>
+            <div class="text-sm font-semibold text-white mt-0.5">Balanced Arcade</div>
+            <div class="text-[11px] text-slate-400 mt-1">20% Hot · 40% Cold · 40% Norm</div>
+          </button>
+
+          <button onclick="selectProfile('zen')" class="profile-btn text-left p-3 rounded-xl border border-slate-800 bg-slate-900/40 transition-all hover:border-slate-700" id="btn-zen">
+            <div class="text-xs font-bold text-emerald-400 uppercase">1 : 5 : 4 (Cozy)</div>
+            <div class="text-sm font-semibold text-white mt-0.5">Zen Puzzler</div>
+            <div class="text-[11px] text-slate-400 mt-1">10% Hot · 50% Cold · 40% Norm</div>
+          </button>
+
+          <button onclick="selectProfile('core')" class="profile-btn text-left p-3 rounded-xl border border-slate-800 bg-slate-900/40 transition-all hover:border-slate-700" id="btn-core">
+            <div class="text-xs font-bold text-blue-400 uppercase">2 : 5 : 3 (Focused)</div>
+            <div class="text-sm font-semibold text-white mt-0.5">Mainstream Core</div>
+            <div class="text-[11px] text-slate-400 mt-1">20% Hot · 50% Cold · 30% Norm</div>
+          </button>
+
+          <button onclick="selectProfile('tension')" class="profile-btn text-left p-3 rounded-xl border border-slate-800 bg-slate-900/40 transition-all hover:border-slate-700" id="btn-tension">
+            <div class="text-xs font-bold text-amber-400 uppercase">3 : 5 : 2 (Dynamic)</div>
+            <div class="text-sm font-semibold text-white mt-0.5">High Tension</div>
+            <div class="text-[11px] text-slate-400 mt-1">30% Hot · 50% Cold · 20% Norm</div>
+          </button>
+
+          <button onclick="selectProfile('speed')" class="profile-btn text-left p-3 rounded-xl border border-slate-800 bg-slate-900/40 transition-all hover:border-slate-700" id="btn-speed">
+            <div class="text-xs font-bold text-teal-400 uppercase">2 : 7 : 1 (Rapid)</div>
+            <div class="text-sm font-semibold text-white mt-0.5">Speedrun Sprint</div>
+            <div class="text-[11px] text-slate-400 mt-1">20% Hot · 70% Cold · 10% Norm</div>
+          </button>
+
+          <button onclick="selectProfile('bomb')" class="profile-btn text-left p-3 rounded-xl border border-slate-800 bg-slate-900/40 transition-all hover:border-slate-700" id="btn-bomb">
+            <div class="text-xs font-bold text-orange-400 uppercase">3 : 4 : 3 (Hardcore)</div>
+            <div class="text-sm font-semibold text-white mt-0.5">Bomb Squad</div>
+            <div class="text-[11px] text-slate-400 mt-1">30% Hot · 40% Cold · 30% Norm</div>
+          </button>
+
+          <button onclick="selectProfile('clash')" class="profile-btn text-left p-3 rounded-xl border border-slate-800 bg-slate-900/40 transition-all hover:border-slate-700" id="btn-clash">
+            <div class="text-xs font-bold text-red-400 uppercase">4 : 4 : 2 (Lethal)</div>
+            <div class="text-sm font-semibold text-white mt-0.5">Symmetric Clash</div>
+            <div class="text-[11px] text-slate-400 mt-1">40% Hot · 40% Cold · 20% Norm</div>
+          </button>
+
+          <button onclick="selectProfile('meltdown')" class="profile-btn text-left p-3 rounded-xl border border-slate-800 bg-slate-900/40 transition-all hover:border-slate-700" id="btn-meltdown">
+            <div class="text-xs font-bold text-rose-500 uppercase">5 : 4 : 1 (Chaos)</div>
+            <div class="text-sm font-semibold text-white mt-0.5">Reactor Meltdown</div>
+            <div class="text-[11px] text-slate-400 mt-1">50% Hot · 40% Cold · 10% Norm</div>
+          </button>
+        </div>
+
+        <!-- Dynamic Data Display Cards -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 p-5 rounded-xl bg-slate-950/60 border border-slate-800">
+          <div>
+            <div class="text-xs text-[var(--muted-foreground)] font-semibold uppercase">Win Rate (Defused)</div>
+            <div class="text-2xl font-black text-emerald-400 mt-1" id="stat-win">76.8%</div>
+            <div class="w-full bg-slate-800 h-1.5 rounded-full mt-2 overflow-hidden">
+              <div id="bar-win" class="bg-emerald-500 h-full" style="width: 76.8%"></div>
+            </div>
+          </div>
+
+          <div>
+            <div class="text-xs text-[var(--muted-foreground)] font-semibold uppercase">Blowout Rupture Rate</div>
+            <div class="text-2xl font-black text-red-400 mt-1" id="stat-blowout">14.8%</div>
+            <div class="w-full bg-slate-800 h-1.5 rounded-full mt-2 overflow-hidden">
+              <div id="bar-blowout" class="bg-red-500 h-full" style="width: 14.8%"></div>
+            </div>
+          </div>
+
+          <div>
+            <div class="text-xs text-[var(--muted-foreground)] font-semibold uppercase">Pacing (Avg Launches)</div>
+            <div class="text-2xl font-black text-cyan-300 mt-1" id="stat-blocks">65.4 blks</div>
+            <div class="text-xs text-slate-400 mt-1.5" id="stat-tier">Peak Tier: 6.6 (Dark Fiber)</div>
+          </div>
+
+          <div>
+            <div class="text-xs text-[var(--muted-foreground)] font-semibold uppercase">Tension (% Time ≥20 PSI)</div>
+            <div class="text-2xl font-black text-amber-400 mt-1" id="stat-tension">52.4%</div>
+            <div class="text-xs text-slate-400 mt-1.5" id="stat-feel">Balanced Thrill</div>
+          </div>
+        </div>
+
+        <!-- Analysis Text -->
+        <div class="mt-4 p-4 rounded-xl bg-slate-900/40 border border-slate-800/80 text-xs text-slate-300 leading-relaxed" id="stat-desc">
+          <strong>Design Verdict:</strong> 2:4:4 is the sweet spot for a classic arcade feel. Players win approximately 3 out of 4 rounds, but the 15% blowout rate keeps players actively paying attention to red hazard placement. Games last ~65 blocks, providing ample opportunity to build 6×6 and 7×7 giant squares.
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 3: RECOMMENDED MODES -->
+    <section class="slide" id="slide-2">
+      <div class="bg-[var(--card)] border border-[var(--border)] rounded-2xl p-6">
+        <h2 class="text-xl font-bold text-white mb-2">Recommended Mode Archetypes</h2>
+        <p class="text-xs text-[var(--muted-foreground)] mb-6">How different ratios can be mapped directly to distinct game modes or difficulty options:</p>
+
+        <div class="grid md:grid-cols-3 gap-4">
+          
+          <!-- Card 1: Casual / Mobile -->
+          <div class="p-5 rounded-xl bg-[#091526] border border-cyan-500/20 flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-xs font-bold px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300">CASUAL / MOBILE</span>
+                <span class="text-xs font-mono font-bold text-cyan-300">2 : 5 : 3</span>
+              </div>
+              <h3 class="text-base font-bold text-white mb-2">"Cozy Cooling" Mode</h3>
+              <p class="text-xs text-[var(--muted-foreground)] leading-relaxed mb-4">
+                Red hazards are present (20%), but cold coolant is generous (50%). Games resolve smoothly in ~50 blocks with only a 6.8% blowout rate.
+              </p>
+              <ul class="text-xs text-slate-300 space-y-1 mb-4">
+                <li>• <strong>Win Rate:</strong> 91.8%</li>
+                <li>• <strong>Game Length:</strong> ~51 blocks</li>
+                <li>• <strong>Best For:</strong> Commuters, quick mobile play</li>
+              </ul>
+            </div>
+            <div class="text-[11px] text-cyan-400 font-semibold border-t border-slate-800 pt-3">
+              Low frustration · Gentle ramp-up
+            </div>
+          </div>
+
+          <!-- Card 2: Standard Arcade (Current) -->
+          <div class="p-5 rounded-xl bg-[#0b172a] border border-cyan-500/50 shadow-[0_0_15px_rgba(0,229,255,0.08)] flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-xs font-bold px-2 py-0.5 rounded bg-cyan-500/20 text-cyan-300">DEFAULT / ARCADE</span>
+                <span class="text-xs font-mono font-bold text-cyan-300">2 : 4 : 4</span>
+              </div>
+              <h3 class="text-base font-bold text-white mb-2">"Core Defusal" (Current)</h3>
+              <p class="text-xs text-[var(--muted-foreground)] leading-relaxed mb-4">
+                The golden balance. 1 in 6 games end in a catastrophic meltdown if you neglect a red block, but players succeed 77% of the time with smart pairing.
+              </p>
+              <ul class="text-xs text-slate-300 space-y-1 mb-4">
+                <li>• <strong>Win Rate:</strong> 76.8%</li>
+                <li>• <strong>Game Length:</strong> ~65 blocks</li>
+                <li>• <strong>Best For:</strong> Main desktop & competitive play</li>
+              </ul>
+            </div>
+            <div class="text-[11px] text-cyan-300 font-semibold border-t border-slate-800 pt-3">
+              High replayability · Satisfying stakes
+            </div>
+          </div>
+
+          <!-- Card 3: Hardcore / Bomb Squad -->
+          <div class="p-5 rounded-xl bg-[#140f1a] border border-amber-500/30 flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-xs font-bold px-2 py-0.5 rounded bg-amber-500/20 text-amber-300">CHALLENGE MODE</span>
+                <span class="text-xs font-mono font-bold text-amber-300">3 : 5 : 2</span>
+              </div>
+              <h3 class="text-base font-bold text-white mb-2">"Bomb Squad" Mode</h3>
+              <p class="text-xs text-[var(--muted-foreground)] leading-relaxed mb-4">
+                Hot blocks occur 30% of the time. The player spends 55% of the round in the flashing warning zone, constantly defusing red clusters.
+              </p>
+              <ul class="text-xs text-slate-300 space-y-1 mb-4">
+                <li>• <strong>Win Rate:</strong> 72.3%</li>
+                <li>• <strong>Danger Ratio:</strong> 55% time ≥ 20 PSI</li>
+                <li>• <strong>Best For:</strong> Advanced players seeking adrenaline</li>
+              </ul>
+            </div>
+            <div class="text-[11px] text-amber-400 font-semibold border-t border-slate-800 pt-3">
+              Adrenaline rush · Requires active neutralization
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 4: DYNAMIC DIFFICULTY ADJUSTMENT (DDA) -->
+    <section class="slide" id="slide-3">
+      <div class="bg-[var(--card)] border border-[var(--border)] rounded-2xl p-6">
+        <h2 class="text-xl font-bold text-white mb-2">Next Evolution: Dynamic Adaptive Ratios (DDA)</h2>
+        <p class="text-xs text-[var(--muted-foreground)] mb-6">
+          Instead of keeping the spawn ratio static throughout the whole match, the engine can adaptively shift based on current reactor pressure:
+        </p>
+
+        <div class="space-y-4">
+          <!-- State 1: Critical Emergency -->
+          <div class="p-4 rounded-xl bg-red-950/20 border border-red-500/30 flex flex-col md:flex-row md:items-center justify-between gap-3">
+            <div>
+              <div class="text-xs font-bold text-red-400 uppercase tracking-wider">State A: Near-Meltdown Emergency (Pressure ≥ 31.0 PSI)</div>
+              <div class="text-sm font-semibold text-white mt-0.5">Shift to Emergency Coolant Reserve: <span class="text-cyan-300 font-mono">1 Hot : 6 Cold : 3 Norm</span></div>
+              <p class="text-xs text-slate-400 mt-1">Prevents arbitrary instant loss on bad RNG rolls, giving the player an active lifeline to claw their way back.</p>
+            </div>
+            <span class="px-3 py-1 rounded-full text-xs font-bold bg-red-500/20 text-red-300 border border-red-500/40 text-center">Clutch Recovery</span>
+          </div>
+
+          <!-- State 2: Nominal Cruising -->
+          <div class="p-4 rounded-xl bg-cyan-950/20 border border-cyan-500/30 flex flex-col md:flex-row md:items-center justify-between gap-3">
+            <div>
+              <div class="text-xs font-bold text-cyan-400 uppercase tracking-wider">State B: Nominal Operating Zone (12.0 – 30.0 PSI)</div>
+              <div class="text-sm font-semibold text-white mt-0.5">Maintain Standard Arcade Defusal: <span class="text-cyan-300 font-mono">2 Hot : 4 Cold : 4 Norm</span></div>
+              <p class="text-xs text-slate-400 mt-1">Natural flow state. Regular stacking, push-out cascades, and steady depressurization.</p>
+            </div>
+            <span class="px-3 py-1 rounded-full text-xs font-bold bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 text-center">Core Gameplay</span>
+          </div>
+
+          <!-- State 3: Last-Gasp Heat Surge -->
+          <div class="p-4 rounded-xl bg-amber-950/20 border border-amber-500/30 flex flex-col md:flex-row md:items-center justify-between gap-3">
+            <div>
+              <div class="text-xs font-bold text-amber-400 uppercase tracking-wider">State C: Final Depressurization Sprint (Pressure ≤ 8.0 PSI)</div>
+              <div class="text-sm font-semibold text-white mt-0.5">Shift to Resistance Heat Surge: <span class="text-amber-300 font-mono">3 Hot : 4 Cold : 3 Norm</span></div>
+              <p class="text-xs text-slate-400 mt-1">As you close in on victory, the core violently vents thermal pockets, preventing a boring runaway cruise to the finish line.</p>
+            </div>
+            <span class="px-3 py-1 rounded-full text-xs font-bold bg-amber-500/20 text-amber-300 border border-amber-500/40 text-center">Climactic Finish</span>
+          </div>
+        </div>
+
+        <div class="mt-6 p-4 rounded-xl bg-slate-900 border border-slate-800 flex items-center justify-between">
+          <div class="text-xs text-slate-300">
+            <strong>Summary:</strong> Static 2:4:4 delivers an excellent baseline. Adaptive DDA elevates it into an elastic, dramatic narrative arc.
+          </div>
+          <button onclick="goToSlide(0)" class="px-3.5 py-1.5 rounded-lg bg-slate-800 text-slate-200 text-xs font-bold hover:bg-slate-700 transition-colors">
+            ↺ Restart Deck
+          </button>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer Pagination -->
+  <footer class="max-w-5xl mx-auto w-full mt-6 pt-4 border-t border-[var(--border)] flex items-center justify-between text-xs text-slate-400">
+    <div class="flex items-center gap-2">
+      <span id="slide-indicator">Slide 1 of 4</span>
+      <span class="text-slate-600">·</span>
+      <span>A.I.r Bubbles Game Engine Report</span>
+    </div>
+    <div class="flex items-center gap-2">
+      <button onclick="prevSlide()" class="px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-800 hover:border-slate-700 text-white font-semibold transition-colors" id="btn-prev">← Prev</button>
+      <button onclick="nextSlide()" class="px-3 py-1.5 rounded-lg bg-cyan-500 text-slate-950 hover:bg-cyan-400 font-bold transition-colors" id="btn-next">Next →</button>
+    </div>
+  </footer>
+
+  <!-- Script for Tab Switching & Explorer Logic -->
+  <script>
+    let currentSlide = 0;
+    const totalSlides = 4;
+
+    function goToSlide(index) {
+      currentSlide = index;
+      document.querySelectorAll('.slide').forEach((s, i) => {
+        s.classList.toggle('active', i === index);
+      });
+      document.querySelectorAll('.tab-btn').forEach((b, i) => {
+        if (i === index) {
+          b.className = 'tab-btn px-3 py-1.5 rounded-lg text-xs font-semibold transition-all bg-cyan-500/20 text-cyan-300';
+        } else {
+          b.className = 'tab-btn px-3 py-1.5 rounded-lg text-xs font-semibold transition-all text-slate-400 hover:text-white';
+        }
+      });
+      document.getElementById('slide-indicator').textContent = `Slide ${index + 1} of ${totalSlides}`;
+      document.getElementById('btn-prev').disabled = (index === 0);
+      document.getElementById('btn-prev').style.opacity = (index === 0) ? '0.4' : '1';
+    }
+
+    function nextSlide() {
+      if (currentSlide < totalSlides - 1) goToSlide(currentSlide + 1);
+    }
+
+    function prevSlide() {
+      if (currentSlide > 0) goToSlide(currentSlide - 1);
+    }
+
+    // Ratio Explorer Data
+    const profiles = {
+      current: {
+        win: "76.8%",
+        blowout: "14.8%",
+        blocks: "65.4 blks",
+        tier: "Peak Tier: 6.6 (Dark Fiber)",
+        tension: "52.4%",
+        feel: "Balanced Arcade Thrill",
+        desc: "<strong>Design Verdict:</strong> 2:4:4 is the sweet spot for balanced arcade play. Players win ~3 out of 4 rounds, but the 15% blowout rate keeps players actively paying attention to red hazard placement. Games last ~65 blocks, providing ample opportunity to build 6×6 and 7×7 giant squares."
+      },
+      zen: {
+        win: "98.8%",
+        blowout: "1.2%",
+        blocks: "42.6 blks",
+        tier: "Peak Tier: 6.2 (Diesel Gen)",
+        tension: "42.3%",
+        feel: "Very Relaxed / Cozy",
+        desc: "<strong>Design Verdict:</strong> 1:5:4 removes almost all fear of sudden death. Blowouts drop to 1.2%, making it an ideal cozy puzzle mode where players can admire the buoyant push-out physics without penalty."
+      },
+      core: {
+        win: "91.8%",
+        blowout: "6.8%",
+        blocks: "51.5 blks",
+        tier: "Peak Tier: 6.4 (Dark Fiber)",
+        tension: "46.7%",
+        feel: "Comfortable Flow",
+        desc: "<strong>Design Verdict:</strong> 2:5:3 is the premier candidate for mobile onboarding. A 92% win rate provides a rewarding sense of competence, and ~51 blocks feels brisk and bite-sized."
+      },
+      tension: {
+        win: "72.3%",
+        blowout: "20.3%",
+        blocks: "59.5 blks",
+        tier: "Peak Tier: 6.4 (Dark Fiber)",
+        tension: "55.0%",
+        feel: "High Adrenaline",
+        desc: "<strong>Design Verdict:</strong> 3:5:2 elevates pressure while keeping cold blocks plentiful enough to recover. A 20% blowout rate rewards players who deliberately pair red and blue blocks to neutralize heat."
+      },
+      speed: {
+        win: "97.2%",
+        blowout: "2.8%",
+        blocks: "33.1 blks",
+        tier: "Peak Tier: 6.0 (Diesel Gen)",
+        tension: "45.0%",
+        feel: "Ultra-Fast Resolution",
+        desc: "<strong>Design Verdict:</strong> 2:7:1 resolves very quickly (33 launches). With 70% coolant, pressure plunges rapidly, making it perfect for rapid-fire time trials."
+      },
+      bomb: {
+        win: "32.7%",
+        blowout: "46.8%",
+        blocks: "60.1 blks",
+        tier: "Peak Tier: 6.3 (Diesel Gen)",
+        tension: "71.5%",
+        feel: "Intense Bomb Squad",
+        desc: "<strong>Design Verdict:</strong> 3:4:3 drops the win rate to 33%, with nearly half of games blowing up. Over 70% of the match is spent in the warning threshold. Designed for expert players."
+      },
+      clash: {
+        win: "9.5%",
+        blowout: "74.0%",
+        blocks: "50.6 blks",
+        tier: "Peak Tier: 6.0 (Diesel Gen)",
+        tension: "84.6%",
+        feel: "Extreme Hazard",
+        desc: "<strong>Design Verdict:</strong> 4:4:2 demonstrates why 1:1 symmetry fails. Despite equal hot and cold spawns, the small +5 PSI blowout buffer leads to a 74% meltdown rate."
+      },
+      meltdown: {
+        win: "2.3%",
+        blowout: "92.3%",
+        blocks: "31.2 blks",
+        tier: "Peak Tier: 5.3 (Server)",
+        tension: "93.8%",
+        feel: "Near-Impossible",
+        desc: "<strong>Design Verdict:</strong> 5:4:1 causes immediate reactor meltdown in over 92% of matches within 30 blocks. Functions only as a survival challenge or penalty state."
+      }
+    };
+
+    function selectProfile(key) {
+      document.querySelectorAll('.profile-btn').forEach(b => {
+        b.className = 'profile-btn text-left p-3 rounded-xl border border-slate-800 bg-slate-900/40 transition-all hover:border-slate-700';
+      });
+      document.getElementById('btn-' + key).className = 'profile-btn active text-left p-3 rounded-xl border border-cyan-500/50 bg-cyan-950/20 transition-all hover:border-cyan-400';
+
+      const p = profiles[key];
+      document.getElementById('stat-win').textContent = p.win;
+      document.getElementById('bar-win').style.width = p.win;
+      document.getElementById('stat-blowout').textContent = p.blowout;
+      document.getElementById('bar-blowout').style.width = p.blowout;
+      document.getElementById('stat-blocks').textContent = p.blocks;
+      document.getElementById('stat-tier').textContent = p.tier;
+      document.getElementById('stat-tension').textContent = p.tension;
+      document.getElementById('stat-feel').textContent = p.feel;
+      document.getElementById('stat-desc').innerHTML = p.desc;
+    }
+
+    goToSlide(0);
+  </script>
+</body>
+</html>

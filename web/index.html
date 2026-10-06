@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>A.I.r Bubbles — n×n Grid Edition</title>
+  <link rel="stylesheet" href="style.css?v=14">
+</head>
+<body>
+  <div id="app-container">
+    <!-- Top Header Bar -->
+    <header id="header-bar">
+      <div class="header-left">
+        <h1 class="logo">A.I.r BUBBLES</h1>
+        <div class="subtitle">n×n Grid Edition · Lake Ellem</div>
+      </div>
+      <div class="header-right">
+        <a href="presentation.html" target="_blank" class="icon-btn" title="View Gameplay Ratio Presentation" style="text-decoration: none;">📊</a>
+        <button id="btn-sound" class="icon-btn" title="Toggle Sound">🔊</button>
+        <button id="btn-info" class="icon-btn" title="How to Play / Compare Dynamics">ℹ️</button>
+        <button id="btn-restart" class="icon-btn" title="Restart Run">🔄</button>
+      </div>
+    </header>
+
+    <!-- Main Content Area: Side-by-side on desktop, stacked on mobile -->
+    <div id="main-content">
+      <!-- Game Section (Canvas + Launcher) -->
+      <section id="game-section">
+        <!-- Main Game Canvas Container -->
+        <main id="game-view">
+          <canvas id="game-canvas"></canvas>
+
+          <!-- Danger Warning Overlay -->
+          <div id="danger-banner" class="hidden">
+            <div class="danger-title">⚠️ VENT OVERFLOW WARNING ⚠️</div>
+            <div class="danger-timer" id="danger-timer-val">3.0s</div>
+          </div>
+        </main>
+
+        <!-- Bottom Launcher Control Area (Touch & Keyboard Optimized) -->
+        <footer id="launcher-bar">
+          <div class="slider-container" id="slider-wrap">
+            <input type="range" id="aim-slider" min="0" max="100" value="50" step="0.5">
+            <div class="slider-track-hint">◄ Aim Vent (Drag or A / D) ►</div>
+          </div>
+          <button id="btn-launch" class="launch-btn">
+            <span class="launch-icon">▲</span>
+            <span class="launch-text">LAUNCH BUBBLE (Space / W)</span>
+          </button>
+        </footer>
+      </section>
+
+      <!-- Side Dashboard Panel (Stats, Mode, Evolution, Keys) -->
+      <aside id="side-panel">
+        <!-- Score & Stats Bar -->
+        <div id="stats-banner">
+          <div class="stat-card" id="card-lake">
+            <div class="stat-label">LAKE ELLEM</div>
+            <div class="stat-value" id="val-score">0</div>
+            <div class="stat-sub" id="val-combo">COMBO x1</div>
+          </div>
+          <div class="stat-card" id="card-pressure">
+            <div class="stat-label">CORE PRESSURE</div>
+            <div class="stat-value" id="val-pressure">30.0 / 35 PSI</div>
+            <div class="stat-sub" id="val-pressure-status">GOAL: 0 · MAX: 35</div>
+          </div>
+          <div class="stat-card" id="card-blocks">
+            <div class="stat-label">BLOCKS LAUNCHED</div>
+            <div class="stat-value" id="val-blocks">0</div>
+            <div class="stat-sub" id="val-blocks-sub">UNLIMITED SUPPLY</div>
+          </div>
+          <div class="stat-card" id="card-next">
+            <div class="stat-label">NEXT</div>
+            <div id="next-preview-box">
+              <canvas id="next-canvas" width="60" height="60"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <!-- Mode Selector & Live Dynamics Bar -->
+        <div id="controls-top">
+          <div class="segmented-control" id="mode-selector">
+            <button class="seg-btn active" data-mode="grid">🟦 n×n Grid Mode</button>
+            <button class="seg-btn" data-mode="circle">⚪ Classic Circle</button>
+          </div>
+          <div id="live-push-badge">💥 Pushouts: <span id="push-counter">0</span></div>
+        </div>
+
+        <!-- Desktop Quick Guide / Keyboard Shortcuts -->
+        <div id="desktop-keys-guide" class="desktop-only">
+          <div class="guide-title">⌨️ Keyboard Controls</div>
+          <div class="key-list">
+            <div class="key-item"><span>Aim Vent:</span> <strong>← / → or A / D</strong></div>
+            <div class="key-item"><span>Launch:</span> <strong>Space / W / ↑</strong></div>
+            <div class="key-item"><span>Restart Round:</span> <strong>R</strong></div>
+          </div>
+        </div>
+
+        <!-- Tier Evolution Reference Strip -->
+        <div id="evolution-strip">
+          <div class="evo-header desktop-only">🧩 Bubble Tier Hierarchy (1 to 12)</div>
+          <div class="evo-scroll" id="evo-scroll-container">
+            <!-- Rendered dynamically in game.js -->
+          </div>
+        </div>
+      </aside>
+    </div>
+
+    <!-- Game Over / Overheat Modal (Root App Level) -->
+    <div id="game-over-modal" class="modal hidden">
+      <div class="modal-card">
+        <div class="modal-badge" id="game-over-badge">OVERHEAT BURST!</div>
+        <h2 id="game-over-title">The Bubble Has Popped</h2>
+        <div class="modal-stats">
+          <div class="modal-stat-row"><span>Final Lake A.I.r:</span> <strong id="modal-final-score">0</strong></div>
+          <div class="modal-stat-row"><span>Peak Square Tier:</span> <strong id="modal-peak-tier">1</strong></div>
+          <div class="modal-stat-row"><span>Total Merges:</span> <strong id="modal-total-merges">0</strong></div>
+          <div class="modal-stat-row"><span>Push-Out Collisions:</span> <strong id="modal-total-pushouts">0</strong></div>
+        </div>
+        <p id="game-over-desc">A cautionary tale of excessive synthetic valuation.</p>
+        <button id="btn-modal-restart" class="primary-btn">Start Fresh Funding Round</button>
+      </div>
+    </div>
+
+    <!-- Dynamics Info Modal (Root App Level) -->
+    <div id="info-modal" class="modal hidden">
+      <div class="modal-card info-card">
+        <button class="modal-close" id="btn-close-info">&times;</button>
+        <h2>Gameplay Dynamics: n×n Grid vs Circles</h2>
+        <div class="info-content">
+          <div class="info-section">
+            <h3>🟦 What changes with n×n Squares?</h3>
+            <ul>
+              <li><strong>No Roll-Off:</strong> Circles slide down crevices. Squares have flat horizontal and vertical faces that stack into columns and bridges.</li>
+              <li><strong>Push-Out Expansion:</strong> Two $n \times n$ squares merge into an $(n+1) \times (n+1)$ square. Because $n+1 > n$, the new square is wider and taller, forcefully <em>pushing adjacent stacks outward and downward</em>!</li>
+              <li><strong>Size 12 Singularity:</strong> Reaching the $12 \times 12$ square (144 cells, ~75% of chamber width) triggers an epic fanfare and disappears, causing all buoyant blocks below to surge upward!</li>
+            </ul>
+          </div>
+          <div class="info-section">
+            <h3>🎮 Controls</h3>
+            <p><strong>Desktop:</strong> Use <strong>A / D</strong> or <strong>Arrow keys</strong> to aim, and <strong>Space / W</strong> to launch. Drag mouse directly on the grid or slider to aim.</p>
+            <p><strong>Mobile:</strong> Drag along the slider track or touch the chamber to aim, then tap <strong>LAUNCH</strong>.</p>
+          </div>
+          <div class="info-section">
+            <h3>📊 Playtest Research & Balance Dossier</h3>
+            <p style="margin-bottom: 8px;">Explore the full research dossier and interactive presentation generated from 21,600 automated playtest runs:</p>
+            <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+              <a href="presentation.html" target="_blank" style="display: inline-block; padding: 6px 12px; background: rgba(0, 229, 255, 0.15); border: 1px solid rgba(0, 229, 255, 0.4); border-radius: 6px; color: #00e5ff; font-weight: bold; font-size: 0.8rem; text-decoration: none;">📊 Interactive Presentation Deck</a>
+              <a href="research.html" target="_blank" style="display: inline-block; padding: 6px 12px; background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 6px; color: #f1f5f9; font-weight: bold; font-size: 0.8rem; text-decoration: none;">🔬 Full Playtest Report</a>
+            </div>
+          </div>
+          <div class="info-section qr-section">
+            <h3>📱 Play on Your Phone</h3>
+            <p>Scan with your phone's camera on the same Wi-Fi:</p>
+            <div id="qr-holder">
+              <img id="qr-img" src="qr.png" alt="Scan to play on phone" width="160" height="160" style="border-radius: 8px; background: white; padding: 6px; box-shadow: 0 4px 12px rgba(0,0,0,0.5);">
+            </div>
+            <p class="qr-url"><code id="qr-url-text">http://192.168.1.225:8085</code></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="audio.js?v=14"></script>
+  <script src="physics.js?v=14"></script>
+  <script src="game.js?v=14"></script>
+</body>
+</html>
