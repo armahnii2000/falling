@@ -779,6 +779,10 @@ class AirBubbleGame {
 
     // Update Huge Cumulative Color Hero Circle on the Right
     this.updateCumulativeHero();
+
+    // Live Aim Impact Forecast & Combo Cascade Predictor
+    const forecast = this.calculateAimForecast();
+    this.updateShotForecastCard(forecast);
   }
 
   render() {
@@ -994,7 +998,9 @@ class AirBubbleGame {
       { key: 'B', count: this.cumulativeB, color: '#00e5ff', bg: 'rgba(0, 229, 255, 0.12)' }
     ];
 
-    const maxCapacity = Math.max(25, maxGlobal);
+    // Dynamic capacity with guaranteed 35% headroom so highest channel never reaches ceiling!
+    const peakChannel = Math.max(this.cumulativeR, this.cumulativeG, this.cumulativeB, 1);
+    const maxCapacity = Math.max(25, Math.ceil(peakChannel * 1.55));
 
     channels.forEach((ch, i) => {
       const cx = startX + i * (colW + pad);
@@ -1009,8 +1015,8 @@ class AirBubbleGame {
       ctx.lineWidth = 1;
       ctx.stroke();
 
-      // Fluid fill level
-      const fillRatio = Math.min(1.0, ch.count / maxCapacity);
+      // Fluid fill level (leaves open growth room at top)
+      const fillRatio = Math.min(0.88, ch.count / maxCapacity);
       const fillH = channelsH * fillRatio;
       const fillY = cy + channelsH - fillH;
 
@@ -1036,6 +1042,24 @@ class AirBubbleGame {
       ctx.font = 'bold 7px monospace';
       ctx.fillText(`${ch.count}`, cx + colW / 2, cy + channelsH + 20);
     });
+
+    // Average 1:1:1 equilibrium datum line across the 3 fluid columns
+    const avgUnits = (this.cumulativeR + this.cumulativeG + this.cumulativeB) / 3;
+    if (avgUnits > 0) {
+      const datumRatio = Math.min(0.88, avgUnits / maxCapacity);
+      const datumH = channelsH * datumRatio;
+      const datumY = channelsTop + channelsH - datumH;
+
+      ctx.save();
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.75)';
+      ctx.lineWidth = 1.2;
+      ctx.setLineDash([2, 2]);
+      ctx.beginPath();
+      ctx.moveTo(startX - 2, datumY);
+      ctx.lineTo(startX + totalColsW + 2, datumY);
+      ctx.stroke();
+      ctx.restore();
+    }
 
     // 4. Peak Bubble Whiteness Readout at bottom
     ctx.save();
@@ -1331,16 +1355,24 @@ class AirBubbleGame {
     const bob = Math.sin(this.gameTime * 4) * 2;
     const py = ly - ventLength - 4 - (previewSize / 2) + bob;
     const startY = py - (previewSize / 2);
-    const targetY = chamber.y + 4;
+    const forecast = this.calculateAimForecast();
+    const landingY = (forecast && forecast.landingY) ? forecast.landingY : (chamber.y + 4);
+    const targetY = landingY;
 
     ctx.save();
     // 1. Subtle glowing trajectory corridor between the two lines
-    ctx.fillStyle = 'rgba(0, 229, 255, 0.04)';
+    const corridorColor = (forecast && forecast.willMerge)
+      ? (forecast.comboCount > 1 ? 'rgba(255, 214, 10, 0.08)' : 'rgba(0, 229, 255, 0.08)')
+      : 'rgba(0, 229, 255, 0.04)';
+    ctx.fillStyle = corridorColor;
     ctx.fillRect(lx - halfWidth, targetY, boxWidth, Math.max(0, startY - targetY));
 
     // 2. Two guide lines marking the left and right edges of the box
-    ctx.strokeStyle = 'rgba(0, 229, 255, 0.45)';
-    ctx.lineWidth = 1.5;
+    const guideLineColor = (forecast && forecast.willMerge)
+      ? (forecast.comboCount > 1 ? 'rgba(255, 214, 10, 0.75)' : 'rgba(0, 229, 255, 0.75)')
+      : 'rgba(0, 229, 255, 0.45)';
+    ctx.strokeStyle = guideLineColor;
+    ctx.lineWidth = (forecast && forecast.willMerge) ? 2.0 : 1.5;
     ctx.setLineDash([4, 4]);
 
     // Left guide line
@@ -1355,15 +1387,61 @@ class AirBubbleGame {
     ctx.lineTo(lx + halfWidth, targetY);
     ctx.stroke();
 
-    // Subtle ceiling landing bracket
+    // Subtle landing bracket
     ctx.setLineDash([]);
-    ctx.strokeStyle = 'rgba(0, 229, 255, 0.6)';
-    ctx.lineWidth = 2;
+    ctx.strokeStyle = (forecast && forecast.willMerge)
+      ? (forecast.comboCount > 1 ? '#ffd60a' : '#00e5ff')
+      : 'rgba(0, 229, 255, 0.6)';
+    ctx.lineWidth = 2.5;
     ctx.beginPath();
     ctx.moveTo(lx - halfWidth, targetY);
     ctx.lineTo(lx + halfWidth, targetY);
     ctx.stroke();
     ctx.restore();
+
+    // 3. In-Chamber Target Highlight Reticle and Floating Forecast Badge
+    if (forecast && forecast.willMerge && forecast.target) {
+      const t = forecast.target;
+
+      ctx.save();
+      // Animated pulse reticle on target block
+      const pulse = 1.0 + Math.sin(this.gameTime * 7) * 0.05;
+      const reticleColor = (forecast.comboCount > 1) ? '#ffd60a' : '#00e5ff';
+      ctx.strokeStyle = reticleColor;
+      ctx.lineWidth = 2.5;
+      ctx.shadowColor = reticleColor;
+      ctx.shadowBlur = 10;
+      ctx.strokeRect(t.x - t.hw * pulse, t.y - t.hh * pulse, t.size * pulse, t.size * pulse);
+      ctx.restore();
+
+      // Floating prediction badge right above target block
+      ctx.save();
+      const badgeY = Math.max(chamber.y + 24, t.y - t.hh - 14);
+      ctx.translate(t.x, badgeY);
+
+      const badgeTitle = (forecast.comboCount > 1)
+        ? `⚡ COMBO x${forecast.comboCount} ➔ T${forecast.finalTier}`
+        : `🎯 T${forecast.finalTier}`;
+
+      // Title label
+      ctx.fillStyle = (forecast.comboCount > 1) ? '#ffd60a' : '#00e5ff';
+      ctx.font = 'bold 9px -apple-system, BlinkMacSystemFont, sans-serif';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'bottom';
+      ctx.shadowColor = '#000000';
+      ctx.shadowBlur = 5;
+      ctx.fillText(badgeTitle, 0, -8);
+
+      // Pill overlay showing expected constituent counts
+      const simBubble = {
+        tier: forecast.finalTier,
+        r: forecast.expectedR,
+        g: forecast.expectedG,
+        b: forecast.expectedB
+      };
+      this.renderRGBPillOverlay(ctx, simBubble, 0, 96);
+      ctx.restore();
+    }
 
     // Ready bubble preview floating right over the elongated vent nozzle
     if (this.readyBubble) {
@@ -1641,6 +1719,227 @@ class AirBubbleGame {
     // Progress bar
     if (barFill) barFill.style.width = `${balance}%`;
     if (barPct) barPct.textContent = `${balance}%`;
+  }
+
+  calculateAimForecast() {
+    if (!this.readyBubble || this.isGameOver) {
+      return { willMerge: false, reason: 'none' };
+    }
+
+    const chamber = this.physics.chamber;
+    const lx = this.launcherX;
+    const readyTier = this.readyBubble.tier;
+    const readyHw = (readyTier * this.physics.cellSize) / 2;
+    const readyHh = readyHw;
+
+    // Find all candidate bubbles in chamber intersecting the vertical corridor
+    const inCorridor = [];
+    for (const b of this.physics.bubbles) {
+      if (b.merging) continue;
+      const minDistX = readyHw + b.hw;
+      const dx = Math.abs(b.x - lx);
+      if (dx < minDistX - 2) {
+        inCorridor.push(b);
+      }
+    }
+
+    // Open lane if no bubbles in path
+    if (inCorridor.length === 0) {
+      return {
+        willMerge: false,
+        reason: 'open_lane',
+        landingY: chamber.y + readyHh
+      };
+    }
+
+    // Bubble with maximum y is lowest in chamber (first hit)
+    inCorridor.sort((a, b) => b.y - a.y);
+    const target = inCorridor[0];
+
+    // Check tier match
+    if (target.tier !== readyTier) {
+      return {
+        willMerge: false,
+        reason: 'mismatch',
+        target: target,
+        landingY: target.y + target.hh + readyHh
+      };
+    }
+
+    // Direct match: Simulate FULL CASCADE CHAIN
+    let simBubbles = this.physics.bubbles.filter(b => !b.merging).map(b => ({
+      id: b.id,
+      tier: b.tier,
+      r: b.r || 0,
+      g: b.g || 0,
+      b: b.b || 0,
+      x: b.x,
+      y: b.y,
+      size: b.size,
+      hw: b.hw,
+      hh: b.hh
+    }));
+
+    let curTier = readyTier + 1;
+    let curR = (target.r || 0) + (this.readyBubble.r || 0);
+    let curG = (target.g || 0) + (this.readyBubble.g || 0);
+    let curB = (target.b || 0) + (this.readyBubble.b || 0);
+    let curX = (target.x + lx) / 2;
+    let curY = target.y;
+    let curSize = curTier * this.physics.cellSize;
+    let curHw = curSize / 2;
+    let curHh = curHw;
+
+    simBubbles = simBubbles.filter(b => b.id !== target.id);
+
+    let comboCount = 1;
+    const chainEvents = [{
+      step: 1,
+      tier: curTier,
+      r: curR,
+      g: curG,
+      b: curB,
+      desc: `Direct Merge T${readyTier}+T${target.tier} ➔ T${curTier}`
+    }];
+
+    // Cascade search
+    let canCascade = true;
+    while (canCascade && curTier < 12) {
+      canCascade = false;
+      let bestNeighbor = null;
+      let bestDist = Infinity;
+
+      for (const cand of simBubbles) {
+        if (cand.tier === curTier) {
+          const dx = Math.abs(cand.x - curX);
+          const dy = Math.abs(cand.y - curY);
+          const minDistX = cand.hw + curHw;
+          const minDistY = cand.hh + curHh;
+
+          // Overlap or touching contact
+          if (minDistX - dx >= -5 && minDistY - dy >= -5) {
+            const dist = Math.hypot(cand.x - curX, cand.y - curY);
+            if (dist < bestDist) {
+              bestDist = dist;
+              bestNeighbor = cand;
+            }
+          }
+        }
+      }
+
+      if (bestNeighbor) {
+        comboCount++;
+        canCascade = true;
+
+        curTier = curTier + 1;
+        curR = curR + (bestNeighbor.r || 0);
+        curG = curG + (bestNeighbor.g || 0);
+        curB = curB + (bestNeighbor.b || 0);
+
+        curX = (curX + bestNeighbor.x) / 2;
+        curY = (curY + bestNeighbor.y) / 2;
+        curSize = curTier * this.physics.cellSize;
+        curHw = curSize / 2;
+        curHh = curHw;
+
+        simBubbles = simBubbles.filter(b => b.id !== bestNeighbor.id);
+
+        chainEvents.push({
+          step: comboCount,
+          tier: curTier,
+          r: curR,
+          g: curG,
+          b: curB,
+          desc: `Combo x${comboCount} with adjacent T${bestNeighbor.tier}`
+        });
+      }
+    }
+
+    const colorInfo = this.getBubbleColor({ r: curR, g: curG, b: curB });
+
+    return {
+      willMerge: true,
+      target: target,
+      comboCount: comboCount,
+      finalTier: curTier,
+      expectedR: curR,
+      expectedG: curG,
+      expectedB: curB,
+      totalUnits: curR + curG + curB,
+      landingX: curX,
+      landingY: curY,
+      colorInfo: colorInfo,
+      chainEvents: chainEvents
+    };
+  }
+
+  updateShotForecastCard(forecast) {
+    const card = document.getElementById('shot-forecast-card');
+    const badge = document.getElementById('forecast-action-badge');
+    const targetDesc = document.getElementById('forecast-target-desc');
+    const resultWrap = document.getElementById('forecast-result-wrap');
+    const resTier = document.getElementById('forecast-res-tier');
+    const badgeR = document.getElementById('f-badge-r');
+    const badgeG = document.getElementById('f-badge-g');
+    const badgeB = document.getElementById('f-badge-b');
+    const outcomeDesc = document.getElementById('forecast-outcome-desc');
+    const hint = document.getElementById('forecast-hint');
+
+    if (!card || !badge || !targetDesc) return;
+
+    if (!forecast || !forecast.willMerge) {
+      card.classList.remove('has-merge', 'has-combo');
+      if (resultWrap) resultWrap.classList.add('hidden');
+      if (forecast && forecast.reason === 'mismatch') {
+        badge.textContent = 'STACKS / NO MERGE';
+        badge.className = 'forecast-badge';
+        const t = forecast.target;
+        targetDesc.textContent = `Tier ${t.tier} [R:${t.r || 0} G:${t.g || 0} B:${t.b || 0}] (Mismatched Tier)`;
+        if (hint) hint.textContent = `Loaded Tier ${this.readyBubble.tier} will bounce & stack underneath`;
+      } else {
+        badge.textContent = 'OPEN LANE';
+        badge.className = 'forecast-badge';
+        targetDesc.textContent = 'Water Surface Ceiling (No Merge)';
+        if (hint) hint.textContent = 'Will settle at the top water surface';
+      }
+      return;
+    }
+
+    // Merge or Combo cascade!
+    if (resultWrap) resultWrap.classList.remove('hidden');
+
+    if (forecast.comboCount > 1) {
+      card.classList.remove('has-merge');
+      card.classList.add('has-combo');
+      badge.textContent = `⚡ COMBO x${forecast.comboCount}!`;
+      badge.className = 'forecast-badge action-combo';
+      targetDesc.textContent = `Hits Tier ${forecast.target.tier} ➔ Triggers ${forecast.comboCount}-Hit Cascade!`;
+    } else {
+      card.classList.remove('has-combo');
+      card.classList.add('has-merge');
+      badge.textContent = '🎯 DIRECT MERGE';
+      badge.className = 'forecast-badge action-merge';
+      targetDesc.textContent = `Hits Tier ${forecast.target.tier} [R:${forecast.target.r || 0} G:${forecast.target.g || 0} B:${forecast.target.b || 0}]`;
+    }
+
+    if (resTier) resTier.textContent = `TIER ${forecast.finalTier}`;
+    if (badgeR) badgeR.textContent = `🔴 R: ${forecast.expectedR}`;
+    if (badgeG) badgeG.textContent = `🟢 G: ${forecast.expectedG}`;
+    if (badgeB) badgeB.textContent = `🔵 B: ${forecast.expectedB}`;
+
+    const colorName = forecast.colorInfo ? forecast.colorInfo.colorName : '';
+    const balance = forecast.colorInfo ? forecast.colorInfo.balance : 0;
+    if (outcomeDesc) {
+      outcomeDesc.textContent = `Yields ${colorName} (${balance}% Whiteness) · +${forecast.totalUnits} Units`;
+    }
+
+    if (hint) {
+      if (forecast.comboCount > 1) {
+        hint.textContent = `Cascades ${forecast.comboCount} times into adjacent matching blocks!`;
+      } else {
+        hint.textContent = `Produces clean Tier ${forecast.finalTier} block`;
+      }
+    }
   }
 
   generateQRCode() {

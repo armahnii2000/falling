@@ -141,28 +141,69 @@ async function run() {
         const b8 = { id: 108, tier: 1, r: 0, g: 0, b: 1, x: 300, y: 90, vy: 0, size: 28, hw: 14, hh: 14, wobbleX: 1, wobbleY: 1 };
         game.onMerge(b7, b8);
 
-        // Give them a settle frame
-        game.update(0.016);
+        // 5. Test Aim Forecast with Multi-hop Combo Cascade:
+        // Set readyBubble to a Tier 2 Blue bubble (b=2)
+        game.readyBubble = { tier: 2, r: 0, g: 0, b: 2, colorName: 'blue' };
+
+        // Position bubbles without pre-existing collisions:
+        // Target: Tier 2 Yellow [R:1 G:1 B:0] at x=240, y=180
+        // Neighbor 1: Tier 3 Cyan [R:0 G:1 B:1] directly above at x=240, y=110
+        // Result: Ready(T2) + Target(T2) -> New T3 [R:1 G:1 B:2].
+        // Then New T3 touches Neighbor 1 (T3) -> Cascades into T4 [R:1 G:2 B:3] (COMBO x2)!
+        const targetB = { id: 201, tier: 2, r: 1, g: 1, b: 0, x: 240, y: 180, vy: 0, size: 56, hw: 28, hh: 28, wobbleX: 1, wobbleY: 1 };
+        const neighborB = { id: 202, tier: 3, r: 0, g: 1, b: 1, x: 240, y: 110, vy: 0, size: 84, hw: 42, hh: 42, wobbleX: 1, wobbleY: 1 };
+        game.physics.bubbles.push(targetB);
+        game.physics.bubbles.push(neighborB);
+
+        // Aim launcher directly at x = 240
+        game.launcherX = 240;
+
+        // Calculate forecast BEFORE physics step modifies positions
+        const comboForecast = game.calculateAimForecast();
+
+        // Run update so DOM and Canvas render with this forecast and updated hero orb
+        game.updateCumulativeHero();
+        game.updateShotForecastCard(comboForecast);
+        game.render();
+        game.isPaused = true;
+        const forecast = comboForecast;
 
         // Read DOM elements
         const orb = document.getElementById('cumulative-color-orb');
         const orbNum = document.getElementById('cumulative-orb-number');
-        const orbLabel = document.getElementById('cumulative-orb-label');
-        const orbName = document.getElementById('cumulative-orb-color-name');
-        const badge = document.getElementById('hero-balance-badge');
+        const forecastCard = document.getElementById('shot-forecast-card');
+        const forecastBadge = document.getElementById('forecast-action-badge');
+        const forecastTarget = document.getElementById('forecast-target-desc');
+        const forecastTier = document.getElementById('forecast-res-tier');
+        const fBadgeR = document.getElementById('f-badge-r');
+        const fBadgeG = document.getElementById('f-badge-g');
+        const fBadgeB = document.getElementById('f-badge-b');
+        const forecastDesc = document.getElementById('forecast-outcome-desc');
 
         return {
           cumulativeR: game.cumulativeR,
           cumulativeG: game.cumulativeG,
           cumulativeB: game.cumulativeB,
           totalMerges: game.totalMerges,
-          orbColor: orb ? orb.style.backgroundColor : null,
           orbNumber: orbNum ? orbNum.textContent : null,
-          orbTextColor: orbNum ? orbNum.style.color : null,
-          orbLabel: orbLabel ? orbLabel.textContent : null,
-          orbName: orbName ? orbName.textContent : null,
-          badgeText: badge ? badge.textContent : null,
-          bubblesInChamber: game.physics.bubbles.length
+          forecast: {
+            willMerge: forecast.willMerge,
+            comboCount: forecast.comboCount,
+            finalTier: forecast.finalTier,
+            expectedR: forecast.expectedR,
+            expectedG: forecast.expectedG,
+            expectedB: forecast.expectedB,
+            chainEvents: forecast.chainEvents
+          },
+          domForecast: {
+            badgeText: forecastBadge ? forecastBadge.textContent : null,
+            targetText: forecastTarget ? forecastTarget.textContent : null,
+            tierText: forecastTier ? forecastTier.textContent : null,
+            rText: fBadgeR ? fBadgeR.textContent : null,
+            gText: fBadgeG ? fBadgeG.textContent : null,
+            bText: fBadgeB ? fBadgeB.textContent : null,
+            descText: forecastDesc ? forecastDesc.textContent : null
+          }
         };
       })()
     `,

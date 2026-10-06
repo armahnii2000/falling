@@ -236,6 +236,146 @@ html, body {
 }
 
 /* ==========================================================================
+   LIVE SHOT FORECAST & COMBO CASCADE CARD
+   ========================================================================== */
+#shot-forecast-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-card);
+  border-radius: 14px;
+  padding: 10px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+  transition: all 0.2s ease;
+}
+
+#shot-forecast-card.has-merge {
+  border-color: rgba(0, 229, 255, 0.6);
+  box-shadow: 0 0 16px rgba(0, 229, 255, 0.25);
+  background: rgba(8, 20, 38, 0.85);
+}
+
+#shot-forecast-card.has-combo {
+  border-color: rgba(255, 214, 10, 0.7);
+  box-shadow: 0 0 22px rgba(255, 214, 10, 0.35);
+  background: rgba(24, 20, 10, 0.85);
+}
+
+.forecast-top-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.forecast-tag {
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.8px;
+  color: var(--accent-cyan);
+  text-transform: uppercase;
+}
+
+.forecast-badge {
+  font-size: 0.64rem;
+  font-weight: 800;
+  padding: 2px 7px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.forecast-badge.action-merge {
+  background: rgba(0, 229, 255, 0.18);
+  border-color: #00e5ff;
+  color: #00e5ff;
+  box-shadow: 0 0 8px rgba(0, 229, 255, 0.4);
+}
+
+.forecast-badge.action-combo {
+  background: rgba(255, 214, 10, 0.25);
+  border-color: #ffd60a;
+  color: #ffd60a;
+  box-shadow: 0 0 10px rgba(255, 214, 10, 0.5);
+  animation: pulse-warn 0.65s infinite alternate;
+}
+
+.forecast-content {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  font-size: 0.74rem;
+}
+
+#forecast-target-line {
+  color: var(--text-dim);
+  font-size: 0.72rem;
+}
+
+#forecast-target-line strong {
+  color: var(--text-main);
+}
+
+.forecast-flow-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 2px;
+}
+
+.forecast-flow-label {
+  color: var(--text-dim);
+  font-weight: 700;
+  font-size: 0.7rem;
+}
+
+.forecast-tier-tag {
+  font-size: 0.74rem;
+  font-weight: 900;
+  color: #000000;
+  background: #ffffff;
+  padding: 2px 7px;
+  border-radius: 5px;
+  box-shadow: 0 0 8px rgba(255, 255, 255, 0.7);
+}
+
+.forecast-pills-wrap {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  margin-top: 2px;
+}
+
+.forecast-pill-badge {
+  font-family: monospace;
+  font-size: 0.74rem;
+  font-weight: 800;
+  padding: 2px 6px;
+  border-radius: 6px;
+  background: rgba(0, 0, 0, 0.45);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+}
+
+#f-badge-r { color: #ff3b30; border-color: rgba(255, 59, 48, 0.45); }
+#f-badge-g { color: #30d158; border-color: rgba(48, 209, 88, 0.45); }
+#f-badge-b { color: #00e5ff; border-color: rgba(0, 229, 255, 0.45); }
+
+.forecast-outcome-sub {
+  font-size: 0.68rem;
+  color: #a4b4cb;
+  margin-top: 2px;
+}
+
+.forecast-hint {
+  font-size: 0.66rem;
+  color: var(--text-dim);
+  font-style: italic;
+}
+
+/* ==========================================================================
    CUMULATIVE COLOR SPECTRUM HERO (HUGE CIRCLE ON THE RIGHT)
    ========================================================================== */
 #cumulative-color-hero {

@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>A.I.r Bubbles — n×n Grid Edition</title>
-  <link rel="stylesheet" href="style.css?v=15">
+  <link rel="stylesheet" href="style.css?v=16">
 </head>
 <body>
   <div id="app-container">
@@ -74,6 +74,30 @@
             <div id="next-preview-box">
               <canvas id="next-canvas" width="60" height="60"></canvas>
             </div>
+          </div>
+        </div>
+
+        <!-- Live Shot Forecast & Combo Cascade Card -->
+        <div id="shot-forecast-card">
+          <div class="forecast-top-row">
+            <span class="forecast-tag">🎯 AIM IMPACT FORECAST</span>
+            <span class="forecast-badge" id="forecast-action-badge">OPEN LANE</span>
+          </div>
+          <div class="forecast-content">
+            <div id="forecast-target-line">Aim Target: <strong id="forecast-target-desc">Water Surface (No Merge)</strong></div>
+            <div id="forecast-result-wrap" class="hidden">
+              <div class="forecast-flow-row">
+                <span class="forecast-flow-label">Expected Result:</span>
+                <span class="forecast-tier-tag" id="forecast-res-tier">TIER 2</span>
+              </div>
+              <div class="forecast-pills-wrap" id="forecast-pills-row">
+                <span class="forecast-pill-badge" id="f-badge-r">🔴 R: 0</span>
+                <span class="forecast-pill-badge" id="f-badge-g">🟢 G: 0</span>
+                <span class="forecast-pill-badge" id="f-badge-b">🔵 B: 0</span>
+              </div>
+              <div class="forecast-outcome-sub" id="forecast-outcome-desc">Yields +2 units towards White Spectrum</div>
+            </div>
+            <div class="forecast-hint" id="forecast-hint">Align vent with same-tier block to trigger merge</div>
           </div>
         </div>
 
@@ -204,8 +228,8 @@
     </div>
   </div>
 
-  <script src="audio.js?v=15"></script>
-  <script src="physics.js?v=15"></script>
-  <script src="game.js?v=15"></script>
+  <script src="audio.js?v=16"></script>
+  <script src="physics.js?v=16"></script>
+  <script src="game.js?v=16"></script>
 </body>
 </html>
