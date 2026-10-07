@@ -736,53 +736,128 @@ class AirBubbleGame {
     // Camera trauma decay
     this.cameraTrauma = Math.max(0, this.cameraTrauma - dt * 1.5);
 
-    // Update HUD
-    this.uiScore.textContent = this.score;
-    this.uiCombo.textContent = this.combo > 1 ? `COMBO x${this.combo}` : 'COMBO x1';
-    this.uiPushCounter.textContent = this.physics.pushoutCount;
+    // Live Aim Impact Forecast & Predictive Universe State
+    this.aimForecast = this.calculateAimForecast();
 
-    // Update White Equilibrium HUD
-    if (this.uiPressure) {
-      this.uiPressure.textContent = `⚪ ${this.bestBalance}%`;
-      if (this.bestBalance >= 90) {
-        this.uiPressure.style.color = '#ffffff';
-        this.uiPressure.style.textShadow = '0 0 10px rgba(255, 255, 255, 0.9)';
-      } else if (this.bestBalance >= 50) {
-        this.uiPressure.style.color = '#00e5ff';
-        this.uiPressure.style.textShadow = 'none';
+    // Update HUD with live vs predictive state
+    this.updateHUD(this.aimForecast);
+
+    // Update Huge Cumulative Color Hero Circle on the Right with predictive preview
+    this.updateCumulativeHero(this.aimForecast);
+
+    // Update Aim Impact Forecast Card
+    this.updateShotForecastCard(this.aimForecast);
+  }
+
+  updateHUD(forecast) {
+    const isPredictive = Boolean(forecast && forecast.willMerge);
+    const cardScore = document.getElementById('card-lake') || document.getElementById('card-score');
+    const cardPressure = document.getElementById('card-pressure');
+    const cardMerges = document.getElementById('card-blocks') || document.getElementById('card-merges');
+    const pushBadge = document.getElementById('live-push-badge');
+
+    // 1. Score
+    if (this.uiScore) {
+      if (isPredictive && forecast.deltaScore > 0) {
+        this.uiScore.innerHTML = `${this.score} <span class="predictive-delta">+${forecast.deltaScore}</span>`;
+        if (cardScore) cardScore.classList.add('predictive-pulse');
       } else {
-        this.uiPressure.style.color = '#ffd60a';
-        this.uiPressure.style.textShadow = 'none';
-      }
-
-      if (this.uiPressureStatus) {
-        this.uiPressureStatus.textContent = `PEAK: TIER ${this.bestBalanceTier}`;
+        this.uiScore.textContent = this.score;
+        if (cardScore) cardScore.classList.remove('predictive-pulse');
       }
     }
 
-    // Update Merges Count / RGB Harvest HUD
+    // 2. Combo
+    if (this.uiCombo) {
+      if (isPredictive) {
+        if (forecast.predictedCombo > 1 || forecast.comboCount > 1) {
+          this.uiCombo.textContent = `⚡ COMBO x${forecast.predictedCombo} (PREDICTED)`;
+          this.uiCombo.style.color = '#ffd60a';
+        } else {
+          this.uiCombo.textContent = '🎯 MERGE (PREDICTED)';
+          this.uiCombo.style.color = '#00e5ff';
+        }
+      } else {
+        this.uiCombo.textContent = this.combo > 1 ? `COMBO x${this.combo}` : 'COMBO x1';
+        this.uiCombo.style.color = '';
+      }
+    }
+
+    // 3. Push Counter / Dynamics Badge
+    if (this.uiPushCounter) {
+      this.uiPushCounter.textContent = this.physics.pushoutCount;
+    }
+    if (pushBadge) {
+      if (isPredictive && forecast.comboCount > 1) {
+        pushBadge.innerHTML = `⚡ Cascade: x${forecast.comboCount}`;
+        pushBadge.classList.add('predictive-badge');
+      } else {
+        pushBadge.innerHTML = `💥 Pushouts: <span id="push-counter">${this.physics.pushoutCount}</span>`;
+        this.uiPushCounter = document.getElementById('push-counter');
+        pushBadge.classList.remove('predictive-badge');
+      }
+    }
+
+    // 4. White Equilibrium
+    if (this.uiPressure) {
+      if (isPredictive) {
+        const isNewPeak = forecast.predictedBestBalance > this.bestBalance;
+        if (isNewPeak) {
+          this.uiPressure.innerHTML = `⚪ ${this.bestBalance}% <span class="predictive-delta" style="color:#ffffff;">➔ ${forecast.predictedBestBalance}%</span>`;
+          if (cardPressure) cardPressure.classList.add('predictive-pulse');
+        } else {
+          this.uiPressure.innerHTML = `⚪ ${this.bestBalance}% <span class="predictive-delta" style="color:#00e5ff;">(${forecast.colorInfo.balance}%)</span>`;
+          if (cardPressure) cardPressure.classList.remove('predictive-pulse');
+        }
+        if (this.uiPressureStatus) {
+          if (isNewPeak) {
+            this.uiPressureStatus.textContent = `⚡ NEW PEAK TIER ${forecast.predictedPeakTier}!`;
+            this.uiPressureStatus.style.color = '#ffffff';
+          } else {
+            this.uiPressureStatus.textContent = `YIELDS ${forecast.colorInfo.balance}% BALANCE`;
+            this.uiPressureStatus.style.color = '#00e5ff';
+          }
+        }
+      } else {
+        this.uiPressure.textContent = `⚪ ${this.bestBalance}%`;
+        if (cardPressure) cardPressure.classList.remove('predictive-pulse');
+        if (this.bestBalance >= 90) {
+          this.uiPressure.style.color = '#ffffff';
+          this.uiPressure.style.textShadow = '0 0 10px rgba(255, 255, 255, 0.9)';
+        } else if (this.bestBalance >= 50) {
+          this.uiPressure.style.color = '#00e5ff';
+          this.uiPressure.style.textShadow = 'none';
+        } else {
+          this.uiPressure.style.color = '#ffd60a';
+          this.uiPressure.style.textShadow = 'none';
+        }
+        if (this.uiPressureStatus) {
+          this.uiPressureStatus.textContent = `PEAK: TIER ${this.bestBalanceTier}`;
+          this.uiPressureStatus.style.color = '#30d158';
+        }
+      }
+    }
+
+    // 5. Merges Count / Units Harvest
     if (this.uiMergesCount) {
-      this.uiMergesCount.textContent = this.totalMerges;
-      const blocksSub = document.getElementById('val-blocks-sub');
-      if (blocksSub) {
-        blocksSub.textContent = `${this.totalMerges} MERGES`;
-      }
-    } else if (this.uiBlocks) {
-      this.uiBlocks.textContent = `R:${this.cumulativeR} G:${this.cumulativeG} B:${this.cumulativeB}`;
-      this.uiBlocks.style.color = '#ffffff';
-      const blocksSub = document.getElementById('val-blocks-sub');
-      if (blocksSub) {
-        const totalUnits = this.cumulativeR + this.cumulativeG + this.cumulativeB;
-        blocksSub.textContent = `${totalUnits} UNITS TOTAL`;
+      if (isPredictive) {
+        this.uiMergesCount.innerHTML = `${this.totalMerges} <span class="predictive-delta">+${forecast.chainEvents.length}</span>`;
+        const blocksSub = document.getElementById('val-blocks-sub');
+        if (blocksSub) {
+          blocksSub.textContent = `+${forecast.deltaUnits} HARVEST UNITS`;
+          blocksSub.style.color = '#ffd60a';
+        }
+        if (cardMerges) cardMerges.classList.add('predictive-pulse');
+      } else {
+        this.uiMergesCount.textContent = this.totalMerges;
+        const blocksSub = document.getElementById('val-blocks-sub');
+        if (blocksSub) {
+          blocksSub.textContent = `${this.totalMerges} MERGES`;
+          blocksSub.style.color = '';
+        }
+        if (cardMerges) cardMerges.classList.remove('predictive-pulse');
       }
     }
-
-    // Update Huge Cumulative Color Hero Circle on the Right
-    this.updateCumulativeHero();
-
-    // Live Aim Impact Forecast & Combo Cascade Predictor
-    const forecast = this.calculateAimForecast();
-    this.updateShotForecastCard(forecast);
   }
 
   render() {
@@ -806,8 +881,8 @@ class AirBubbleGame {
     // 1. Draw Rectangular Chamber Background & Grid (Clean, no warning text on grid)
     this.renderChamber(ctx, chamber);
 
-    // 2. Draw Vertical RGB Spectrum Gauge to the Side of the Grid
-    this.renderRGBGauge(ctx, this.physics.gauge);
+    // 2. Draw Vertical RGB Spectrum Gauge to the Side of the Grid with predictive preview
+    this.renderRGBGauge(ctx, this.physics.gauge, this.aimForecast);
 
     // 3. Draw Bubbles
     for (const b of this.physics.bubbles) {
@@ -917,40 +992,43 @@ class AirBubbleGame {
     ctx.restore();
   }
 
-  // Vertical RGB Spectrum Gauge to the side of the grid
-  renderRGBGauge(ctx, gauge) {
+  // Vertical RGB Spectrum Gauge to the side of the grid with full predictive preview
+  renderRGBGauge(ctx, gauge, forecast) {
     if (!gauge) return;
     const gx = gauge.x;
     const gy = gauge.y;
     const gw = gauge.w;
     const gh = gauge.h;
 
+    const isPredictive = Boolean(forecast && forecast.willMerge && forecast.deltaUnits > 0);
+
     ctx.save();
 
     // 1. Gauge Frame
     ctx.fillStyle = '#081324';
-    ctx.strokeStyle = 'rgba(64, 128, 200, 0.45)';
-    ctx.lineWidth = 1.5;
+    ctx.strokeStyle = isPredictive ? 'rgba(0, 229, 255, 0.85)' : 'rgba(64, 128, 200, 0.45)';
+    ctx.lineWidth = isPredictive ? 2 : 1.5;
     ctx.beginPath();
     ctx.roundRect(gx, gy, gw, gh, 6);
     ctx.fill();
     ctx.stroke();
 
-    // Top Header
-    ctx.fillStyle = '#8b9bb4';
-    ctx.font = 'bold 8px -apple-system, sans-serif';
+    // Top Header: RGB MIX or RGB PREVIEW
+    ctx.fillStyle = isPredictive ? '#ffd60a' : '#8b9bb4';
+    ctx.font = isPredictive ? 'bold 7.5px -apple-system, sans-serif' : 'bold 8px -apple-system, sans-serif';
     ctx.textAlign = 'center';
-    ctx.fillText('RGB MIX', gx + gw / 2, gy + 11);
+    ctx.fillText(isPredictive ? 'PREVIEW 🔮' : 'RGB MIX', gx + gw / 2, gy + 11);
 
-    // 2. Prism Lamp (Global Cumulative Mixed Color Orb)
+    // 2. Prism Lamp (Global Cumulative Mixed Color Orb / Predicted Optical Color)
     const lampX = gx + gw / 2;
     const lampY = gy + 27;
     const lampR = Math.min(12, (gw - 12) / 2);
 
-    let effR = this.cumulativeR;
-    let effG = this.cumulativeG;
-    let effB = this.cumulativeB;
+    let effR = isPredictive ? forecast.predictedR : this.cumulativeR;
+    let effG = isPredictive ? forecast.predictedG : this.cumulativeG;
+    let effB = isPredictive ? forecast.predictedB : this.cumulativeB;
     const totalUnits = effR + effG + effB;
+
     if (totalUnits === 0 && this.physics && this.physics.bubbles && this.physics.bubbles.length > 0) {
       for (const b of this.physics.bubbles) {
         effR += (b.r || 0);
@@ -967,14 +1045,14 @@ class AirBubbleGame {
       : `rgb(${globalR}, ${globalG}, ${globalB})`;
 
     ctx.save();
-    ctx.shadowColor = globalMixColor;
-    ctx.shadowBlur = 12;
+    ctx.shadowColor = isPredictive ? '#ffd60a' : globalMixColor;
+    ctx.shadowBlur = isPredictive ? 16 : 12;
     ctx.fillStyle = globalMixColor;
     ctx.beginPath();
     ctx.arc(lampX, lampY, lampR, 0, Math.PI * 2);
     ctx.fill();
-    ctx.strokeStyle = '#ffffff';
-    ctx.lineWidth = 1.5;
+    ctx.strokeStyle = isPredictive ? '#ffd60a' : '#ffffff';
+    ctx.lineWidth = isPredictive ? 2.0 : 1.5;
     ctx.stroke();
 
     // Specular highlight on glass lens
@@ -982,6 +1060,17 @@ class AirBubbleGame {
     ctx.beginPath();
     ctx.arc(lampX - lampR * 0.35, lampY - lampR * 0.35, lampR * 0.35, 0, Math.PI * 2);
     ctx.fill();
+
+    // Animated dashed aura ring when in predictive mode
+    if (isPredictive) {
+      ctx.strokeStyle = 'rgba(255, 214, 10, 0.85)';
+      ctx.lineWidth = 1.5;
+      ctx.setLineDash([3, 3]);
+      ctx.lineDashOffset = -this.gameTime * 14;
+      ctx.beginPath();
+      ctx.arc(lampX, lampY, lampR + 3, 0, Math.PI * 2);
+      ctx.stroke();
+    }
     ctx.restore();
 
     // 3. Three Vertical Fluid Channels (Red, Green, Blue)
@@ -992,14 +1081,22 @@ class AirBubbleGame {
     const totalColsW = colW * 3 + pad * 2;
     const startX = gx + (gw - totalColsW) / 2;
 
+    const deltaR = isPredictive ? (forecast.deltaR || 0) : 0;
+    const deltaG = isPredictive ? (forecast.deltaG || 0) : 0;
+    const deltaB = isPredictive ? (forecast.deltaB || 0) : 0;
+
+    const predR = this.cumulativeR + deltaR;
+    const predG = this.cumulativeG + deltaG;
+    const predB = this.cumulativeB + deltaB;
+
     const channels = [
-      { key: 'R', count: this.cumulativeR, color: '#ff3b30', bg: 'rgba(255, 59, 48, 0.12)' },
-      { key: 'G', count: this.cumulativeG, color: '#30d158', bg: 'rgba(48, 209, 88, 0.12)' },
-      { key: 'B', count: this.cumulativeB, color: '#00e5ff', bg: 'rgba(0, 229, 255, 0.12)' }
+      { key: 'R', live: this.cumulativeR, delta: deltaR, pred: predR, color: '#ff3b30', bg: 'rgba(255, 59, 48, 0.12)' },
+      { key: 'G', live: this.cumulativeG, delta: deltaG, pred: predG, color: '#30d158', bg: 'rgba(48, 209, 88, 0.12)' },
+      { key: 'B', live: this.cumulativeB, delta: deltaB, pred: predB, color: '#00e5ff', bg: 'rgba(0, 229, 255, 0.12)' }
     ];
 
     // Dynamic capacity with guaranteed 35% headroom so highest channel never reaches ceiling!
-    const peakChannel = Math.max(this.cumulativeR, this.cumulativeG, this.cumulativeB, 1);
+    const peakChannel = Math.max(predR, predG, predB, 1);
     const maxCapacity = Math.max(25, Math.ceil(peakChannel * 1.55));
 
     channels.forEach((ch, i) => {
@@ -1011,24 +1108,80 @@ class AirBubbleGame {
       ctx.beginPath();
       ctx.roundRect(cx, cy, colW, channelsH, 3);
       ctx.fill();
-      ctx.strokeStyle = 'rgba(255, 255, 255, 0.08)';
+      ctx.strokeStyle = (isPredictive && ch.delta > 0) ? 'rgba(255, 214, 10, 0.4)' : 'rgba(255, 255, 255, 0.08)';
       ctx.lineWidth = 1;
       ctx.stroke();
 
-      // Fluid fill level (leaves open growth room at top)
-      const fillRatio = Math.min(0.88, ch.count / maxCapacity);
-      const fillH = channelsH * fillRatio;
-      const fillY = cy + channelsH - fillH;
+      // Fluid fill levels
+      const liveRatio = Math.min(0.88, ch.live / maxCapacity);
+      const liveFillH = channelsH * liveRatio;
+      const liveFillY = cy + channelsH - liveFillH;
 
-      if (fillH > 0) {
+      // Solid Live Fluid
+      if (liveFillH > 0) {
         ctx.save();
         ctx.fillStyle = ch.color;
         ctx.shadowColor = ch.color;
         ctx.shadowBlur = 6;
         ctx.beginPath();
-        ctx.roundRect(cx, fillY, colW, fillH, [0, 0, 3, 3]);
+        ctx.roundRect(cx, liveFillY, colW, liveFillH, [0, 0, 3, 3]);
         ctx.fill();
         ctx.restore();
+      }
+
+      // Ghost Fluid Extension (Predicted Gain)
+      if (isPredictive && ch.delta > 0) {
+        const predRatio = Math.min(0.88, ch.pred / maxCapacity);
+        const predFillH = channelsH * predRatio;
+        const predFillY = cy + channelsH - predFillH;
+        const ghostH = Math.max(0, liveFillY - predFillY);
+
+        if (ghostH > 0) {
+          ctx.save();
+          // 1. Ghost Translucent Body with gentle pulse
+          const ghostAlpha = 0.42 + Math.sin(this.gameTime * 6) * 0.14;
+          ctx.globalAlpha = ghostAlpha;
+          ctx.fillStyle = ch.color;
+          ctx.fillRect(cx, predFillY, colW, ghostH);
+
+          // 2. Diagonal Stripe Hatch
+          ctx.beginPath();
+          ctx.rect(cx, predFillY, colW, ghostH);
+          ctx.clip();
+          ctx.strokeStyle = '#ffffff';
+          ctx.lineWidth = 1;
+          ctx.globalAlpha = 0.6;
+          for (let y = predFillY - colW; y <= predFillY + ghostH + colW; y += 4) {
+            ctx.beginPath();
+            ctx.moveTo(cx, y);
+            ctx.lineTo(cx + colW, y + colW);
+            ctx.stroke();
+          }
+          ctx.restore();
+
+          // 3. Top Glowing Neon Cap Line at predFillY
+          ctx.save();
+          ctx.strokeStyle = '#ffd60a';
+          ctx.lineWidth = 1.6;
+          ctx.shadowColor = '#ffd60a';
+          ctx.shadowBlur = 5;
+          ctx.beginPath();
+          ctx.moveTo(cx, predFillY);
+          ctx.lineTo(cx + colW, predFillY);
+          ctx.stroke();
+          ctx.restore();
+
+          // 4. Floating +Delta text above the tube / ghost level
+          ctx.save();
+          ctx.fillStyle = '#ffd60a';
+          ctx.font = 'bold 7px monospace';
+          ctx.textAlign = 'center';
+          ctx.shadowColor = '#000000';
+          ctx.shadowBlur = 3;
+          const textY = Math.max(cy + 7, predFillY - 2);
+          ctx.fillText(`+${ch.delta}`, cx + colW / 2, textY);
+          ctx.restore();
+        }
       }
 
       // Channel Letter Label (R, G, B) below column
@@ -1037,13 +1190,18 @@ class AirBubbleGame {
       ctx.textAlign = 'center';
       ctx.fillText(ch.key, cx + colW / 2, cy + channelsH + 11);
 
-      // Channel count number
-      ctx.fillStyle = '#ffffff';
+      // Channel count number (shows predicted count in gold or live count in white)
       ctx.font = 'bold 7px monospace';
-      ctx.fillText(`${ch.count}`, cx + colW / 2, cy + channelsH + 20);
+      if (isPredictive && ch.delta > 0) {
+        ctx.fillStyle = '#ffd60a';
+        ctx.fillText(`${ch.pred}`, cx + colW / 2, cy + channelsH + 20);
+      } else {
+        ctx.fillStyle = '#ffffff';
+        ctx.fillText(`${ch.live}`, cx + colW / 2, cy + channelsH + 20);
+      }
     });
 
-    // Average 1:1:1 equilibrium datum line across the 3 fluid columns
+    // Average 1:1:1 Equilibrium Datum Lines
     const avgUnits = (this.cumulativeR + this.cumulativeG + this.cumulativeB) / 3;
     if (avgUnits > 0) {
       const datumRatio = Math.min(0.88, avgUnits / maxCapacity);
@@ -1061,21 +1219,61 @@ class AirBubbleGame {
       ctx.restore();
     }
 
+    // Predicted Equilibrium Line if in predictive mode
+    if (isPredictive && (predR + predG + predB > this.cumulativeR + this.cumulativeG + this.cumulativeB)) {
+      const predAvgUnits = (predR + predG + predB) / 3;
+      const predDatumRatio = Math.min(0.88, predAvgUnits / maxCapacity);
+      const predDatumH = channelsH * predDatumRatio;
+      const predDatumY = channelsTop + channelsH - predDatumH;
+
+      ctx.save();
+      ctx.strokeStyle = '#ffd60a';
+      ctx.lineWidth = 1.4;
+      ctx.setLineDash([3, 2]);
+      ctx.beginPath();
+      ctx.moveTo(startX - 2, predDatumY);
+      ctx.lineTo(startX + totalColsW + 2, predDatumY);
+      ctx.stroke();
+
+      ctx.fillStyle = '#ffd60a';
+      ctx.font = 'bold 6px monospace';
+      ctx.textAlign = 'right';
+      ctx.fillText('EQ➔', startX - 3, predDatumY + 2);
+      ctx.restore();
+    }
+
     // 4. Peak Bubble Whiteness Readout at bottom
     ctx.save();
-    const balanceColor = this.bestBalance >= 90 ? '#ffffff' : (this.bestBalance >= 50 ? '#00e5ff' : '#8b9bb4');
-    ctx.fillStyle = balanceColor;
-    if (this.bestBalance >= 90) {
-      ctx.shadowColor = '#ffffff';
-      ctx.shadowBlur = 8;
-    }
-    ctx.font = 'bold 8px sans-serif';
-    ctx.textAlign = 'center';
-    ctx.fillText(`⚪ ${this.bestBalance}%`, gx + gw / 2, gy + gh - 14);
+    if (isPredictive) {
+      const predBal = forecast.predictedBestBalance;
+      const isNewPeak = predBal > this.bestBalance;
+      ctx.fillStyle = isNewPeak ? '#ffffff' : '#ffd60a';
+      if (isNewPeak) {
+        ctx.shadowColor = '#ffffff';
+        ctx.shadowBlur = 10;
+      }
+      ctx.font = 'bold 8px sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText(`⚪ ➔ ${predBal}%`, gx + gw / 2, gy + gh - 14);
 
-    ctx.font = 'bold 7px sans-serif';
-    ctx.fillStyle = '#8b9bb4';
-    ctx.fillText(`PEAK T${this.bestBalanceTier}`, gx + gw / 2, gy + gh - 4);
+      ctx.font = 'bold 7px sans-serif';
+      ctx.fillStyle = isNewPeak ? '#ffd60a' : '#8b9bb4';
+      ctx.fillText(isNewPeak ? `NEW T${forecast.predictedPeakTier}!` : `PEAK T${this.bestBalanceTier}`, gx + gw / 2, gy + gh - 4);
+    } else {
+      const balanceColor = this.bestBalance >= 90 ? '#ffffff' : (this.bestBalance >= 50 ? '#00e5ff' : '#8b9bb4');
+      ctx.fillStyle = balanceColor;
+      if (this.bestBalance >= 90) {
+        ctx.shadowColor = '#ffffff';
+        ctx.shadowBlur = 8;
+      }
+      ctx.font = 'bold 8px sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText(`⚪ ${this.bestBalance}%`, gx + gw / 2, gy + gh - 14);
+
+      ctx.font = 'bold 7px sans-serif';
+      ctx.fillStyle = '#8b9bb4';
+      ctx.fillText(`PEAK T${this.bestBalanceTier}`, gx + gw / 2, gy + gh - 4);
+    }
     ctx.restore();
 
     ctx.restore();
@@ -1586,7 +1784,9 @@ class AirBubbleGame {
     });
   }
 
-  updateCumulativeHero() {
+  updateCumulativeHero(forecast) {
+    const heroCard = document.getElementById('cumulative-color-hero');
+    const heroTag = heroCard ? heroCard.querySelector('.hero-tag') : null;
     const orb = document.getElementById('cumulative-color-orb');
     const orbNum = document.getElementById('cumulative-orb-number');
     const orbLabel = document.getElementById('cumulative-orb-label');
@@ -1595,71 +1795,91 @@ class AirBubbleGame {
     const pillR = document.getElementById('val-pill-r');
     const pillG = document.getElementById('val-pill-g');
     const pillB = document.getElementById('val-pill-b');
+    const pillCardR = document.getElementById('pill-r');
+    const pillCardG = document.getElementById('pill-g');
+    const pillCardB = document.getElementById('pill-b');
     const barFill = document.getElementById('hero-whiteness-fill');
     const barPct = document.getElementById('hero-whiteness-pct');
 
     if (!orb || !orbNum) return;
 
-    const cumR = this.cumulativeR;
-    const cumG = this.cumulativeG;
-    const cumB = this.cumulativeB;
-    const totalUnits = cumR + cumG + cumB;
+    const isPredictive = Boolean(forecast && forecast.willMerge && forecast.deltaUnits > 0);
+
+    // Toggle active predictive styling on hero card
+    if (heroCard) {
+      heroCard.classList.toggle('predictive-active', isPredictive);
+    }
+    if (heroTag) {
+      heroTag.textContent = isPredictive ? '🔮 PREDICTED SPECTRUM' : 'CUMULATIVE SPECTRUM';
+      heroTag.style.color = isPredictive ? '#ffd60a' : '';
+    }
+
+    // Determine target values: live vs predicted
+    const liveR = this.cumulativeR;
+    const liveG = this.cumulativeG;
+    const liveB = this.cumulativeB;
+    const liveTotal = liveR + liveG + liveB;
+
+    const effR = isPredictive ? forecast.predictedR : liveR;
+    const effG = isPredictive ? forecast.predictedG : liveG;
+    const effB = isPredictive ? forecast.predictedB : liveB;
+    const totalUnits = isPredictive ? forecast.predictedTotalUnits : liveTotal;
 
     // Effective RGB for chromatic preview:
     // If no merges have occurred yet, preview the chamber's active bubbles so the hero orb is responsive immediately!
-    let effR = cumR;
-    let effG = cumG;
-    let effB = cumB;
+    let chromaticR = effR;
+    let chromaticG = effG;
+    let chromaticB = effB;
     let isStandby = false;
 
     if (totalUnits === 0) {
       if (this.physics && this.physics.bubbles && this.physics.bubbles.length > 0) {
         for (const b of this.physics.bubbles) {
-          effR += (b.r || 0);
-          effG += (b.g || 0);
-          effB += (b.b || 0);
+          chromaticR += (b.r || 0);
+          chromaticG += (b.g || 0);
+          chromaticB += (b.b || 0);
         }
       } else {
         isStandby = true;
       }
     }
 
-    const maxVal = Math.max(effR, effG, effB);
+    const maxVal = Math.max(chromaticR, chromaticG, chromaticB);
     let R = 24, G = 38, B = 60;
     let balance = 0;
     let isWhite = false;
     let colorName = 'Standby';
 
     if (!isStandby && maxVal > 0) {
-      R = Math.round((effR / maxVal) * 255);
-      G = Math.round((effG / maxVal) * 255);
-      B = Math.round((effB / maxVal) * 255);
-      const minVal = Math.min(effR, effG, effB);
+      R = Math.round((chromaticR / maxVal) * 255);
+      G = Math.round((chromaticG / maxVal) * 255);
+      B = Math.round((chromaticB / maxVal) * 255);
+      const minVal = Math.min(chromaticR, chromaticG, chromaticB);
       balance = Math.round((minVal / maxVal) * 100);
-      isWhite = (balance >= 95 && effR > 0 && effG > 0 && effB > 0);
+      isWhite = (balance >= 95 && chromaticR > 0 && chromaticG > 0 && chromaticB > 0);
 
       if (isWhite) {
         colorName = '⚪ Pure White Light';
-      } else if (effR > 0 && effG === 0 && effB === 0) {
+      } else if (chromaticR > 0 && chromaticG === 0 && chromaticB === 0) {
         colorName = '🔴 Pure Red';
-      } else if (effG > 0 && effR === 0 && effB === 0) {
+      } else if (chromaticG > 0 && chromaticR === 0 && chromaticB === 0) {
         colorName = '🟢 Pure Green';
-      } else if (effB > 0 && effR === 0 && effG === 0) {
+      } else if (chromaticB > 0 && chromaticR === 0 && chromaticG === 0) {
         colorName = '🔵 Pure Blue';
-      } else if (effR === effG && effB === 0) {
+      } else if (chromaticR === chromaticG && chromaticB === 0) {
         colorName = '🟡 Yellow (R+G)';
-      } else if (effR === effB && effG === 0) {
+      } else if (chromaticR === chromaticB && chromaticG === 0) {
         colorName = '🟣 Magenta (R+B)';
-      } else if (effG === effB && effR === 0) {
+      } else if (chromaticG === chromaticB && chromaticR === 0) {
         colorName = '🔷 Cyan (G+B)';
       } else if (balance >= 75) {
         colorName = 'Near-White Light';
-      } else if (effR >= effG && effR >= effB) {
-        colorName = effG > effB ? 'Warm Amber' : 'Rose Violet';
-      } else if (effG >= effR && effG >= effB) {
-        colorName = effR > effB ? 'Lime Green' : 'Aquamarine';
+      } else if (chromaticR >= chromaticG && chromaticR >= chromaticB) {
+        colorName = chromaticG > chromaticB ? 'Warm Amber' : 'Rose Violet';
+      } else if (chromaticG >= chromaticR && chromaticG >= chromaticB) {
+        colorName = chromaticR > chromaticB ? 'Lime Green' : 'Aquamarine';
       } else {
-        colorName = effR > effG ? 'Deep Violet' : 'Electric Cyan';
+        colorName = chromaticR > chromaticG ? 'Deep Violet' : 'Electric Cyan';
       }
     }
 
@@ -1670,11 +1890,15 @@ class AirBubbleGame {
       orb.style.borderColor = 'rgba(255, 255, 255, 0.35)';
     } else if (isWhite) {
       orb.style.backgroundColor = '#ffffff';
-      orb.style.boxShadow = '0 0 55px rgba(255, 255, 255, 0.95), 0 0 100px rgba(255, 255, 255, 0.55), inset 0 0 24px #ffffff';
+      orb.style.boxShadow = isPredictive
+        ? '0 0 65px rgba(255, 255, 255, 1), 0 0 120px rgba(255, 214, 10, 0.6), inset 0 0 28px #ffffff'
+        : '0 0 55px rgba(255, 255, 255, 0.95), 0 0 100px rgba(255, 255, 255, 0.55), inset 0 0 24px #ffffff';
       orb.style.borderColor = '#ffffff';
     } else {
       orb.style.backgroundColor = `rgb(${R}, ${G}, ${B})`;
-      orb.style.boxShadow = `0 0 45px rgba(${R}, ${G}, ${B}, 0.8), 0 0 85px rgba(${R}, ${G}, ${B}, 0.4), inset 0 3px 10px rgba(255, 255, 255, 0.75), inset 0 -8px 16px rgba(0, 0, 0, 0.5)`;
+      orb.style.boxShadow = isPredictive
+        ? `0 0 55px rgba(${R}, ${G}, ${B}, 0.95), 0 0 95px rgba(255, 214, 10, 0.5), inset 0 3px 10px rgba(255, 255, 255, 0.85), inset 0 -8px 16px rgba(0, 0, 0, 0.5)`
+        : `0 0 45px rgba(${R}, ${G}, ${B}, 0.8), 0 0 85px rgba(${R}, ${G}, ${B}, 0.4), inset 0 3px 10px rgba(255, 255, 255, 0.75), inset 0 -8px 16px rgba(0, 0, 0, 0.5)`;
       orb.style.borderColor = (balance >= 70) ? '#ffffff' : `rgba(${Math.min(255, R + 60)}, ${Math.min(255, G + 60)}, ${Math.min(255, B + 60)}, 0.95)`;
     }
 
@@ -1702,36 +1926,113 @@ class AirBubbleGame {
     }
 
     if (orbLabel) {
-      orbLabel.textContent = totalUnits === 0 ? 'READY TO HARVEST' : 'CUMULATIVE UNITS';
-      orbLabel.style.color = isLightBackground ? 'rgba(0, 0, 0, 0.75)' : 'rgba(255, 255, 255, 0.85)';
+      if (isPredictive) {
+        orbLabel.textContent = `PREDICTED (+${forecast.deltaUnits} GAIN)`;
+        orbLabel.style.color = '#ffd60a';
+      } else {
+        orbLabel.textContent = totalUnits === 0 ? 'READY TO HARVEST' : 'CUMULATIVE UNITS';
+        orbLabel.style.color = isLightBackground ? 'rgba(0, 0, 0, 0.75)' : 'rgba(255, 255, 255, 0.85)';
+      }
     }
 
     if (orbName) {
-      orbName.textContent = colorName;
-      orbName.style.color = orbTextColor;
-      orbName.style.textShadow = isLightBackground ? 'none' : '0 1px 4px rgba(0, 0, 0, 0.8)';
+      orbName.textContent = isPredictive ? `⚡ ${colorName}` : colorName;
+      orbName.style.color = isPredictive ? '#ffd60a' : orbTextColor;
+      orbName.style.textShadow = isLightBackground && !isPredictive ? 'none' : '0 1px 4px rgba(0, 0, 0, 0.8)';
     }
 
     // Top status badge
     if (badge) {
-      badge.textContent = isWhite ? '⚪ 100% WHITE!' : (totalUnits > 0 ? `${balance}% BALANCED` : '⚪ READY');
-      badge.style.color = isWhite ? '#ffffff' : (balance >= 50 ? '#00e5ff' : '#ffd60a');
-      badge.style.borderColor = isWhite ? '#ffffff' : (balance >= 50 ? '#00e5ff' : 'rgba(255, 255, 255, 0.2)');
+      if (isPredictive) {
+        badge.textContent = isWhite ? '⚪ ➔ 100% WHITE!' : `➔ ${balance}% BALANCED`;
+        badge.style.color = '#ffd60a';
+        badge.style.borderColor = '#ffd60a';
+      } else {
+        badge.textContent = isWhite ? '⚪ 100% WHITE!' : (totalUnits > 0 ? `${balance}% BALANCED` : '⚪ READY');
+        badge.style.color = isWhite ? '#ffffff' : (balance >= 50 ? '#00e5ff' : '#ffd60a');
+        badge.style.borderColor = isWhite ? '#ffffff' : (balance >= 50 ? '#00e5ff' : 'rgba(255, 255, 255, 0.2)');
+      }
     }
 
     // Channel pills
-    if (pillR) pillR.textContent = cumR;
-    if (pillG) pillG.textContent = cumG;
-    if (pillB) pillB.textContent = cumB;
+    if (pillR) {
+      if (isPredictive && forecast.deltaR > 0) {
+        pillR.innerHTML = `${liveR} <span class="pill-delta">+${forecast.deltaR}</span>`;
+        if (pillCardR) pillCardR.classList.add('pill-predictive-gain');
+      } else {
+        pillR.textContent = liveR;
+        if (pillCardR) pillCardR.classList.remove('pill-predictive-gain');
+      }
+    }
+    if (pillG) {
+      if (isPredictive && forecast.deltaG > 0) {
+        pillG.innerHTML = `${liveG} <span class="pill-delta">+${forecast.deltaG}</span>`;
+        if (pillCardG) pillCardG.classList.add('pill-predictive-gain');
+      } else {
+        pillG.textContent = liveG;
+        if (pillCardG) pillCardG.classList.remove('pill-predictive-gain');
+      }
+    }
+    if (pillB) {
+      if (isPredictive && forecast.deltaB > 0) {
+        pillB.innerHTML = `${liveB} <span class="pill-delta">+${forecast.deltaB}</span>`;
+        if (pillCardB) pillCardB.classList.add('pill-predictive-gain');
+      } else {
+        pillB.textContent = liveB;
+        if (pillCardB) pillCardB.classList.remove('pill-predictive-gain');
+      }
+    }
 
     // Progress bar
-    if (barFill) barFill.style.width = `${balance}%`;
-    if (barPct) barPct.textContent = `${balance}%`;
+    const liveMax = Math.max(liveR, liveG, liveB, 1);
+    const liveMin = Math.min(liveR, liveG, liveB);
+    const liveBal = liveTotal > 0 ? Math.round((liveMin / liveMax) * 100) : 0;
+
+    if (barFill) {
+      barFill.style.width = `${balance}%`;
+      barFill.classList.toggle('predictive-fill', isPredictive);
+    }
+    if (barPct) {
+      if (isPredictive && balance !== liveBal) {
+        barPct.innerHTML = `${liveBal}% <span class="predictive-delta">➔ ${balance}%</span>`;
+      } else {
+        barPct.textContent = `${balance}%`;
+      }
+    }
   }
 
   calculateAimForecast() {
+    const nonMergeState = (reason, target, landingY) => ({
+      willMerge: false,
+      reason: reason,
+      target: target,
+      landingY: landingY,
+      comboCount: 1,
+      finalTier: this.readyBubble ? this.readyBubble.tier : 1,
+      expectedR: (this.readyBubble && this.readyBubble.r) || 0,
+      expectedG: (this.readyBubble && this.readyBubble.g) || 0,
+      expectedB: (this.readyBubble && this.readyBubble.b) || 0,
+      totalUnits: ((this.readyBubble && this.readyBubble.r) || 0) + ((this.readyBubble && this.readyBubble.g) || 0) + ((this.readyBubble && this.readyBubble.b) || 0),
+      chainEvents: [],
+      deltaR: 0,
+      deltaG: 0,
+      deltaB: 0,
+      deltaUnits: 0,
+      deltaScore: 0,
+      predictedScore: this.score,
+      predictedR: this.cumulativeR,
+      predictedG: this.cumulativeG,
+      predictedB: this.cumulativeB,
+      predictedTotalUnits: this.cumulativeR + this.cumulativeG + this.cumulativeB,
+      predictedMerges: this.totalMerges,
+      predictedPeakTier: this.peakTier,
+      predictedCombo: this.combo,
+      predictedCumulativeColor: null,
+      predictedBestBalance: this.bestBalance
+    });
+
     if (!this.readyBubble || this.isGameOver) {
-      return { willMerge: false, reason: 'none' };
+      return nonMergeState('none', null, 0);
     }
 
     const chamber = this.physics.chamber;
@@ -1753,11 +2054,7 @@ class AirBubbleGame {
 
     // Open lane if no bubbles in path
     if (inCorridor.length === 0) {
-      return {
-        willMerge: false,
-        reason: 'open_lane',
-        landingY: chamber.y + readyHh
-      };
+      return nonMergeState('open_lane', null, chamber.y + readyHh);
     }
 
     // Bubble with maximum y is lowest in chamber (first hit)
@@ -1766,12 +2063,7 @@ class AirBubbleGame {
 
     // Check tier match
     if (target.tier !== readyTier) {
-      return {
-        willMerge: false,
-        reason: 'mismatch',
-        target: target,
-        landingY: target.y + target.hh + readyHh
-      };
+      return nonMergeState('mismatch', target, target.y + target.hh + readyHh);
     }
 
     // Direct match: Simulate FULL CASCADE CHAIN
@@ -1801,6 +2093,16 @@ class AirBubbleGame {
     simBubbles = simBubbles.filter(b => b.id !== target.id);
 
     let comboCount = 1;
+    let simCombo = (this.gameTime - this.lastMergeTime <= this.comboWindow) ? (this.combo + 1) : 1;
+    let deltaR = curR;
+    let deltaG = curG;
+    let deltaB = curB;
+
+    const step1Color = this.getBubbleColor({ r: curR, g: curG, b: curB });
+    const step1BasePts = curTier * simCombo * 10;
+    const step1Mult = 1.0 + (step1Color.balance / 100) * 2.0;
+    let deltaScore = Math.round(step1BasePts * step1Mult);
+
     const chainEvents = [{
       step: 1,
       tier: curTier,
@@ -1838,11 +2140,21 @@ class AirBubbleGame {
       if (bestNeighbor) {
         comboCount++;
         canCascade = true;
+        simCombo++;
+
+        deltaR += curR + (bestNeighbor.r || 0);
+        deltaG += curG + (bestNeighbor.g || 0);
+        deltaB += curB + (bestNeighbor.b || 0);
 
         curTier = curTier + 1;
         curR = curR + (bestNeighbor.r || 0);
         curG = curG + (bestNeighbor.g || 0);
         curB = curB + (bestNeighbor.b || 0);
+
+        const stepNColor = this.getBubbleColor({ r: curR, g: curG, b: curB });
+        const stepNBasePts = curTier * simCombo * 10;
+        const stepNMult = 1.0 + (stepNColor.balance / 100) * 2.0;
+        deltaScore += Math.round(stepNBasePts * stepNMult);
 
         curX = (curX + bestNeighbor.x) / 2;
         curY = (curY + bestNeighbor.y) / 2;
@@ -1864,6 +2176,16 @@ class AirBubbleGame {
     }
 
     const colorInfo = this.getBubbleColor({ r: curR, g: curG, b: curB });
+    const deltaUnits = deltaR + deltaG + deltaB;
+    const predictedR = this.cumulativeR + deltaR;
+    const predictedG = this.cumulativeG + deltaG;
+    const predictedB = this.cumulativeB + deltaB;
+    const predictedTotalUnits = predictedR + predictedG + predictedB;
+    const predictedScore = this.score + deltaScore;
+    const predictedMerges = this.totalMerges + chainEvents.length;
+    const predictedPeakTier = Math.max(this.peakTier, curTier);
+    const predictedCumulativeColor = this.getBubbleColor({ r: predictedR, g: predictedG, b: predictedB });
+    const predictedBestBalance = Math.max(this.bestBalance, colorInfo.balance, predictedCumulativeColor.balance);
 
     return {
       willMerge: true,
@@ -1877,7 +2199,23 @@ class AirBubbleGame {
       landingX: curX,
       landingY: curY,
       colorInfo: colorInfo,
-      chainEvents: chainEvents
+      chainEvents: chainEvents,
+
+      deltaR: deltaR,
+      deltaG: deltaG,
+      deltaB: deltaB,
+      deltaUnits: deltaUnits,
+      deltaScore: deltaScore,
+      predictedScore: predictedScore,
+      predictedR: predictedR,
+      predictedG: predictedG,
+      predictedB: predictedB,
+      predictedTotalUnits: predictedTotalUnits,
+      predictedMerges: predictedMerges,
+      predictedPeakTier: predictedPeakTier,
+      predictedCombo: simCombo,
+      predictedCumulativeColor: predictedCumulativeColor,
+      predictedBestBalance: predictedBestBalance
     };
   }
 

@@ -627,6 +627,78 @@ html, body {
   box-shadow: 0 0 8px rgba(255, 255, 255, 0.5);
 }
 
+/* ==========================================================================
+   PREDICTIVE HOVER MODE VISUAL CUES
+   ========================================================================== */
+.predictive-delta {
+  font-size: 0.82em;
+  font-weight: 800;
+  color: #ffd60a;
+  text-shadow: 0 0 6px rgba(255, 214, 10, 0.6);
+  margin-left: 3px;
+  display: inline-block;
+  animation: pulse-delta 0.8s infinite alternate ease-in-out;
+}
+
+@keyframes pulse-delta {
+  from { opacity: 0.8; transform: scale(0.97); }
+  to { opacity: 1; transform: scale(1.04); }
+}
+
+.stat-card.predictive-pulse {
+  border-color: rgba(255, 214, 10, 0.55) !important;
+  box-shadow: 0 0 14px rgba(255, 214, 10, 0.25) !important;
+  background: rgba(18, 22, 16, 0.88) !important;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+#cumulative-color-hero.predictive-active {
+  border-color: rgba(0, 229, 255, 0.75) !important;
+  box-shadow: 0 0 28px rgba(0, 229, 255, 0.35), inset 0 0 14px rgba(0, 229, 255, 0.12) !important;
+}
+
+#cumulative-color-hero.predictive-active #cumulative-color-orb {
+  outline: 2.5px dashed rgba(255, 255, 255, 0.9);
+  outline-offset: 4px;
+  animation: pulse-orb-halo 1.1s infinite ease-in-out alternate;
+}
+
+@keyframes pulse-orb-halo {
+  from { outline-color: rgba(0, 229, 255, 0.6); outline-offset: 3px; }
+  to { outline-color: rgba(255, 214, 10, 0.95); outline-offset: 6px; }
+}
+
+.channel-pill.pill-predictive-gain {
+  border-color: #ffd60a !important;
+  box-shadow: 0 0 8px rgba(255, 214, 10, 0.45);
+  background: rgba(255, 214, 10, 0.14) !important;
+  animation: pulse-pill 0.8s infinite alternate ease-in-out;
+}
+
+@keyframes pulse-pill {
+  from { filter: brightness(1.0); }
+  to { filter: brightness(1.25); }
+}
+
+.pill-delta {
+  font-size: 0.78em;
+  font-weight: 800;
+  color: #ffd60a;
+  margin-left: 2px;
+}
+
+#hero-whiteness-fill.predictive-fill {
+  background: linear-gradient(90deg, #ffd60a 0%, #00e5ff 60%, #ffffff 100%) !important;
+  box-shadow: 0 0 12px rgba(255, 214, 10, 0.8) !important;
+}
+
+#live-push-badge.predictive-badge {
+  background: rgba(0, 229, 255, 0.2) !important;
+  border-color: #00e5ff !important;
+  color: #00e5ff !important;
+  box-shadow: 0 0 10px rgba(0, 229, 255, 0.4) !important;
+}
+
 /* Mode Bar */
 .segmented-control {
   display: flex;

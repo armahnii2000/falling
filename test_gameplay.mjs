@@ -160,9 +160,11 @@ async function run() {
 
         // Calculate forecast BEFORE physics step modifies positions
         const comboForecast = game.calculateAimForecast();
+        game.aimForecast = comboForecast;
 
-        // Run update so DOM and Canvas render with this forecast and updated hero orb
-        game.updateCumulativeHero();
+        // Run update so DOM and Canvas render with predictive preview
+        game.updateHUD(comboForecast);
+        game.updateCumulativeHero(comboForecast);
         game.updateShotForecastCard(comboForecast);
         game.render();
         game.isPaused = true;
@@ -171,6 +173,16 @@ async function run() {
         // Read DOM elements
         const orb = document.getElementById('cumulative-color-orb');
         const orbNum = document.getElementById('cumulative-orb-number');
+        const orbLabel = document.getElementById('cumulative-orb-label');
+        const heroCard = document.getElementById('cumulative-color-hero');
+        const heroTag = heroCard ? heroCard.querySelector('.hero-tag') : null;
+        const pillR = document.getElementById('val-pill-r');
+        const pillG = document.getElementById('val-pill-g');
+        const pillB = document.getElementById('val-pill-b');
+        const valScore = document.getElementById('val-score');
+        const valCombo = document.getElementById('val-combo');
+        const valPressure = document.getElementById('val-pressure');
+        const valMerges = document.getElementById('val-merges-count');
         const forecastCard = document.getElementById('shot-forecast-card');
         const forecastBadge = document.getElementById('forecast-action-badge');
         const forecastTarget = document.getElementById('forecast-target-desc');
@@ -186,6 +198,20 @@ async function run() {
           cumulativeB: game.cumulativeB,
           totalMerges: game.totalMerges,
           orbNumber: orbNum ? orbNum.textContent : null,
+          orbLabel: orbLabel ? orbLabel.textContent : null,
+          heroTag: heroTag ? heroTag.textContent : null,
+          heroPredictiveClass: heroCard ? heroCard.classList.contains('predictive-active') : false,
+          pills: {
+            r: pillR ? pillR.innerHTML : null,
+            g: pillG ? pillG.innerHTML : null,
+            b: pillB ? pillB.innerHTML : null
+          },
+          hudStats: {
+            score: valScore ? valScore.innerHTML : null,
+            combo: valCombo ? valCombo.textContent : null,
+            pressure: valPressure ? valPressure.innerHTML : null,
+            merges: valMerges ? valMerges.innerHTML : null
+          },
           forecast: {
             willMerge: forecast.willMerge,
             comboCount: forecast.comboCount,
@@ -216,7 +242,8 @@ async function run() {
   console.log('Capturing verified proof screenshot...');
   const shotRes = await sendSession('Page.captureScreenshot', { format: 'png' });
   fs.writeFileSync('web/proof_cumulative_color_orb_in_action.png', Buffer.from(shotRes.data, 'base64'));
-  console.log('Screenshot saved to web/proof_cumulative_color_orb_in_action.png');
+  fs.writeFileSync('web/proof_predictive_hover_mode.png', Buffer.from(shotRes.data, 'base64'));
+  console.log('Screenshots saved to web/proof_cumulative_color_orb_in_action.png and web/proof_predictive_hover_mode.png');
 
   ws.close();
   chrome.kill();
