@@ -67,13 +67,15 @@ class PhysicsEngine {
 
   createBubble(tier, colorData, x, y, vy = -780) {
     const size = tier * this.cellSize;
-    const rCount = (typeof colorData === 'object' && colorData !== null) ? (colorData.r || 0) : (colorData === 'hot' ? tier : 0);
+    const val = Math.pow(2, tier - 1);
+    const rCount = (typeof colorData === 'object' && colorData !== null) ? (colorData.r || 0) : (colorData === 'hot' ? val : 0);
     const gCount = (typeof colorData === 'object' && colorData !== null) ? (colorData.g || 0) : 0;
-    const bCount = (typeof colorData === 'object' && colorData !== null) ? (colorData.b || 0) : (colorData === 'cold' ? tier : 0);
+    const bCount = (typeof colorData === 'object' && colorData !== null) ? (colorData.b || 0) : (colorData === 'cold' ? val : 0);
 
     const b = {
       id: this.nextId++,
       tier: tier,
+      val: val,
       r: rCount,
       g: gCount,
       b: bCount,
@@ -92,8 +94,8 @@ class PhysicsEngine {
       wobbleX: 1.0,
       wobbleY: 1.0,
       wobbleVel: 0,
-      isSingularity: (tier >= 12),
-      singularityTimer: (tier >= 12 ? 0.6 : 0)
+      isSingularity: (tier >= 11),
+      singularityTimer: (tier >= 11 ? 0.6 : 0)
     };
     return b;
   }
@@ -111,7 +113,7 @@ class PhysicsEngine {
       const b = this.bubbles[i];
       b.age += dt;
 
-      // Handle Tier 12 Singularity auto-disappear
+      // Handle Block 11 (1024) Singularity auto-disappear
       if (b.isSingularity) {
         b.singularityTimer -= dt;
         if (b.singularityTimer <= 0 && !b.merging) {
@@ -222,8 +224,8 @@ class PhysicsEngine {
     const ox = minDistX - Math.abs(dx);
     const oy = minDistY - Math.abs(dy);
 
-    // Check for identical tier merge (Tiers 1 to 11 can merge into next tier)
-    if (b1.tier === b2.tier && b1.tier < 12 && !b1.merging && !b2.merging) {
+    // Check for identical tier merge (Tiers 1 to 10 can merge into next tier, 11 total blocks)
+    if (b1.tier === b2.tier && b1.tier < 11 && !b1.merging && !b2.merging) {
       // 1. Direct 2D overlap
       const isDirectOverlap = (ox > 0 && oy > 0);
 
@@ -286,7 +288,7 @@ class PhysicsEngine {
     const minDist = b1.radius + b2.radius;
 
     if (dist < minDist && dist > 0.001) {
-      if (b1.tier === b2.tier && b1.tier < 12 && !b1.merging && !b2.merging) {
+      if (b1.tier === b2.tier && b1.tier < 11 && !b1.merging && !b2.merging) {
         b1.merging = true;
         b2.merging = true;
         return true;

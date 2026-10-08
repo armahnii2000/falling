@@ -154,6 +154,14 @@
           <div id="live-push-badge">💥 Pushouts: <span id="push-counter">0</span></div>
         </div>
 
+        <!-- Tier Evolution Reference Strip -->
+        <div id="evolution-strip">
+          <div class="evo-header desktop-only">🧩 Block Hierarchy (1 to 1024 · 11 Blocks)</div>
+          <div class="evo-scroll" id="evo-scroll-container">
+            <!-- Rendered dynamically in game.js -->
+          </div>
+        </div>
+
         <!-- Desktop Quick Guide / Keyboard Shortcuts -->
         <div id="desktop-keys-guide" class="desktop-only">
           <div class="guide-title">⌨️ Keyboard Controls</div>
@@ -161,14 +169,6 @@
             <div class="key-item"><span>Aim Vent:</span> <strong>← / → or A / D</strong></div>
             <div class="key-item"><span>Launch:</span> <strong>Space / W / ↑</strong></div>
             <div class="key-item"><span>Restart Round:</span> <strong>R</strong></div>
-          </div>
-        </div>
-
-        <!-- Tier Evolution Reference Strip -->
-        <div id="evolution-strip">
-          <div class="evo-header desktop-only">🧩 Bubble Tier Hierarchy (1 to 12)</div>
-          <div class="evo-scroll" id="evo-scroll-container">
-            <!-- Rendered dynamically in game.js -->
           </div>
         </div>
       </aside>
@@ -181,7 +181,7 @@
         <h2 id="game-over-title">The Bubble Has Popped</h2>
         <div class="modal-stats">
           <div class="modal-stat-row"><span>Final Lake A.I.r:</span> <strong id="modal-final-score">0</strong></div>
-          <div class="modal-stat-row"><span>Peak Square Tier:</span> <strong id="modal-peak-tier">1</strong></div>
+          <div class="modal-stat-row"><span>Peak Block Achieved:</span> <strong id="modal-peak-tier">1</strong></div>
           <div class="modal-stat-row"><span>Total Merges:</span> <strong id="modal-total-merges">0</strong></div>
           <div class="modal-stat-row"><span>Push-Out Collisions:</span> <strong id="modal-total-pushouts">0</strong></div>
         </div>
@@ -199,8 +199,8 @@
           <div class="info-section">
             <h3>🌈 The Additive Light Mixing Rules</h3>
             <ul>
-              <li><strong>Pure Primaries Spawn:</strong> Launched blocks roll randomly as 🔴 <strong>Red</strong>, 🟢 <strong>Green</strong>, or 🔵 <strong>Blue</strong> with low tiers (1, 2, or 3).</li>
-              <li><strong>Suika Merge by Number Only:</strong> Any two blocks of the <em>same Tier number</em> merge into Tier $N + 1$, regardless of color!</li>
+              <li><strong>Pure Primaries Spawn:</strong> Launched blocks roll randomly as 🔴 <strong>Red</strong>, 🟢 <strong>Green</strong>, or 🔵 <strong>Blue</strong> with values 1, 2, or 4.</li>
+              <li><strong>Power-of-2 Mathematical Merge:</strong> Any two blocks of the <em>same value</em> merge together and add up directly ($1+1 \to 2$, $2+2 \to 4$, $4+4 \to 8$, $\dots$, $512+512 \to 1024$)!</li>
               <li><strong>Accurate Chromatic Mixing:</strong> When two blocks merge, their internal RGB units add together ($r_1+r_2, g_1+g_2, b_1+b_2$). The resulting block's color is the true optical blend:
                 <br>• 🔴 Red + 🟢 Green = 🟡 <strong>Yellow</strong> (or 🟠 Amber)
                 <br>• 🔴 Red + 🔵 Blue = 🟣 <strong>Magenta</strong>

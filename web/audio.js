@@ -4,7 +4,7 @@ class SoundEngine {
     this.ctx = null;
     this.muted = false;
     this.unlocked = false;
-    // Scale for Tiers 1 through 12: C4, D4, E4, F4, G4, A4, B4, C5, D5, E5, F5, G5
+    // Scale for Blocks 1 through 11 (1 to 1024): C4, D4, E4, F4, G4, A4, B4, C5, D5, E5, F5, G5
     this.frequencies = [
       261.63, 293.66, 329.63, 349.23, 392.00, 440.00,
       493.88, 523.25, 587.33, 659.25, 698.46, 783.99
@@ -167,7 +167,7 @@ class SoundEngine {
     osc.stop(t + 0.2);
   }
 
-  // Size 12 Singularity Supernova Fanfare & Disappearance
+  // Block 11 (1024) Singularity Supernova Fanfare & Disappearance
   playSingularity() {
     if (this.muted) return;
     this.ensureContext();

@@ -1,21 +1,25 @@
 // A.I.r Bubbles — n×n Grid Edition Game Controller
-// Implements full inverted buoyancy, 12-tier grid bubbles, temperature rules,
+// Implements full inverted buoyancy, 11-tier power-of-2 blocks (1 to 1024),
 // Lake Ellem score reservoir, and tactile push-out dynamics.
 
 const TIERS = [
-  { tier: 1,  name: "Photon",       sub: "Primary Spark" },
-  { tier: 2,  name: "Chroma",       sub: "Dual Spectrum" },
-  { tier: 3,  name: "Prism",        sub: "Tri-Color Mix" },
-  { tier: 4,  name: "Spectra",      sub: "Harmonic Wave" },
-  { tier: 5,  name: "Lumen",        sub: "Amplified Light" },
-  { tier: 6,  name: "Candela",      sub: "Focused Beam" },
-  { tier: 7,  name: "Aurora",       sub: "Atmospheric Glow" },
-  { tier: 8,  name: "Corona",       sub: "Stellar Halo" },
-  { tier: 9,  name: "Helios",       sub: "Solar Core" },
-  { tier: 10, name: "Supernova",    sub: "Radiant Burst" },
-  { tier: 11, name: "Quasar",       sub: "Hyperluminal Apex" },
-  { tier: 12, name: "White Singularity", sub: "100% Equilibrium" }
+  { tier: 1,  val: 1,    name: "Photon",            sub: "Primary Spark (1)" },
+  { tier: 2,  val: 2,    name: "Chroma",            sub: "Dual Spectrum (2)" },
+  { tier: 3,  val: 4,    name: "Prism",             sub: "Tri-Color Mix (4)" },
+  { tier: 4,  val: 8,    name: "Spectra",           sub: "Harmonic Wave (8)" },
+  { tier: 5,  val: 16,   name: "Lumen",             sub: "Amplified Light (16)" },
+  { tier: 6,  val: 32,   name: "Candela",           sub: "Focused Beam (32)" },
+  { tier: 7,  val: 64,   name: "Aurora",            sub: "Atmospheric Glow (64)" },
+  { tier: 8,  val: 128,  name: "Corona",            sub: "Stellar Halo (128)" },
+  { tier: 9,  val: 256,  name: "Helios",            sub: "Solar Core (256)" },
+  { tier: 10, val: 512,  name: "Supernova",         sub: "Radiant Burst (512)" },
+  { tier: 11, val: 1024, name: "White Singularity", sub: "1024 Apex Equilibrium" }
 ];
+
+function getTierValue(tier) {
+  if (tier >= 1 && tier <= TIERS.length) return TIERS[tier - 1].val;
+  return Math.pow(2, Math.max(0, tier - 1));
+}
 
 class AirBubbleGame {
   constructor() {
@@ -226,13 +230,15 @@ class AirBubbleGame {
 
   rollSpawn() {
     const tier = this.rollSpawnTier();
+    const val = getTierValue(tier);
     const color = this.rollSpawnColor();
     return {
       tier: tier,
+      val: val,
       colorName: color,
-      r: color === 'red' ? tier : 0,
-      g: color === 'green' ? tier : 0,
-      b: color === 'blue' ? tier : 0
+      r: color === 'red' ? val : 0,
+      g: color === 'green' ? val : 0,
+      b: color === 'blue' ? val : 0
     };
   }
 
@@ -427,8 +433,9 @@ class AirBubbleGame {
       this.whiteBubblesCreated++;
     }
 
-    // 3. Score calculation: resulting tier * combo + Whiteness Purity Bonus
-    const basePts = nextTier * this.combo * 10;
+    // 3. Score calculation: resulting block value * combo + Whiteness Purity Bonus
+    const nextVal = getTierValue(nextTier);
+    const basePts = nextVal * this.combo * 5;
     const whitenessMult = 1.0 + (colorInfo.balance / 100) * 2.0; // Up to 3x multiplier for pure white!
     const pts = Math.round(basePts * whitenessMult);
     this.score += pts;
@@ -511,20 +518,20 @@ class AirBubbleGame {
       });
     }
 
-    // Check Victory (e.g. Tier 8+ with >= 90% white balance, or Tier 12 Singularity)
+    // Check Victory (e.g. Block 128+ with >= 90% white balance, or Block 1024 Singularity)
     if (nextTier >= 8 && colorInfo.balance >= 90 && !this.isWon && !this.isGameOver) {
       this.triggerWhiteVictory(newBubble, colorInfo);
       return;
     }
   }
 
-  // SIZE 12 SINGULARITY BURST / DISAPPEAR
+  // SIZE 11 (1024) SINGULARITY BURST / DISAPPEAR
   onSingularityPop(b) {
     this.sound.playSingularity();
     this.cameraTrauma = 1.0;
 
-    // Massive score bonus
-    const pts = 144 * this.combo;
+    // Massive score bonus for 1024 Singularity
+    const pts = 2048 * this.combo;
     this.score += pts;
 
     this.popups.push({
@@ -590,7 +597,7 @@ class AirBubbleGame {
     badge.style.borderColor = '#ffffff';
     badge.style.color = '#ffffff';
     document.getElementById('game-over-title').textContent = 'Pure White Light Synthesized!';
-    document.getElementById('game-over-desc').textContent = `Magnificent achievement! You cultivated a giant Tier ${b.tier} bubble with ${colorInfo.balance}% White light equilibrium across ${this.blocksLaunched} launches.`;
+    document.getElementById('game-over-desc').textContent = `Magnificent achievement! You cultivated a giant Block ${getTierValue(b.tier)} with ${colorInfo.balance}% White light equilibrium across ${this.blocksLaunched} launches.`;
     this.showGameOverModal();
   }
 
@@ -605,13 +612,13 @@ class AirBubbleGame {
     badge.style.borderColor = '#ff453a';
     badge.style.color = '#ff453a';
     document.getElementById('game-over-title').textContent = 'The Chamber Has Jammed';
-    document.getElementById('game-over-desc').textContent = `Bubbles stacked down past the seabed danger line for over 3 seconds. Peak balance achieved: ${this.bestBalance}% on Tier ${this.bestBalanceTier}.`;
+    document.getElementById('game-over-desc').textContent = `Blocks stacked down past the seabed danger line for over 3 seconds. Peak balance achieved: ${this.bestBalance}% on Block ${getTierValue(this.bestBalanceTier)}.`;
     this.showGameOverModal();
   }
 
   showGameOverModal() {
     document.getElementById('modal-final-score').textContent = this.score;
-    document.getElementById('modal-peak-tier').textContent = `Tier ${this.peakTier} (${TIERS[this.peakTier - 1]?.name || ''}) · ⚪ ${this.bestBalance}%`;
+    document.getElementById('modal-peak-tier').textContent = `Block ${getTierValue(this.peakTier)} (${TIERS[this.peakTier - 1]?.name || ''}) · ⚪ ${this.bestBalance}%`;
     document.getElementById('modal-total-merges').textContent = this.totalMerges;
     document.getElementById('modal-total-pushouts').textContent = `R:${this.cumulativeR} G:${this.cumulativeG} B:${this.cumulativeB}`;
     document.getElementById('game-over-modal').classList.remove('hidden');
@@ -811,7 +818,7 @@ class AirBubbleGame {
         }
         if (this.uiPressureStatus) {
           if (isNewPeak) {
-            this.uiPressureStatus.textContent = `⚡ NEW PEAK TIER ${forecast.predictedPeakTier}!`;
+            this.uiPressureStatus.textContent = `⚡ NEW PEAK BLOCK ${getTierValue(forecast.predictedPeakTier)}!`;
             this.uiPressureStatus.style.color = '#ffffff';
           } else {
             this.uiPressureStatus.textContent = `YIELDS ${forecast.colorInfo.balance}% BALANCE`;
@@ -1258,7 +1265,7 @@ class AirBubbleGame {
 
       ctx.font = 'bold 7px sans-serif';
       ctx.fillStyle = isNewPeak ? '#ffd60a' : '#8b9bb4';
-      ctx.fillText(isNewPeak ? `NEW T${forecast.predictedPeakTier}!` : `PEAK T${this.bestBalanceTier}`, gx + gw / 2, gy + gh - 4);
+      ctx.fillText(isNewPeak ? `NEW ${getTierValue(forecast.predictedPeakTier)}!` : `PEAK ${getTierValue(this.bestBalanceTier)}`, gx + gw / 2, gy + gh - 4);
     } else {
       const balanceColor = this.bestBalance >= 90 ? '#ffffff' : (this.bestBalance >= 50 ? '#00e5ff' : '#8b9bb4');
       ctx.fillStyle = balanceColor;
@@ -1272,7 +1279,7 @@ class AirBubbleGame {
 
       ctx.font = 'bold 7px sans-serif';
       ctx.fillStyle = '#8b9bb4';
-      ctx.fillText(`PEAK T${this.bestBalanceTier}`, gx + gw / 2, gy + gh - 4);
+      ctx.fillText(`PEAK ${getTierValue(this.bestBalanceTier)}`, gx + gw / 2, gy + gh - 4);
     }
     ctx.restore();
 
@@ -1413,23 +1420,26 @@ class AirBubbleGame {
         ctx.stroke();
       }
 
-      // Center Tier Number Badge - SOLID BLACK TEXT WITH CRISP MICRO-RIM
+      // Center Block Value Number Badge - SOLID BLACK TEXT WITH CRISP MICRO-RIM
       ctx.save();
-      const numSize = Math.max(10, Math.min(24, b.size * 0.44));
+      const valStr = `${b.val || getTierValue(b.tier)}`;
+      let numSize = Math.max(10, Math.min(26, b.size * 0.44));
+      if (valStr.length === 3) numSize = Math.max(9, Math.min(22, b.size * 0.36));
+      if (valStr.length >= 4) numSize = Math.max(9, Math.min(20, b.size * 0.28));
       ctx.font = `900 ${numSize}px -apple-system, BlinkMacSystemFont, sans-serif`;
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
-      const numY = (b.size >= 34 ? -6 : 0);
+      const numY = (b.size >= 34 ? -Math.round(b.size * 0.12) : 0);
 
       // Subtle light stroke guaranteeing legibility on pure blue/red boxes
-      ctx.strokeStyle = 'rgba(255, 255, 255, 0.88)';
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.92)';
       ctx.lineWidth = Math.max(2, Math.round(b.size * 0.05));
       ctx.lineJoin = 'round';
-      ctx.strokeText(`${b.tier}`, 0, numY);
+      ctx.strokeText(valStr, 0, numY);
 
       // Solid black text fill
       ctx.fillStyle = '#000000';
-      ctx.fillText(`${b.tier}`, 0, numY);
+      ctx.fillText(valStr, 0, numY);
       ctx.restore();
 
       // RGB Pill Overlay showing exact constituent R, G, B counts
@@ -1455,21 +1465,24 @@ class AirBubbleGame {
       ctx.lineWidth = colorInfo.isWhite ? 3.0 : 2.0;
       ctx.stroke();
 
-      // Circle Tier Number Badge - SOLID BLACK TEXT WITH CRISP MICRO-RIM
+      // Circle Block Value Number Badge - SOLID BLACK TEXT WITH CRISP MICRO-RIM
       ctx.save();
-      const circleNumSize = Math.max(10, Math.min(22, b.radius * 0.72));
+      const circleValStr = `${b.val || getTierValue(b.tier)}`;
+      let circleNumSize = Math.max(10, Math.min(24, b.radius * 0.72));
+      if (circleValStr.length === 3) circleNumSize = Math.max(9, Math.min(20, b.radius * 0.58));
+      if (circleValStr.length >= 4) circleNumSize = Math.max(9, Math.min(18, b.radius * 0.46));
       ctx.font = `900 ${circleNumSize}px -apple-system, BlinkMacSystemFont, sans-serif`;
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
-      const circleNumY = (b.radius >= 22 ? -5 : 0);
+      const circleNumY = (b.radius >= 22 ? -Math.round(b.radius * 0.18) : 0);
 
-      ctx.strokeStyle = 'rgba(255, 255, 255, 0.88)';
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.92)';
       ctx.lineWidth = Math.max(2, Math.round(b.radius * 0.08));
       ctx.lineJoin = 'round';
-      ctx.strokeText(`${b.tier}`, 0, circleNumY);
+      ctx.strokeText(circleValStr, 0, circleNumY);
 
       ctx.fillStyle = '#000000';
-      ctx.fillText(`${b.tier}`, 0, circleNumY);
+      ctx.fillText(circleValStr, 0, circleNumY);
       ctx.restore();
 
       // RGB Pill Overlay for circle mode
@@ -1618,8 +1631,8 @@ class AirBubbleGame {
       ctx.translate(t.x, badgeY);
 
       const badgeTitle = (forecast.comboCount > 1)
-        ? `⚡ COMBO x${forecast.comboCount} ➔ T${forecast.finalTier}`
-        : `🎯 T${forecast.finalTier}`;
+        ? `⚡ COMBO x${forecast.comboCount} ➔ ${getTierValue(forecast.finalTier)}`
+        : `🎯 ${getTierValue(forecast.finalTier)}`;
 
       // Title label
       ctx.fillStyle = (forecast.comboCount > 1) ? '#ffd60a' : '#00e5ff';
@@ -1663,6 +1676,7 @@ class AirBubbleGame {
         ctx.lineWidth = 2.0;
         ctx.stroke();
 
+        const readyValStr = `${this.readyBubble.val || getTierValue(this.readyBubble.tier)}`;
         ctx.save();
         ctx.font = '900 13px -apple-system, BlinkMacSystemFont, sans-serif';
         ctx.textAlign = 'center';
@@ -1670,9 +1684,9 @@ class AirBubbleGame {
         ctx.strokeStyle = 'rgba(255, 255, 255, 0.9)';
         ctx.lineWidth = 2.0;
         ctx.lineJoin = 'round';
-        ctx.strokeText(`${this.readyBubble.tier}`, 0, (this.readyBubble.tier >= 2 ? -5 : 0));
+        ctx.strokeText(readyValStr, 0, (this.readyBubble.tier >= 2 ? -5 : 0));
         ctx.fillStyle = '#000000';
-        ctx.fillText(`${this.readyBubble.tier}`, 0, (this.readyBubble.tier >= 2 ? -5 : 0));
+        ctx.fillText(readyValStr, 0, (this.readyBubble.tier >= 2 ? -5 : 0));
         ctx.restore();
 
         if (this.readyBubble.tier >= 2) {
@@ -1688,6 +1702,7 @@ class AirBubbleGame {
         ctx.lineWidth = 2.0;
         ctx.stroke();
 
+        const readyValStr = `${this.readyBubble.val || getTierValue(this.readyBubble.tier)}`;
         ctx.save();
         ctx.font = '900 13px -apple-system, BlinkMacSystemFont, sans-serif';
         ctx.textAlign = 'center';
@@ -1695,9 +1710,9 @@ class AirBubbleGame {
         ctx.strokeStyle = 'rgba(255, 255, 255, 0.9)';
         ctx.lineWidth = 2.0;
         ctx.lineJoin = 'round';
-        ctx.strokeText(`${this.readyBubble.tier}`, 0, (this.readyBubble.tier >= 2 ? -5 : 0));
+        ctx.strokeText(readyValStr, 0, (this.readyBubble.tier >= 2 ? -5 : 0));
         ctx.fillStyle = '#000000';
-        ctx.fillText(`${this.readyBubble.tier}`, 0, (this.readyBubble.tier >= 2 ? -5 : 0));
+        ctx.fillText(readyValStr, 0, (this.readyBubble.tier >= 2 ? -5 : 0));
         ctx.restore();
 
         if (this.readyBubble.tier >= 2) {
@@ -1740,6 +1755,7 @@ class AirBubbleGame {
       ctx.stroke();
     }
 
+    const nextValStr = `${this.nextBubble.val || getTierValue(this.nextBubble.tier)}`;
     ctx.save();
     ctx.font = '900 13px -apple-system, BlinkMacSystemFont, sans-serif';
     ctx.textAlign = 'center';
@@ -1747,9 +1763,9 @@ class AirBubbleGame {
     ctx.strokeStyle = 'rgba(255, 255, 255, 0.9)';
     ctx.lineWidth = 2.0;
     ctx.lineJoin = 'round';
-    ctx.strokeText(`${this.nextBubble.tier}`, 0, (this.nextBubble.tier >= 2 ? -5 : 0));
+    ctx.strokeText(nextValStr, 0, (this.nextBubble.tier >= 2 ? -5 : 0));
     ctx.fillStyle = '#000000';
-    ctx.fillText(`${this.nextBubble.tier}`, 0, (this.nextBubble.tier >= 2 ? -5 : 0));
+    ctx.fillText(nextValStr, 0, (this.nextBubble.tier >= 2 ? -5 : 0));
     ctx.restore();
 
     if (this.nextBubble.tier >= 2) {
@@ -1764,20 +1780,23 @@ class AirBubbleGame {
     if (!container) return;
     container.innerHTML = '';
     const evoExamples = [
-      { tier: 1, name: "🔴/🟢/🔵 Primary", color: "#ff3b30", text: "#000000" },
-      { tier: 2, name: "🟡/🟣/🔷 Dual Mix", color: "#ffd60a", text: "#000000" },
-      { tier: 3, name: "🌈 Tri-Chroma", color: "#c56cf0", text: "#000000" },
-      { tier: 4, name: "☀️ Harmonic", color: "#ff9f1a", text: "#000000" },
-      { tier: 5, name: "💎 Prism Lumen", color: "#00e5ff", text: "#000000" },
-      { tier: 6, name: "🔮 Near-White", color: "#f1f2f6", text: "#000000" },
-      { tier: 8, name: "⚪ Solar White", color: "#ffffff", text: "#000000" },
-      { tier: 12, name: "☀️ Singularity", color: "#ffffff", text: "#000000" }
+      { tier: 1,  val: 1,    name: "1 Photon",      color: "#ff3b30", text: "#000000" },
+      { tier: 2,  val: 2,    name: "2 Chroma",      color: "#ffd60a", text: "#000000" },
+      { tier: 3,  val: 4,    name: "4 Prism",       color: "#c56cf0", text: "#000000" },
+      { tier: 4,  val: 8,    name: "8 Spectra",     color: "#ff9f1a", text: "#000000" },
+      { tier: 5,  val: 16,   name: "16 Lumen",      color: "#00e5ff", text: "#000000" },
+      { tier: 6,  val: 32,   name: "32 Candela",    color: "#f1f2f6", text: "#000000" },
+      { tier: 7,  val: 64,   name: "64 Aurora",     color: "#2ed573", text: "#000000" },
+      { tier: 8,  val: 128,  name: "128 Corona",    color: "#ffa502", text: "#000000" },
+      { tier: 9,  val: 256,  name: "256 Helios",    color: "#ff4757", text: "#000000" },
+      { tier: 10, val: 512,  name: "512 Nova",      color: "#eccc68", text: "#000000" },
+      { tier: 11, val: 1024, name: "1024 Apex",     color: "#ffffff", text: "#000000" }
     ];
     evoExamples.forEach(t => {
       const item = document.createElement('div');
       item.className = 'evo-item';
       item.innerHTML = `
-        <div class="evo-badge" style="background:${t.color}; color:${t.text}; box-shadow: 0 0 8px ${t.color};">${t.tier}</div>
+        <div class="evo-badge" style="background:${t.color}; color:${t.text}; box-shadow: 0 0 8px ${t.color}; font-weight: 900;">${t.val}</div>
         <div class="evo-name">${t.name}</div>
       `;
       container.appendChild(item);
@@ -2099,7 +2118,7 @@ class AirBubbleGame {
     let deltaB = curB;
 
     const step1Color = this.getBubbleColor({ r: curR, g: curG, b: curB });
-    const step1BasePts = curTier * simCombo * 10;
+    const step1BasePts = getTierValue(curTier) * simCombo * 5;
     const step1Mult = 1.0 + (step1Color.balance / 100) * 2.0;
     let deltaScore = Math.round(step1BasePts * step1Mult);
 
@@ -2109,12 +2128,12 @@ class AirBubbleGame {
       r: curR,
       g: curG,
       b: curB,
-      desc: `Direct Merge T${readyTier}+T${target.tier} ➔ T${curTier}`
+      desc: `Direct Merge ${getTierValue(readyTier)} + ${getTierValue(target.tier)} ➔ ${getTierValue(curTier)}`
     }];
 
-    // Cascade search
+    // Cascade search (11 blocks max)
     let canCascade = true;
-    while (canCascade && curTier < 12) {
+    while (canCascade && curTier < 11) {
       canCascade = false;
       let bestNeighbor = null;
       let bestDist = Infinity;
@@ -2152,7 +2171,7 @@ class AirBubbleGame {
         curB = curB + (bestNeighbor.b || 0);
 
         const stepNColor = this.getBubbleColor({ r: curR, g: curG, b: curB });
-        const stepNBasePts = curTier * simCombo * 10;
+        const stepNBasePts = getTierValue(curTier) * simCombo * 5;
         const stepNMult = 1.0 + (stepNColor.balance / 100) * 2.0;
         deltaScore += Math.round(stepNBasePts * stepNMult);
 
@@ -2170,7 +2189,7 @@ class AirBubbleGame {
           r: curR,
           g: curG,
           b: curB,
-          desc: `Combo x${comboCount} with adjacent T${bestNeighbor.tier}`
+          desc: `Combo x${comboCount} with adjacent Block ${getTierValue(bestNeighbor.tier)}`
         });
       }
     }
@@ -2240,8 +2259,8 @@ class AirBubbleGame {
         badge.textContent = 'STACKS / NO MERGE';
         badge.className = 'forecast-badge';
         const t = forecast.target;
-        targetDesc.textContent = `Tier ${t.tier} [R:${t.r || 0} G:${t.g || 0} B:${t.b || 0}] (Mismatched Tier)`;
-        if (hint) hint.textContent = `Loaded Tier ${this.readyBubble.tier} will bounce & stack underneath`;
+        targetDesc.textContent = `Block ${getTierValue(t.tier)} [R:${t.r || 0} G:${t.g || 0} B:${t.b || 0}] (Mismatched Value)`;
+        if (hint) hint.textContent = `Loaded Block ${getTierValue(this.readyBubble.tier)} will bounce & stack underneath`;
       } else {
         badge.textContent = 'OPEN LANE';
         badge.className = 'forecast-badge';
@@ -2259,16 +2278,16 @@ class AirBubbleGame {
       card.classList.add('has-combo');
       badge.textContent = `⚡ COMBO x${forecast.comboCount}!`;
       badge.className = 'forecast-badge action-combo';
-      targetDesc.textContent = `Hits Tier ${forecast.target.tier} ➔ Triggers ${forecast.comboCount}-Hit Cascade!`;
+      targetDesc.textContent = `Hits Block ${getTierValue(forecast.target.tier)} ➔ Triggers ${forecast.comboCount}-Hit Cascade!`;
     } else {
       card.classList.remove('has-combo');
       card.classList.add('has-merge');
       badge.textContent = '🎯 DIRECT MERGE';
       badge.className = 'forecast-badge action-merge';
-      targetDesc.textContent = `Hits Tier ${forecast.target.tier} [R:${forecast.target.r || 0} G:${forecast.target.g || 0} B:${forecast.target.b || 0}]`;
+      targetDesc.textContent = `Hits Block ${getTierValue(forecast.target.tier)} [R:${forecast.target.r || 0} G:${forecast.target.g || 0} B:${forecast.target.b || 0}]`;
     }
 
-    if (resTier) resTier.textContent = `TIER ${forecast.finalTier}`;
+    if (resTier) resTier.textContent = `BLOCK ${getTierValue(forecast.finalTier)}`;
     if (badgeR) badgeR.textContent = `🔴 R: ${forecast.expectedR}`;
     if (badgeG) badgeG.textContent = `🟢 G: ${forecast.expectedG}`;
     if (badgeB) badgeB.textContent = `🔵 B: ${forecast.expectedB}`;
@@ -2283,7 +2302,7 @@ class AirBubbleGame {
       if (forecast.comboCount > 1) {
         hint.textContent = `Cascades ${forecast.comboCount} times into adjacent matching blocks!`;
       } else {
-        hint.textContent = `Produces clean Tier ${forecast.finalTier} block`;
+        hint.textContent = `Produces clean Block ${getTierValue(forecast.finalTier)}`;
       }
     }
   }
