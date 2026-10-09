@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Into the Darkness — Block Proportions & Scaling</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: #0d1117;
+      color: #e6edf3;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      padding: 40px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    h1 {
+      font-size: 28px;
+      margin-bottom: 8px;
+      letter-spacing: -0.5px;
+    }
+    p.subtitle {
+      color: #8b949e;
+      font-size: 15px;
+      margin-bottom: 30px;
+    }
+    .card {
+      background: #161b22;
+      border: 1px solid #30363d;
+      border-radius: 12px;
+      padding: 28px;
+      max-width: 1200px;
+      width: 100%;
+      margin-bottom: 30px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    }
+    .chart-img {
+      width: 100%;
+      height: auto;
+      border-radius: 8px;
+      border: 1px solid #21262d;
+    }
+    .interactive-row {
+      display: flex;
+      align-items: flex-end;
+      gap: 16px;
+      overflow-x: auto;
+      padding: 30px 20px;
+      background: #090d13;
+      border-radius: 8px;
+      border: 1px solid #21262d;
+      margin-top: 20px;
+    }
+    .block-card {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+    }
+    .interactive-block {
+      border-radius: 4px;
+      display: grid;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+      position: relative;
+      transition: transform 0.2s;
+    }
+    .interactive-block:hover {
+      transform: scale(1.05);
+    }
+    .grid-cell {
+      border: 1px solid rgba(0,0,0,0.25);
+    }
+    .block-label {
+      font-size: 12px;
+      color: #8b949e;
+      text-align: center;
+      line-height: 1.4;
+    }
+    .block-label strong {
+      color: #f0f6fc;
+      display: block;
+      font-size: 13px;
+    }
+    .badge-11 {
+      color: #58a6ff;
+    }
+  </style>
+</head>
+<body>
+  <h1>Into the Darkness — Block Proportions & Discrete N×N Scaling</h1>
+  <p class="subtitle">Visual reference and mathematical footprint for all 11 tiers (1×1 to 11×11 units)</p>
+
+  <div class="card">
+    <h2 style="font-size: 18px; margin-bottom: 16px; color: #58a6ff;">High-Resolution Scaling Chart</h2>
+    <img src="/image5_block_proportions.jpg" alt="Block Proportions Graphic" class="chart-img">
+  </div>
+
+  <div class="card">
+    <h2 style="font-size: 18px; margin-bottom: 8px; color: #58a6ff;">Interactive CSS Rendered Blocks</h2>
+    <p style="color: #8b949e; font-size: 13px; margin-bottom: 16px;">Rendered at 1 unit = 12px (hover over any block to inspect):</p>
+    <div class="interactive-row" id="blocks-container"></div>
+  </div>
+
+  <script>
+    const TIERS = [
+      { t: 1,  name: "Photon",      color: "#f5cd23", text: "#111" },
+      { t: 2,  name: "Chroma",      color: "#e12691", text: "#fff" },
+      { t: 3,  name: "Prism",       color: "#0fb9e1", text: "#fff" },
+      { t: 4,  name: "Spectra",     color: "#285fdc", text: "#fff" },
+      { t: 5,  name: "Lumen",       color: "#d7322d", text: "#fff" },
+      { t: 6,  name: "Candela",     color: "#1ea555", text: "#fff" },
+      { t: 7,  name: "Aurora",      color: "#872db9", text: "#fff" },
+      { t: 8,  name: "Corona",      color: "#964b28", text: "#fff" },
+      { t: 9,  name: "Helios",      color: "#235f73", text: "#fff" },
+      { t: 10, name: "Supernova",   color: "#2d3037", text: "#fff" },
+      { t: 11, name: "Singularity", color: "#050508", text: "#fff", border: "2px solid #e6edf3" }
+    ];
+
+    const u = 12; // 1 unit = 12px
+    const container = document.getElementById('blocks-container');
+
+    TIERS.forEach(item => {
+      const card = document.createElement('div');
+      card.className = 'block-card';
+
+      const block = document.createElement('div');
+      block.className = 'interactive-block';
+      const sizePx = item.t * u;
+      block.style.width = `${sizePx}px`;
+      block.style.height = `${sizePx}px`;
+      block.style.backgroundColor = item.color;
+      block.style.gridTemplateColumns = `repeat(${item.t}, 1fr)`;
+      block.style.gridTemplateRows = `repeat(${item.t}, 1fr)`;
+      if (item.border) block.style.border = item.border;
+
+      // Sub-grid cells
+      for (let i = 0; i < item.t * item.t; i++) {
+        const cell = document.createElement('div');
+        cell.className = 'grid-cell';
+        block.appendChild(cell);
+      }
+
+      // Center number badge
+      const num = document.createElement('div');
+      num.style.position = 'absolute';
+      num.style.top = '50%';
+      num.style.left = '50%';
+      num.style.transform = 'translate(-50%, -50%)';
+      num.style.color = item.text;
+      num.style.fontWeight = 'bold';
+      num.style.fontSize = `${Math.max(10, item.t * 2.8)}px`;
+      num.textContent = item.t;
+      block.appendChild(num);
+
+      const label = document.createElement('div');
+      label.className = 'block-label';
+      label.innerHTML = `<strong>T${item.t} (${item.t}×${item.t})</strong>${item.t * item.t} cells<br><span style="color:${item.t===11?'#58a6ff':'#8b949e'}">${item.name}</span>`;
+
+      card.appendChild(block);
+      card.appendChild(label);
+      container.appendChild(card);
+    });
+  </script>
+</body>
+</html>

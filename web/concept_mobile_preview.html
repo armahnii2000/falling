@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Into the Darkness — Mobile Portrait View</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: #02040a;
+      color: #e2f1ff;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      width: 430px;
+      height: 932px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+
+    /* Subtle background grid */
+    body::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: 
+        radial-gradient(circle at 50% 20%, rgba(0, 229, 255, 0.04) 0%, transparent 60%),
+        radial-gradient(circle at 50% 80%, rgba(255, 0, 128, 0.04) 0%, transparent 60%),
+        linear-gradient(rgba(255, 255, 255, 0.015) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.015) 1px, transparent 1px);
+      background-size: 100% 100%, 100% 100%, 32px 32px, 32px 32px;
+      pointer-events: none;
+    }
+
+    /* iPhone Hardware Notch / Dynamic Island */
+    .dynamic-island {
+      position: absolute;
+      top: 12px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 124px;
+      height: 34px;
+      background: #000000;
+      border-radius: 24px;
+      z-index: 50;
+      box-shadow: 0 0 10px rgba(0,0,0,0.8);
+    }
+
+    /* Native iOS Status Bar */
+    .status-bar {
+      height: 52px;
+      padding: 14px 28px 0 28px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 14px;
+      font-weight: 700;
+      color: #ffffff;
+      z-index: 40;
+    }
+    .battery-pill {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: #ff4757;
+      font-weight: 900;
+      font-size: 13px;
+    }
+    .battery-icon {
+      width: 25px;
+      height: 12px;
+      border: 1.5px solid #ff4757;
+      border-radius: 3px;
+      padding: 1px;
+      position: relative;
+    }
+    .battery-icon::after {
+      content: "";
+      position: absolute;
+      right: -3px;
+      top: 2.5px;
+      width: 2px;
+      height: 4px;
+      background: #ff4757;
+      border-radius: 0 1px 1px 0;
+    }
+    .battery-fill {
+      width: 14%;
+      height: 100%;
+      background: #ff4757;
+      border-radius: 1px;
+    }
+
+    /* INCOMING REAL-TIME STORY NOTIFICATION BANNER */
+    .story-notification-banner {
+      margin: 8px 16px 12px 16px;
+      background: rgba(22, 28, 45, 0.92);
+      backdrop-filter: blur(25px);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 22px;
+      padding: 14px 16px;
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.7);
+      z-index: 30;
+      position: relative;
+      animation: banner-drop 0.5s ease-out;
+    }
+    .banner-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 11px;
+      margin-bottom: 5px;
+    }
+    .banner-app {
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: #ffffff;
+    }
+    .banner-time {
+      font-size: 10px;
+      color: #94a3b8;
+    }
+    .banner-body {
+      font-size: 12.5px;
+      line-height: 1.35;
+      color: #f1f5f9;
+    }
+    .banner-sub {
+      font-size: 10px;
+      color: #ff6b81;
+      font-weight: 800;
+      margin-top: 4px;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    /* GAME CHAMBER AREA */
+    #mobile-game-container {
+      flex: 1;
+      margin: 0 16px 16px 16px;
+      background: radial-gradient(circle at 50% 20%, #060e22 0%, #020409 100%);
+      border: 2px solid rgba(255, 255, 255, 0.1);
+      border-radius: 26px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.8);
+    }
+
+    /* Top HUD inside Chamber */
+    .chamber-mini-hud {
+      height: 42px;
+      padding: 0 18px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      background: rgba(0, 0, 0, 0.3);
+      font-size: 12px;
+    }
+    .hud-title {
+      font-weight: 800;
+      letter-spacing: 1px;
+      color: #94a3b8;
+      text-transform: uppercase;
+      font-size: 10px;
+    }
+    .hud-stat strong { color: #ffffff; font-weight: 900; }
+
+    /* Dropper Line */
+    .mobile-dropper {
+      height: 64px;
+      position: relative;
+      border-bottom: 1px dashed rgba(255, 255, 255, 0.1);
+      background: rgba(0, 0, 0, 0.2);
+    }
+    .ready-block {
+      position: absolute;
+      top: 10px;
+      left: 175px;
+      width: 44px;
+      height: 44px;
+      background: #00e5ff;
+      border: 2px solid #ffffff;
+      border-radius: 8px;
+      box-shadow: 0 0 20px rgba(0, 229, 255, 0.7);
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      grid-template-rows: repeat(2, 1fr);
+      gap: 1px;
+      padding: 2px;
+    }
+    .ready-cell {
+      background: rgba(0, 229, 255, 0.85);
+      border-radius: 2px;
+    }
+    .ready-val {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 15px;
+      font-weight: 900;
+      color: #020712;
+    }
+    .aim-guide-laser {
+      position: absolute;
+      top: 54px;
+      left: 196px;
+      width: 2px;
+      height: 480px;
+      background: linear-gradient(180deg, rgba(0, 229, 255, 0.8) 0%, rgba(0, 229, 255, 0.02) 100%);
+      pointer-events: none;
+    }
+
+    /* Overflow Danger Line */
+    .danger-limit-line {
+      position: absolute;
+      top: 130px;
+      left: 0;
+      right: 0;
+      height: 1px;
+      border-top: 1px dashed rgba(255, 71, 87, 0.6);
+      display: flex;
+      justify-content: flex-end;
+      padding-right: 14px;
+    }
+    .danger-limit-badge {
+      font-size: 9px;
+      font-weight: 800;
+      color: #ff6b81;
+      letter-spacing: 0.5px;
+      background: #040915;
+      padding: 0 6px;
+      margin-top: -7px;
+    }
+
+    /* Pit Blocks Stack */
+    .mobile-pit {
+      flex: 1;
+      position: relative;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      padding-bottom: 24px;
+      gap: 12px;
+    }
+
+    .m-block {
+      border-radius: 8px;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-weight: 900;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
+    }
+    .m-grid {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      border-radius: 8px;
+      overflow: hidden;
+      opacity: 0.28;
+      pointer-events: none;
+    }
+    .m-cell {
+      border: 1px solid rgba(255, 255, 255, 0.6);
+    }
+    .m-val {
+      font-size: 16px;
+      font-weight: 900;
+      z-index: 5;
+    }
+    .m-pill {
+      font-size: 8px;
+      font-weight: 800;
+      font-family: monospace;
+      padding: 1px 5px;
+      border-radius: 5px;
+      background: rgba(0, 0, 0, 0.7);
+      color: #ffffff;
+      margin-top: 2px;
+      z-index: 5;
+    }
+
+    /* Tier 1 */
+    .b-m1 {
+      width: 32px;
+      height: 32px;
+      background: #ffee00;
+      border: 1.5px solid #ffffff;
+      color: #332200;
+    }
+    /* Tier 2 */
+    .b-m2 {
+      width: 56px;
+      height: 56px;
+      background: #ff007f;
+      border: 1.5px solid #ffffff;
+      color: #ffffff;
+    }
+    /* Tier 3 */
+    .b-m3 {
+      width: 84px;
+      height: 84px;
+      background: #0066ff;
+      border: 2px solid #ffffff;
+      color: #ffffff;
+    }
+    /* Tier 4 */
+    .b-m4 {
+      width: 112px;
+      height: 112px;
+      background: #00e676;
+      border: 2px solid #ffffff;
+      color: #003311;
+    }
+    /* Tier 6: Black Monolith */
+    .b-m6-black {
+      width: 168px;
+      height: 168px;
+      background: #000000;
+      border: 2px solid #ffffff;
+      color: #ffffff;
+      box-shadow: 0 0 30px rgba(255, 255, 255, 0.25);
+    }
+    .b-m6-black .m-val { font-size: 26px; }
+    .b-m6-black .m-pill {
+      background: #ffffff;
+      color: #000000;
+      font-weight: 900;
+      font-size: 9px;
+      padding: 2px 6px;
+    }
+
+    /* Bottom Drag / Drop Control */
+    .mobile-controls {
+      height: 64px;
+      padding: 0 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      background: rgba(0, 0, 0, 0.3);
+    }
+    .drag-hint {
+      font-size: 11px;
+      font-weight: 700;
+      color: #64748b;
+      letter-spacing: 0.5px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .drop-btn {
+      background: #00e5ff;
+      color: #020712;
+      font-size: 12px;
+      font-weight: 900;
+      padding: 10px 18px;
+      border-radius: 14px;
+      border: none;
+      box-shadow: 0 0 15px rgba(0, 229, 255, 0.4);
+    }
+
+    /* Home Bar Indicator */
+    .home-bar {
+      width: 140px;
+      height: 5px;
+      background: rgba(255, 255, 255, 0.35);
+      border-radius: 4px;
+      margin: 6px auto 10px auto;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Dynamic Island -->
+  <div class="dynamic-island"></div>
+
+  <!-- iOS Status Bar (Native Battery Tied to Blackness) -->
+  <div class="status-bar">
+    <span>3:32</span>
+    <div class="battery-pill">
+      <span>14%</span>
+      <div class="battery-icon">
+        <div class="battery-fill"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- INCOMING STORY NOTIFICATION (Diegetic Real-Time Drama) -->
+  <div class="story-notification-banner">
+    <div class="banner-top">
+      <div class="banner-app">
+        <span>💬</span>
+        <span>Messages · Wife</span>
+      </div>
+      <div class="banner-time">2:35 AM</div>
+    </div>
+    <div class="banner-body">
+      "Leo, it's almost 3 AM... are you still at the office? I left dinner in the fridge. Please get some sleep, I'm worried."
+    </div>
+    <div class="banner-sub">
+      <span>📞 2 Missed Calls</span>
+      <span>STAGE 6: THE CRUNCH (14% BATTERY)</span>
+    </div>
+  </div>
+
+  <!-- MAIN FALLING BLOCKS GAME CHAMBER -->
+  <div id="mobile-game-container">
+    
+    <!-- Mini Chamber HUD -->
+    <div class="chamber-mini-hud">
+      <span class="hud-title">Chamber of the Fall</span>
+      <div class="hud-stat">SCORE: <strong>24,850</strong></div>
+      <div class="hud-stat">PEAK: <strong>T6 (6×6)</strong></div>
+    </div>
+
+    <!-- Dropper Track & Laser -->
+    <div class="mobile-dropper">
+      <div class="ready-block">
+        <div class="ready-cell"></div><div class="ready-cell"></div>
+        <div class="ready-cell"></div><div class="ready-cell"></div>
+        <div class="ready-val">2</div>
+      </div>
+      <div class="aim-guide-laser"></div>
+    </div>
+
+    <!-- Overflow Limit -->
+    <div class="danger-limit-line">
+      <div class="danger-limit-badge">DANGER LIMIT (3.0s)</div>
+    </div>
+
+    <!-- Pit: Discrete NxN Blocks -->
+    <div class="mobile-pit">
+      <!-- 1x1 Yellow -->
+      <div class="m-block b-m1">
+        <div class="m-grid" style="grid-template-columns: 1fr; grid-template-rows: 1fr;">
+          <div class="m-cell"></div>
+        </div>
+        <span class="m-val" style="font-size: 13px;">1</span>
+      </div>
+
+      <!-- 2x2 Magenta -->
+      <div class="m-block b-m2">
+        <div class="m-grid" style="grid-template-columns: repeat(2, 1fr); grid-template-rows: repeat(2, 1fr);">
+          <div class="m-cell"></div><div class="m-cell"></div>
+          <div class="m-cell"></div><div class="m-cell"></div>
+        </div>
+        <span class="m-val">2</span>
+        <div class="m-pill">M:2</div>
+      </div>
+
+      <!-- 3x3 Cobalt Blue -->
+      <div class="m-block b-m3">
+        <div class="m-grid" style="grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(3, 1fr);">
+          <div class="m-cell"></div><div class="m-cell"></div><div class="m-cell"></div>
+          <div class="m-cell"></div><div class="m-cell"></div><div class="m-cell"></div>
+          <div class="m-cell"></div><div class="m-cell"></div><div class="m-cell"></div>
+        </div>
+        <span class="m-val">4</span>
+        <div class="m-pill">C:2 M:2</div>
+      </div>
+
+      <!-- 4x4 Emerald Green -->
+      <div class="m-block b-m4">
+        <div class="m-grid" style="grid-template-columns: repeat(4, 1fr); grid-template-rows: repeat(4, 1fr);">
+          <div class="m-cell"></div><div class="m-cell"></div><div class="m-cell"></div><div class="m-cell"></div>
+          <div class="m-cell"></div><div class="m-cell"></div><div class="m-cell"></div><div class="m-cell"></div>
+          <div class="m-cell"></div><div class="m-cell"></div><div class="m-cell"></div><div class="m-cell"></div>
+          <div class="m-cell"></div><div class="m-cell"></div><div class="m-cell"></div><div class="m-cell"></div>
+        </div>
+        <span class="m-val">8</span>
+        <div class="m-pill">C:4 Y:4</div>
+      </div>
+
+      <!-- 6x6 Black Monolith -->
+      <div class="m-block b-m6-black">
+        <div class="m-grid" style="grid-template-columns: repeat(6, 1fr); grid-template-rows: repeat(6, 1fr);">
+          <!-- 36 sub-grid cells -->
+          <div class="m-cell"></div><div class="m-cell"></div><div class="m-cell"></div><div class="m-cell"></div><div class="m-cell"></div><div class="m-cell"></div>
+          <div class="m-cell"></div><div class="m-cell"></div><div class="m-cell"></div><div class="m-cell"></div><div class="m-cell"></div><div class="m-cell"></div>
+          <div class="m-cell"></div><div class="m-cell"></div><div class="m-cell"></div><div class="m-cell"></div><div class="m-cell"></div><div class="m-cell"></div>
+          <div class="m-cell"></div><div class="m-cell"></div><div class="m-cell"></div><div class="m-cell"></div><div class="m-cell"></div><div class="m-cell"></div>
+          <div class="m-cell"></div><div class="m-cell"></div><div class="m-cell"></div><div class="m-cell"></div><div class="m-cell"></div><div class="m-cell"></div>
+          <div class="m-cell"></div><div class="m-cell"></div><div class="m-cell"></div><div class="m-cell"></div><div class="m-cell"></div><div class="m-cell"></div>
+        </div>
+        <span class="m-val">32</span>
+        <div class="m-pill">★ 100% BLACK</div>
+      </div>
+    </div>
+
+    <!-- Mobile Controls at Bottom of Chamber -->
+    <div class="mobile-controls">
+      <div class="drag-hint">◄ DRAG TO AIM ►</div>
+      <button class="drop-btn">DROP BLOCK ▼</button>
+    </div>
+
+  </div>
+
+  <!-- iOS Home Bar -->
+  <div class="home-bar"></div>
+
+</body>
+</html>

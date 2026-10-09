@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>How a Cube Divides into Pyramids — Clean Geometric Sketch</title>
+  <style>
+    :root {
+      --bg: #090e17;
+      --card-bg: #0f1826;
+      --border: rgba(255, 255, 255, 0.12);
+      --red: #ff453a;
+      --green: #30d158;
+      --blue: #0a84ff;
+      --gold: #ffd60a;
+      --text: #f5f5f7;
+      --text-dim: #86868b;
+    }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      padding: 30px 20px 60px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .container {
+      width: 100%;
+      max-width: 960px;
+    }
+    .header {
+      text-align: center;
+      margin-bottom: 28px;
+    }
+    .header h1 {
+      font-size: 2rem;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      margin-bottom: 8px;
+    }
+    .header p {
+      color: var(--text-dim);
+      font-size: 1rem;
+    }
+    .sketch-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 24px;
+      margin-bottom: 28px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    }
+    .card-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      margin-bottom: 4px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .card-subtitle {
+      color: var(--text-dim);
+      font-size: 0.9rem;
+      margin-bottom: 20px;
+    }
+    .canvas-wrap {
+      width: 100%;
+      background: #060a11;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 12px;
+      padding: 16px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    svg {
+      max-width: 100%;
+      height: auto;
+      display: block;
+    }
+    .explanation {
+      margin-top: 18px;
+      padding: 14px 18px;
+      background: rgba(255, 255, 255, 0.03);
+      border-radius: 10px;
+      font-size: 0.92rem;
+      line-height: 1.6;
+      color: #d1d5db;
+    }
+    .explanation strong {
+      color: #fff;
+    }
+    .pill {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 6px;
+      font-weight: 700;
+      font-size: 0.82rem;
+      margin-right: 4px;
+    }
+    .pill-red { background: rgba(255, 69, 58, 0.2); color: var(--red); border: 1px solid var(--red); }
+    .pill-green { background: rgba(48, 209, 88, 0.2); color: var(--green); border: 1px solid var(--green); }
+    .pill-blue { background: rgba(10, 132, 255, 0.2); color: var(--blue); border: 1px solid var(--blue); }
+    .back-btn {
+      color: #00e5ff;
+      text-decoration: none;
+      font-size: 0.88rem;
+      font-weight: 600;
+      margin-bottom: 20px;
+      display: inline-block;
+    }
+    .back-btn:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <a href="sketches.html" class="back-btn">◄ Back to Sketches Gallery</a>
+
+    <header class="header">
+      <h1>Geometric Sketch: A Cube Divided into Pyramids</h1>
+      <p>Clean architectural diagrams showing the two exact mathematical ways a cube decomposes into pyramids.</p>
+    </header>
+
+    <!-- Sketch 1: 3 Identical Pyramids = 1 Cube -->
+    <section class="sketch-card">
+      <div class="card-title">
+        <span>Method 1: Three Identical Pyramids Meeting at a Corner</span>
+      </div>
+      <div class="card-subtitle">
+        Euclid's classic theorem: A cube can be cut along its internal diagonal planes into exactly 3 identical, congruent square pyramids.
+      </div>
+
+      <div class="canvas-wrap">
+        <svg width="860" height="380" viewBox="0 0 860 380">
+          <defs>
+            <marker id="arrow" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+              <path d="M 0 1 L 10 5 L 0 9 z" fill="#ffd60a"/>
+            </marker>
+          </defs>
+
+          <!-- ================= LEFT: EXPLODED VIEW (3 SEPARATE PYRAMIDS) ================= -->
+          <g transform="translate(10, 20)">
+            <text x="210" y="24" fill="#86868b" font-size="12" font-weight="700" text-anchor="middle" letter-spacing="1">
+              EXPLODED VIEW: 3 CONGRUENT PYRAMIDS
+            </text>
+
+            <!-- 1. GREEN PYRAMID (TOP FACE BASE) -->
+            <!-- Apex at (160, 160) -->
+            <g opacity="0.95">
+              <!-- Sloped side faces meeting at apex (160, 160) -->
+              <polygon points="160,160 120,90 200,60" fill="rgba(48, 209, 88, 0.22)" stroke="#30d158" stroke-width="1.8"/>
+              <polygon points="160,160 200,60 280,80" fill="rgba(48, 209, 88, 0.35)" stroke="#30d158" stroke-width="1.8"/>
+              <!-- Square Base (Top) -->
+              <polygon points="120,90 200,60 280,80 200,110" fill="rgba(48, 209, 88, 0.5)" stroke="#30d158" stroke-width="2.2"/>
+              <!-- Apex dot -->
+              <circle cx="160" cy="160" r="3.5" fill="#30d158"/>
+              <text x="200" y="88" fill="#fff" font-size="11" font-weight="bold" text-anchor="middle">Base 1 (Top)</text>
+              <text x="145" y="175" fill="#30d158" font-size="10" font-weight="bold">Apex O</text>
+            </g>
+
+            <!-- 2. RED PYRAMID (LEFT FACE BASE) -->
+            <!-- Apex at (200, 210) -->
+            <g opacity="0.95">
+              <!-- Sloped side faces meeting at apex (200, 210) -->
+              <polygon points="200,210 70,200 130,170" fill="rgba(255, 69, 58, 0.3)" stroke="#ff453a" stroke-width="1.8"/>
+              <polygon points="200,210 70,270 130,240" fill="rgba(255, 69, 58, 0.2)" stroke="#ff453a" stroke-width="1.8"/>
+              <!-- Square Base (Left) -->
+              <polygon points="70,200 130,170 130,240 70,270" fill="rgba(255, 69, 58, 0.5)" stroke="#ff453a" stroke-width="2.2"/>
+              <!-- Apex dot -->
+              <circle cx="200" cy="210" r="3.5" fill="#ff453a"/>
+              <text x="100" y="224" fill="#fff" font-size="11" font-weight="bold" text-anchor="middle">Base 2 (Left)</text>
+              <text x="215" y="214" fill="#ff453a" font-size="10" font-weight="bold">Apex O</text>
+            </g>
+
+            <!-- 3. BLUE PYRAMID (RIGHT FACE BASE) -->
+            <!-- Apex at (240, 200) -->
+            <g opacity="0.95">
+              <!-- Sloped side faces meeting at apex (240, 200) -->
+              <polygon points="240,200 310,170 370,195" fill="rgba(10, 132, 255, 0.25)" stroke="#0a84ff" stroke-width="1.8"/>
+              <polygon points="240,200 310,240 370,265" fill="rgba(10, 132, 255, 0.35)" stroke="#0a84ff" stroke-width="1.8"/>
+              <!-- Square Base (Right) -->
+              <polygon points="310,170 370,195 370,265 310,240" fill="rgba(10, 132, 255, 0.5)" stroke="#0a84ff" stroke-width="2.2"/>
+              <!-- Apex dot -->
+              <circle cx="240" cy="200" r="3.5" fill="#0a84ff"/>
+              <text x="340" y="222" fill="#fff" font-size="11" font-weight="bold" text-anchor="middle">Base 3 (Right)</text>
+              <text x="230" y="195" fill="#0a84ff" font-size="10" font-weight="bold">Apex O</text>
+            </g>
+
+            <!-- Annotation -->
+            <text x="210" y="325" fill="#ffd60a" font-size="11" font-weight="600" text-anchor="middle">
+              Each pyramid volume = 1/3 · Base · Height = 1/3 of Cube
+            </text>
+          </g>
+
+          <!-- ================= CENTER ARROW ================= -->
+          <g transform="translate(435, 180)">
+            <line x1="-20" y1="0" x2="35" y2="0" stroke="#ffd60a" stroke-width="3" marker-end="url(#arrow)"/>
+            <text x="8" y="-12" fill="#ffd60a" font-size="11" font-weight="800" text-anchor="middle">SLIDE TOGETHER</text>
+          </g>
+
+          <!-- ================= RIGHT: ASSEMBLED SOLID CUBE ================= -->
+          <g transform="translate(490, 20)">
+            <text x="180" y="24" fill="#86868b" font-size="12" font-weight="700" text-anchor="middle" letter-spacing="1">
+              ASSEMBLED VIEW: 1 SOLID CUBE
+            </text>
+
+            <!-- The Assembled Cube: Isometric Projection with Shared Apex O at Center/Corner -->
+            <!-- Corner O is the rear corner at (180, 180) -->
+            <!-- 3 Square Faces (Outer Bases): -->
+            
+            <!-- Top Face (Green Base) -->
+            <polygon points="180,90 270,140 180,190 90,140" fill="rgba(48, 209, 88, 0.55)" stroke="#30d158" stroke-width="2.2"/>
+            <text x="180" y="145" fill="#fff" font-size="12" font-weight="bold" text-anchor="middle">🟢 Green Face</text>
+
+            <!-- Left Face (Red Base) -->
+            <polygon points="90,140 180,190 180,290 90,240" fill="rgba(255, 69, 58, 0.55)" stroke="#ff453a" stroke-width="2.2"/>
+            <text x="135" y="220" fill="#fff" font-size="12" font-weight="bold" text-anchor="middle">🔴 Red Face</text>
+
+            <!-- Right Face (Blue Base) -->
+            <polygon points="180,190 270,140 270,240 180,290" fill="rgba(10, 132, 255, 0.55)" stroke="#0a84ff" stroke-width="2.2"/>
+            <text x="225" y="220" fill="#fff" font-size="12" font-weight="bold" text-anchor="middle">🔵 Blue Face</text>
+
+            <!-- Internal Seams (where the 3 pyramids touch along diagonal planes) -->
+            <line x1="180" y1="190" x2="180" y2="90" stroke="#ffffff" stroke-width="1.8" stroke-dasharray="3,3"/>
+            <line x1="180" y1="190" x2="90" y2="240" stroke="#ffffff" stroke-width="1.8" stroke-dasharray="3,3"/>
+            <line x1="180" y1="190" x2="270" y2="240" stroke="#ffffff" stroke-width="1.8" stroke-dasharray="3,3"/>
+
+            <!-- Central Junction Vertex -->
+            <circle cx="180" cy="190" r="5" fill="#ffffff" stroke="#ffd60a" stroke-width="2"/>
+            <text x="180" y="208" fill="#ffd60a" font-size="10" font-weight="bold" text-anchor="middle">Shared Apex (O)</text>
+
+            <!-- Overall Cube Boundary Glow -->
+            <polygon points="180,90 270,140 270,240 180,290 90,240 90,140" fill="none" stroke="rgba(255, 255, 255, 0.6)" stroke-width="2.5"/>
+
+            <text x="180" y="325" fill="#ffffff" font-size="12" font-weight="800" text-anchor="middle">
+              1 Red + 1 Green + 1 Blue = 1 SOLID CUBE
+            </text>
+          </g>
+        </svg>
+      </div>
+
+      <div class="explanation">
+        <strong>How the math works:</strong>
+        <br>
+        1. Consider a cube with edge length $s$. Its volume is $s^3$.
+        <br>
+        2. Pick any corner $O = (0, 0, 0)$ as the apex.
+        <br>
+        3. Draw pyramids from $O$ to the three opposite faces ($x=s$, $y=s$, $z=s$).
+        <br>
+        4. Each pyramid has a square base of area $s^2$ and height $s$. By the volume formula of a pyramid ($\frac{1}{3} \times \text{Base} \times \text{Height}$), each pyramid has volume $\mathbf{\frac{1}{3} s^3}$.
+        <br>
+        5. Together, the three pyramids partition the entire cube with <strong>zero gaps and zero overlap</strong>!
+      </div>
+    </section>
+
+    <!-- Sketch 2: 6 Pyramids from the Center Point -->
+    <section class="sketch-card">
+      <div class="card-title">
+        <span>Method 2: Six Pyramids Meeting at the Cube's Dead Center</span>
+      </div>
+      <div class="card-subtitle">
+        Connecting the cube's 3D center point to each of its 6 square faces partitions the cube into 6 identical pyramids.
+      </div>
+
+      <div class="canvas-wrap">
+        <svg width="700" height="260" viewBox="0 0 700 260">
+          <!-- Isometric Wireframe Cube with Center Point -->
+          <g transform="translate(180, 20)">
+            <!-- Outer Cube Wireframe -->
+            <!-- Top Face -->
+            <polygon points="170,30 250,75 170,120 90,75" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.4)" stroke-width="1.5"/>
+            <!-- Left Face -->
+            <polygon points="90,75 170,120 170,210 90,165" fill="rgba(255,255,255,0.02)" stroke="rgba(255,255,255,0.4)" stroke-width="1.5"/>
+            <!-- Right Face -->
+            <polygon points="170,120 250,75 250,165 170,210" fill="rgba(255,255,255,0.02)" stroke="rgba(255,255,255,0.4)" stroke-width="1.5"/>
+
+            <!-- Center Point (M) at (170, 120) -->
+            <!-- Rays to 8 vertices -->
+            <line x1="170" y1="120" x2="170" y2="30" stroke="#ffd60a" stroke-width="1.2" stroke-dasharray="2,2"/>
+            <line x1="170" y1="120" x2="250" y2="75" stroke="#ffd60a" stroke-width="1.2" stroke-dasharray="2,2"/>
+            <line x1="170" y1="120" x2="250" y2="165" stroke="#ffd60a" stroke-width="1.2" stroke-dasharray="2,2"/>
+            <line x1="170" y1="120" x2="170" y2="210" stroke="#ffd60a" stroke-width="1.2" stroke-dasharray="2,2"/>
+            <line x1="170" y1="120" x2="90" y2="165" stroke="#ffd60a" stroke-width="1.2" stroke-dasharray="2,2"/>
+            <line x1="170" y1="120" x2="90" y2="75" stroke="#ffd60a" stroke-width="1.2" stroke-dasharray="2,2"/>
+
+            <!-- Pyramids shaded: Top, Left, Right -->
+            <polygon points="170,120 170,30 250,75" fill="rgba(48, 209, 88, 0.25)"/>
+            <polygon points="170,120 170,30 90,75" fill="rgba(48, 209, 88, 0.35)"/>
+            
+            <polygon points="170,120 90,75 90,165" fill="rgba(255, 69, 58, 0.3)"/>
+            <polygon points="170,120 90,165 170,210" fill="rgba(255, 69, 58, 0.2)"/>
+
+            <polygon points="170,120 170,210 250,165" fill="rgba(10, 132, 255, 0.3)"/>
+            <polygon points="170,120 250,165 250,75" fill="rgba(10, 132, 255, 0.2)"/>
+
+            <!-- Center Dot -->
+            <circle cx="170" cy="120" r="4.5" fill="#ffd60a"/>
+            <text x="170" y="112" fill="#ffd60a" font-size="11" font-weight="bold" text-anchor="middle">Center Point (M)</text>
+          </g>
+
+          <g transform="translate(480, 70)">
+            <text x="0" y="20" fill="#fff" font-size="13" font-weight="bold">6 Identical Pyramids:</text>
+            <text x="0" y="44" fill="#d1d5db" font-size="11">Base area = s²</text>
+            <text x="0" y="64" fill="#d1d5db" font-size="11">Height = s/2 (center to face)</text>
+            <text x="0" y="88" fill="#ffd60a" font-size="11" font-weight="bold">Volume each = 1/3 · s² · (s/2) = 1/6 s³</text>
+            <text x="0" y="112" fill="#00e5ff" font-size="11" font-weight="bold">6 × (1/6 s³) = 1 Complete Cube</text>
+            <text x="0" y="136" fill="#86868b" font-size="10">Provides 3 color pairs (2 Red, 2 Green, 2 Blue)</text>
+          </g>
+        </svg>
+      </div>
+    </section>
+
+  </div>
+
+</body>
+</html>

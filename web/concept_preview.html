@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Into the Darkness — Phone & Game Dual Screen</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: #02050e;
+      color: #e2f1ff;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      width: 1600px;
+      height: 900px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+    
+    /* Subtle background grid */
+    body::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: 
+        radial-gradient(circle at 80% 30%, rgba(0, 229, 255, 0.03) 0%, transparent 60%),
+        radial-gradient(circle at 20% 70%, rgba(255, 0, 128, 0.03) 0%, transparent 60%),
+        linear-gradient(rgba(255, 255, 255, 0.015) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.015) 1px, transparent 1px);
+      background-size: 100% 100%, 100% 100%, 48px 48px, 48px 48px;
+      pointer-events: none;
+    }
+
+    /* Minimalist Top Header */
+    header {
+      height: 58px;
+      padding: 0 36px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+      background: rgba(4, 9, 20, 0.9);
+      backdrop-filter: blur(20px);
+      z-index: 10;
+    }
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .logo {
+      font-size: 19px;
+      font-weight: 900;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: #ffffff;
+    }
+    .tagline {
+      font-size: 13px;
+      font-weight: 600;
+      color: #64748b;
+    }
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      font-size: 13px;
+      font-family: monospace;
+      color: #94a3b8;
+    }
+    .header-stat strong { color: #ffffff; font-weight: 900; }
+
+    /* Main Dual Screen Layout */
+    #main-layout {
+      display: flex;
+      flex: 1;
+      height: calc(900px - 58px);
+      padding: 24px 36px;
+      gap: 32px;
+      z-index: 5;
+    }
+
+    /* LEFT: The Phone Screen Only */
+    #phone-panel {
+      width: 400px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(6, 12, 26, 0.5);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 28px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+      position: relative;
+    }
+
+    /* Authentic iPhone Enclosure */
+    .iphone-frame {
+      width: 320px;
+      height: 680px;
+      background: #000000;
+      border-radius: 50px;
+      border: 4px solid #334155;
+      box-shadow: 
+        0 0 0 2px #0f172a,
+        0 30px 60px -15px rgba(0, 0, 0, 0.95),
+        0 0 40px rgba(255, 71, 87, 0.12);
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Glare Reflection */
+    .iphone-frame::after {
+      content: "";
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 260px;
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.07) 0%, transparent 65%);
+      pointer-events: none;
+    }
+
+    /* Dynamic Island */
+    .dynamic-island {
+      position: absolute;
+      top: 14px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 98px;
+      height: 26px;
+      background: #000000;
+      border-radius: 20px;
+      z-index: 30;
+    }
+
+    /* Phone Status Bar */
+    .phone-status-bar {
+      height: 48px;
+      padding: 14px 24px 0 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 13px;
+      font-weight: 700;
+      color: #ffffff;
+      z-index: 10;
+    }
+    .battery-pill {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: #ff4757;
+      font-weight: 900;
+    }
+    .battery-icon {
+      width: 24px;
+      height: 12px;
+      border: 1.5px solid #ff4757;
+      border-radius: 3px;
+      padding: 1px;
+      position: relative;
+    }
+    .battery-icon::after {
+      content: "";
+      position: absolute;
+      right: -3px;
+      top: 2.5px;
+      width: 2px;
+      height: 4px;
+      background: #ff4757;
+      border-radius: 0 1px 1px 0;
+    }
+    .battery-fill {
+      width: 14%;
+      height: 100%;
+      background: #ff4757;
+      border-radius: 1px;
+    }
+
+    /* Phone Screen Surface */
+    .phone-screen {
+      flex: 1;
+      padding: 24px 20px 24px 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      background: #050508;
+      color: #ffffff;
+      position: relative;
+    }
+    
+    .phone-clock-block {
+      text-align: center;
+      margin-top: 20px;
+    }
+    .phone-big-time {
+      font-size: 56px;
+      font-weight: 800;
+      letter-spacing: -2px;
+      line-height: 1;
+    }
+    .phone-date {
+      font-size: 13px;
+      font-weight: 600;
+      color: #94a3b8;
+      margin-top: 4px;
+    }
+
+    /* Notifications Stack */
+    .phone-notifs {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+    .notif-card {
+      background: rgba(30, 41, 59, 0.85);
+      backdrop-filter: blur(25px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 18px;
+      padding: 13px 15px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+    }
+    .notif-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 6px;
+      font-size: 11px;
+    }
+    .notif-app {
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .notif-time {
+      font-size: 10px;
+      color: #94a3b8;
+    }
+    .badge-alert {
+      background: #ff4757;
+      color: #fff;
+      font-size: 8px;
+      font-weight: 900;
+      padding: 1px 6px;
+      border-radius: 4px;
+      text-transform: uppercase;
+    }
+    .notif-text {
+      font-size: 12px;
+      line-height: 1.4;
+      color: #e2e8f0;
+    }
+    .missed-row {
+      color: #ff4757;
+      font-weight: 800;
+      font-size: 12px;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .phone-footer-hint {
+      text-align: center;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: #64748b;
+    }
+
+    /* RIGHT: The Game Screen (Expansive Chamber) */
+    #game-panel {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      background: #050a16;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 28px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* Game Chamber HUD Top */
+    .game-hud {
+      height: 52px;
+      padding: 0 28px;
+      background: rgba(10, 18, 36, 0.7);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .hud-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 13px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: #94a3b8;
+    }
+    .live-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #00e5ff;
+      box-shadow: 0 0 10px #00e5ff;
+    }
+    .hud-scores {
+      display: flex;
+      gap: 32px;
+      font-size: 13px;
+    }
+    .score-badge strong { color: #ffffff; font-weight: 900; }
+
+    /* Chamber Viewport */
+    .chamber-viewport {
+      flex: 1;
+      position: relative;
+      margin: 18px 28px 24px 28px;
+      background: radial-gradient(circle at 50% 25%, #081126 0%, #020409 100%);
+      border: 2px solid rgba(255, 255, 255, 0.08);
+      border-radius: 22px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Dropper Track at Ceiling */
+    .dropper-rail {
+      height: 72px;
+      border-bottom: 1px dashed rgba(255, 255, 255, 0.12);
+      position: relative;
+      background: rgba(0, 0, 0, 0.25);
+    }
+    .ready-block-unit {
+      position: absolute;
+      top: 14px;
+      left: 480px;
+      width: 48px;
+      height: 48px;
+      background: #00e5ff;
+      border: 2px solid #ffffff;
+      border-radius: 8px;
+      box-shadow: 0 0 25px rgba(0, 229, 255, 0.8);
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      grid-template-rows: repeat(2, 1fr);
+      gap: 1px;
+      padding: 2px;
+      animation: gentle-bob 2s infinite ease-in-out;
+    }
+    @keyframes gentle-bob {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-3px); }
+    }
+    .ready-subcell {
+      background: rgba(0, 229, 255, 0.8);
+      border-radius: 2px;
+    }
+    .ready-label {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      font-weight: 900;
+      color: #020712;
+    }
+
+    /* Vertical Aim Guide Laser */
+    .aim-laser {
+      position: absolute;
+      top: 62px;
+      left: 503px;
+      width: 2px;
+      height: 490px;
+      background: linear-gradient(180deg, rgba(0, 229, 255, 0.8) 0%, rgba(0, 229, 255, 0.03) 100%);
+      pointer-events: none;
+    }
+
+    /* Danger Overflow Line */
+    .overflow-line {
+      position: absolute;
+      top: 140px;
+      left: 0;
+      right: 0;
+      height: 1px;
+      border-top: 1px dashed rgba(255, 71, 87, 0.6);
+      display: flex;
+      justify-content: flex-end;
+      padding-right: 20px;
+    }
+    .overflow-text {
+      font-size: 10px;
+      font-weight: 800;
+      color: #ff6b81;
+      letter-spacing: 1px;
+      background: #060d1d;
+      padding: 0 8px;
+      margin-top: -8px;
+    }
+
+    /* Bottom Pit Container */
+    .pit-bed {
+      flex: 1;
+      position: relative;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      padding-bottom: 28px;
+      gap: 20px;
+    }
+
+    /* Blocks in the Pit */
+    .game-block {
+      border-radius: 10px;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-weight: 900;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.6);
+      transition: all 0.2s;
+    }
+    .grid-overlay {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      border-radius: 10px;
+      overflow: hidden;
+      pointer-events: none;
+      opacity: 0.28;
+    }
+    .grid-cell {
+      border: 1px solid rgba(255, 255, 255, 0.65);
+    }
+    .val-text {
+      font-size: 18px;
+      font-weight: 900;
+      z-index: 5;
+    }
+    .ink-pill {
+      font-size: 10px;
+      font-weight: 800;
+      font-family: monospace;
+      padding: 2px 7px;
+      border-radius: 6px;
+      background: rgba(0, 0, 0, 0.7);
+      color: #ffffff;
+      margin-top: 4px;
+      z-index: 5;
+      letter-spacing: 0.5px;
+    }
+
+    /* Tier 1: 1x1 Yellow */
+    .b-t1 {
+      width: 40px;
+      height: 40px;
+      background: #ffee00;
+      border: 1.5px solid #ffffff;
+      color: #332200;
+      box-shadow: 0 0 16px rgba(255, 238, 0, 0.4);
+    }
+
+    /* Tier 2: 2x2 Magenta */
+    .b-t2 {
+      width: 72px;
+      height: 72px;
+      background: #ff007f;
+      border: 2px solid #ffffff;
+      color: #ffffff;
+      box-shadow: 0 0 20px rgba(255, 0, 127, 0.4);
+    }
+
+    /* Tier 3: 3x3 Cobalt Blue (C+M merge) */
+    .b-t3 {
+      width: 108px;
+      height: 108px;
+      background: #0066ff;
+      border: 2px solid #ffffff;
+      color: #ffffff;
+      box-shadow: 0 0 25px rgba(0, 102, 255, 0.4);
+    }
+
+    /* Tier 4: 4x4 Emerald Green (C+Y merge) */
+    .b-t4 {
+      width: 144px;
+      height: 144px;
+      background: #00e676;
+      border: 2px solid #ffffff;
+      color: #003311;
+      box-shadow: 0 0 30px rgba(0, 230, 118, 0.4);
+    }
+
+    /* Tier 6: 6x6 PERFECT BLACK MONOLITH */
+    .b-t6-black {
+      width: 216px;
+      height: 216px;
+      background: #000000;
+      border: 2.5px solid #ffffff;
+      color: #ffffff;
+      box-shadow: 
+        0 0 40px rgba(255, 255, 255, 0.25),
+        inset 0 0 25px rgba(0, 0, 0, 0.95);
+      z-index: 4;
+    }
+    .b-t6-black .val-text {
+      font-size: 34px;
+      letter-spacing: -1px;
+    }
+    .b-t6-black .ink-pill {
+      background: #ffffff;
+      color: #000000;
+      font-weight: 900;
+      font-size: 11px;
+      padding: 3px 9px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Clean Header -->
+  <header>
+    <div class="header-left">
+      <div class="logo">Into the Darkness</div>
+      <div class="tagline">Trilogy Part 1: The Fall · Falling Blocks & CMY Subtractive Ink</div>
+    </div>
+    <div class="header-right">
+      <div class="header-stat">GOAL: <strong>Tier 11 (11×11) + 100% Dark</strong></div>
+      <div class="header-stat">BATTERY SYNC: <strong style="color: #ff4757;">14% CRITICAL</strong></div>
+    </div>
+  </header>
+
+  <!-- Clean Dual Screen Layout: Phone Screen ONLY on left, Game Screen on right -->
+  <div id="main-layout">
+    
+    <!-- LEFT: The Phone Screen Only -->
+    <aside id="phone-panel">
+      <div class="iphone-frame">
+        <div class="dynamic-island"></div>
+        
+        <!-- Status Bar with 14% Battery -->
+        <div class="phone-status-bar">
+          <span>3:32</span>
+          <div class="battery-pill">
+            <span>14%</span>
+            <div class="battery-icon">
+              <div class="battery-fill"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Phone Lockscreen drama -->
+        <div class="phone-screen">
+          <div class="phone-clock-block">
+            <div class="phone-big-time">3:32</div>
+            <div class="phone-date">Thursday, October 8</div>
+          </div>
+
+          <div class="phone-notifs">
+            <!-- Missed Calls from Wife -->
+            <div class="notif-card">
+              <div class="missed-row">
+                <span>📞 2 MISSED CALLS</span>
+                <span style="font-size: 10px; color: #ff6b81;">WIFE</span>
+              </div>
+              <div style="font-size: 10px; color: #94a3b8; margin-top: 3px;">1:45 AM · 2:30 AM</div>
+            </div>
+
+            <!-- Urgent Message from Wife -->
+            <div class="notif-card">
+              <div class="notif-header">
+                <span class="notif-app">💬 Messages · Wife</span>
+                <span class="notif-time">2:35 AM</span>
+              </div>
+              <div class="notif-text">
+                "Leo, it's almost 3 AM... are you still at the office? I left dinner in the fridge. Please get some sleep, I'm worried."
+              </div>
+            </div>
+
+            <!-- Slack Crisis Alert -->
+            <div class="notif-card">
+              <div class="notif-header">
+                <span class="notif-app">#war-room <span class="badge-alert">CRISIS</span></span>
+                <span class="notif-time">3:18 AM</span>
+              </div>
+              <div class="notif-text" style="color: #ff9ff3;">
+                "Runway under 60 days. Diligence audit repo must be clean by dawn."
+              </div>
+            </div>
+          </div>
+
+          <div class="phone-footer-hint">
+            STAGE 6 · BATTERY 14%
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- RIGHT: The Game Screen (Wide, Clean, Full Main Focus) -->
+    <main id="game-panel">
+      
+      <!-- Chamber HUD Header -->
+      <div class="game-hud">
+        <div class="hud-left">
+          <span class="live-dot"></span>
+          <span>Chamber of the Fall · Discrete N×N Physics</span>
+        </div>
+        <div class="hud-scores">
+          <div class="score-badge">SCORE: <strong>24,850</strong></div>
+          <div class="score-badge">COMBO: <strong>x3</strong></div>
+          <div class="score-badge">PEAK: <strong>Tier 6 (6×6 Monolith)</strong></div>
+        </div>
+      </div>
+
+      <!-- Main Chamber Well -->
+      <div class="chamber-viewport">
+        
+        <!-- Top Dropper Rail & Aim Laser -->
+        <div class="dropper-rail">
+          <div class="ready-block-unit">
+            <div class="ready-subcell"></div>
+            <div class="ready-subcell"></div>
+            <div class="ready-subcell"></div>
+            <div class="ready-subcell"></div>
+            <div class="ready-label">2</div>
+          </div>
+          <div class="aim-laser"></div>
+        </div>
+
+        <!-- Overflow Warning Limit -->
+        <div class="overflow-line">
+          <div class="overflow-text">OVERFLOW DANGER LIMIT (3.0s)</div>
+        </div>
+
+        <!-- The Pit: Discrete N×N Blocks in CMY & Black -->
+        <div class="pit-bed">
+          
+          <!-- Tier 1: 1x1 Yellow Unit -->
+          <div class="game-block b-t1">
+            <div class="grid-overlay" style="grid-template-columns: 1fr; grid-template-rows: 1fr;">
+              <div class="grid-cell"></div>
+            </div>
+            <span class="val-text">1</span>
+          </div>
+
+          <!-- Tier 2: 2x2 Magenta Square -->
+          <div class="game-block b-t2">
+            <div class="grid-overlay" style="grid-template-columns: repeat(2, 1fr); grid-template-rows: repeat(2, 1fr);">
+              <div class="grid-cell"></div><div class="grid-cell"></div>
+              <div class="grid-cell"></div><div class="grid-cell"></div>
+            </div>
+            <span class="val-text">2</span>
+            <div class="ink-pill">M:2</div>
+          </div>
+
+          <!-- Tier 3: 3x3 Cobalt Blue Square (C+M) -->
+          <div class="game-block b-t3">
+            <div class="grid-overlay" style="grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(3, 1fr);">
+              <div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div>
+              <div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div>
+              <div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div>
+            </div>
+            <span class="val-text">4</span>
+            <div class="ink-pill">C:2 M:2</div>
+          </div>
+
+          <!-- Tier 4: 4x4 Emerald Green Square (C+Y) -->
+          <div class="game-block b-t4">
+            <div class="grid-overlay" style="grid-template-columns: repeat(4, 1fr); grid-template-rows: repeat(4, 1fr);">
+              <div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div>
+              <div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div>
+              <div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div>
+              <div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div>
+            </div>
+            <span class="val-text">8</span>
+            <div class="ink-pill">C:4 Y:4</div>
+          </div>
+
+          <!-- Tier 6: 6x6 PERFECT BLACK MONOLITH -->
+          <div class="game-block b-t6-black">
+            <div class="grid-overlay" style="grid-template-columns: repeat(6, 1fr); grid-template-rows: repeat(6, 1fr);">
+              <!-- 36 discrete sub-grid cells -->
+              <div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div>
+              <div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div>
+              <div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div>
+              <div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div>
+              <div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div>
+              <div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div>
+            </div>
+            <span class="val-text">32</span>
+            <div class="ink-pill">★ 100% BLACK (C:11 M:11 Y:10)</div>
+          </div>
+
+        </div>
+
+      </div>
+
+    </main>
+
+  </div>
+
+</body>
+</html>

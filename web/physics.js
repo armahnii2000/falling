@@ -3,9 +3,9 @@
 
 class PhysicsEngine {
   constructor() {
-    this.cols = 16;       // 16 grid columns wide
-    this.rows = 24;       // 24 grid rows tall
-    this.cellSize = 20;   // In pixels, dynamically adapted to viewport
+    this.cols = 24;       // 24 grid columns wide (Option A: 2:3 ratio)
+    this.rows = 36;       // 36 grid rows tall (Option A: 2:3 ratio)
+    this.cellSize = 16;   // In pixels, dynamically adapted to viewport
     this.chamber = { x: 0, y: 0, w: 320, h: 480 };
     this.gauge = { x: 0, y: 0, w: 30, h: 480 };
     this.dangerY = 0;
@@ -61,8 +61,8 @@ class PhysicsEngine {
       h: chamberH
     };
 
-    // Danger line is 4.5 rows above the bottom vent floor
-    this.dangerY = this.chamber.y + (this.rows - 4.5) * this.cellSize;
+    // Danger line is 6.5 rows above the bottom vent floor (scaled for 36-row height)
+    this.dangerY = this.chamber.y + (this.rows - 6.5) * this.cellSize;
   }
 
   createBubble(tier, colorData, x, y, vy = -780) {

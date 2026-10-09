@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>A.I.r Bubbles — Brainstorming Concept Sketches</title>
+  <style>
+    :root {
+      --bg-dark: #070d19;
+      --card-bg: rgba(13, 24, 44, 0.85);
+      --border-glow: rgba(0, 229, 255, 0.35);
+      --accent-cyan: #00e5ff;
+      --accent-gold: #ffd60a;
+      --text-main: #f0f6fc;
+      --text-dim: #8b9bb4;
+    }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      background: var(--bg-dark);
+      color: var(--text-main);
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      padding: 24px 20px 60px;
+      line-height: 1.5;
+    }
+    .header {
+      max-width: 1100px;
+      margin: 0 auto 32px;
+      text-align: center;
+    }
+    .header h1 {
+      font-size: 2.2rem;
+      letter-spacing: -0.5px;
+      background: linear-gradient(135deg, #00e5ff 0%, #ffffff 50%, #ffd60a 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 8px;
+    }
+    .header p {
+      color: var(--text-dim);
+      font-size: 1.05rem;
+      max-width: 720px;
+      margin: 0 auto;
+    }
+    .back-nav {
+      margin-top: 14px;
+    }
+    .back-nav a {
+      color: var(--accent-cyan);
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 0.95rem;
+      padding: 6px 14px;
+      border: 1px solid rgba(0, 229, 255, 0.3);
+      border-radius: 8px;
+      background: rgba(0, 229, 255, 0.08);
+      transition: all 0.2s ease;
+      display: inline-block;
+    }
+    .back-nav a:hover {
+      background: rgba(0, 229, 255, 0.2);
+      box-shadow: 0 0 12px rgba(0, 229, 255, 0.4);
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 36px;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+    .sketch-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border-glow);
+      border-radius: 18px;
+      overflow: hidden;
+      box-shadow: 0 12px 36px rgba(0, 0, 0, 0.6);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .sketch-card:hover {
+      box-shadow: 0 16px 48px rgba(0, 229, 255, 0.25);
+    }
+    .img-wrap {
+      width: 100%;
+      background: #000;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      position: relative;
+    }
+    .img-wrap img {
+      width: 100%;
+      height: auto;
+      display: block;
+      cursor: zoom-in;
+    }
+    .card-body {
+      padding: 24px;
+    }
+    .badge {
+      display: inline-block;
+      font-size: 0.75rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      padding: 4px 10px;
+      border-radius: 20px;
+      margin-bottom: 10px;
+    }
+    .badge-1 { background: rgba(0, 229, 255, 0.2); color: #00e5ff; border: 1px solid #00e5ff; }
+    .badge-2 { background: rgba(255, 214, 10, 0.2); color: #ffd60a; border: 1px solid #ffd60a; }
+    .badge-3 { background: rgba(197, 108, 240, 0.2); color: #c56cf0; border: 1px solid #c56cf0; }
+    .card-title {
+      font-size: 1.45rem;
+      margin-bottom: 8px;
+      color: #fff;
+    }
+    .card-desc {
+      color: var(--text-dim);
+      font-size: 0.95rem;
+      margin-bottom: 16px;
+      line-height: 1.5;
+    }
+    .mechanics-box {
+      background: rgba(0, 0, 0, 0.35);
+      border-radius: 10px;
+      padding: 14px 16px;
+      border-left: 3px solid var(--accent-cyan);
+    }
+    .mechanics-box h4 {
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      color: var(--accent-cyan);
+      margin-bottom: 6px;
+    }
+    .mechanics-box ul {
+      padding-left: 20px;
+      color: #d0d8e4;
+      font-size: 0.88rem;
+    }
+    .mechanics-box li {
+      margin-bottom: 6px;
+    }
+    .direct-link {
+      display: inline-block;
+      margin-top: 12px;
+      color: var(--text-dim);
+      font-size: 0.82rem;
+      text-decoration: underline;
+    }
+    .direct-link:hover {
+      color: #fff;
+    }
+  </style>
+</head>
+<body>
+
+  <header class="header">
+    <h1>🎨 Gameplay Evolution Brainstorming Sketches</h1>
+    <p>Exploring the two core user proposals: a physical 3-legged balance table with a roll-off failure penalty, and alternative geometric/optical analogies (triangles & light beams).</p>
+    <div class="back-nav">
+      <a href="index.html">◄ Return to Current Game Prototype (localhost:8086)</a>
+    </div>
+  </header>
+
+  <main class="grid">
+
+    <!-- Interactive 2D Triangle Mechanics & Balance Demonstrator -->
+    <article class="sketch-card" style="border-color: #00e5ff; background: rgba(8, 20, 38, 0.95);">
+      <div style="padding: 24px 24px 0 24px;">
+        <span class="badge" style="background: rgba(0, 229, 255, 0.2); color: #00e5ff; border: 1px solid #00e5ff;">⭐ 2D REALISTIC MECHANICS DEMO</span>
+        <h2 class="card-title" style="color: #ffffff; font-size: 1.7rem;">Pure 2D Triangles: Flat-Edge Stacking & Physical Tilt Slide</h2>
+        <p class="card-desc" style="font-size: 1rem; color: #a4b8d1;">
+          In 3D, stacking upright pyramids on top of other sharp pyramid tips looks fake because tips cannot physically balance on tips in real life. But in <strong>2D</strong>, triangles stack <strong>flat-edge to flat-edge</strong> with complete stability. Test the interactive physics demo below:
+        </p>
+      </div>
+
+      <!-- Live Interactive SVG Demonstrator -->
+      <div style="background: #040914; border-top: 1px solid rgba(0, 229, 255, 0.2); border-bottom: 1px solid rgba(0, 229, 255, 0.2); padding: 20px; text-align: center;">
+        <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 24px; align-items: center;">
+          
+          <!-- Diagram 1: 2D Gapless Triangle Tessellation -->
+          <div style="background: rgba(12, 22, 38, 0.7); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 16px; width: 340px;">
+            <div style="font-size: 0.82rem; font-weight: 800; color: #ffd60a; margin-bottom: 10px; text-transform: uppercase;">
+              1. Flat-Edge 2D Tessellation (No Sharp Point Stacking)
+            </div>
+            <svg width="280" height="220" viewBox="0 0 280 220" style="display: block; margin: 0 auto; overflow: visible;">
+              <defs>
+                <filter id="glow-r"><feGaussianBlur stdDeviation="3" result="c"/><feMerge><feMergeNode in="c"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+                <filter id="glow-g"><feGaussianBlur stdDeviation="3" result="c"/><feMerge><feMergeNode in="c"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+                <filter id="glow-b"><feGaussianBlur stdDeviation="3" result="c"/><feMerge><feMergeNode in="c"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+                <filter id="glow-w"><feGaussianBlur stdDeviation="4" result="c"/><feMerge><feMergeNode in="c"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+              </defs>
+              <!-- Base Platform -->
+              <rect x="20" y="195" width="240" height="8" rx="4" fill="#1b2a40" stroke="#00e5ff" stroke-width="1.5"/>
+              
+              <!-- Left Upright Triangle (Red) -->
+              <polygon points="50,195 130,195 90,126" fill="rgba(255, 59, 48, 0.25)" stroke="#ff3b30" stroke-width="2.5" filter="url(#glow-r)"/>
+              <text x="90" y="172" fill="#fff" font-size="12" font-weight="bold" text-anchor="middle">🔴 R</text>
+              
+              <!-- Right Upright Triangle (Blue) -->
+              <polygon points="130,195 210,195 170,126" fill="rgba(0, 229, 255, 0.25)" stroke="#00e5ff" stroke-width="2.5" filter="url(#glow-b)"/>
+              <text x="170" y="172" fill="#fff" font-size="12" font-weight="bold" text-anchor="middle">🔵 B</text>
+              
+              <!-- Inverted Triangle Flush in Center Pocket (Green) -->
+              <polygon points="90,126 170,126 130,195" fill="rgba(48, 209, 88, 0.25)" stroke="#30d158" stroke-width="2.5" stroke-dasharray="3,3" filter="url(#glow-g)"/>
+              <text x="130" y="152" fill="#fff" font-size="12" font-weight="bold" text-anchor="middle">🟢 G (▼)</text>
+              
+              <!-- Top Apex Triangle (White Equilibrium Tier 2) -->
+              <polygon points="90,126 170,126 130,57" fill="rgba(255, 255, 255, 0.3)" stroke="#ffffff" stroke-width="3" filter="url(#glow-w)"/>
+              <text x="130" y="103" fill="#000" font-size="11" font-weight="900" text-anchor="middle">⚪ TIER 2</text>
+              <text x="130" y="116" fill="#fff" font-size="8" font-weight="bold" text-anchor="middle">100% WHITE</text>
+            </svg>
+            <p style="font-size: 0.78rem; color: #8b9bb4; margin-top: 8px;">
+              3 upright triangles + 1 inverted center triangle lock together <strong>flush along flat seams</strong>. Zero gaps, zero tip-balancing!
+            </p>
+          </div>
+
+          <!-- Diagram 2: Interactive 2D Tilt Rocker & Slide Hazard -->
+          <div style="background: rgba(12, 22, 38, 0.7); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 16px; width: 380px;">
+            <div style="font-size: 0.82rem; font-weight: 800; color: #00e5ff; margin-bottom: 10px; text-transform: uppercase;">
+              2. Interactive 2D Balance Rocker & Slide Threshold
+            </div>
+            
+            <svg id="rocker-svg" width="340" height="170" viewBox="0 0 340 170" style="display: block; margin: 0 auto; overflow: visible;">
+              <!-- Central Fulcrum / Pivot -->
+              <polygon points="170,125 155,155 185,155" fill="#22364c" stroke="#00e5ff" stroke-width="2"/>
+              <circle cx="170" cy="125" r="4" fill="#ffd60a"/>
+
+              <!-- Tilting Beam Group (rotates dynamically) -->
+              <g id="tilting-beam" transform="rotate(0, 170, 125)">
+                <!-- Main Balance Platform -->
+                <rect x="40" y="120" width="260" height="10" rx="4" fill="#0f1c2e" stroke="#00e5ff" stroke-width="2"/>
+                
+                <!-- Left Leg / Red Hydraulic Weight -->
+                <rect x="55" y="98" width="45" height="22" rx="3" fill="rgba(255, 59, 48, 0.4)" stroke="#ff3b30" stroke-width="1.5"/>
+                <text x="77" y="113" fill="#fff" font-size="9" font-weight="bold" text-anchor="middle">🔴 Red: <tspan id="svg-r-val">8</tspan></text>
+                
+                <!-- Center Block / Green Weight -->
+                <polygon points="150,120 190,120 170,85" fill="rgba(48, 209, 88, 0.4)" stroke="#30d158" stroke-width="1.5"/>
+                <text x="170" y="112" fill="#fff" font-size="8" font-weight="bold" text-anchor="middle">🟢 G: <tspan id="svg-g-val">8</tspan></text>
+                
+                <!-- Right Leg / Blue Hydraulic Weight -->
+                <rect x="240" y="98" width="45" height="22" rx="3" fill="rgba(0, 229, 255, 0.4)" stroke="#00e5ff" stroke-width="1.5"/>
+                <text x="262" y="113" fill="#fff" font-size="9" font-weight="bold" text-anchor="middle">🔵 Blue: <tspan id="svg-b-val">8</tspan></text>
+                
+                <!-- Sliding White Core Ball -->
+                <circle id="core-ball" cx="170" cy="74" r="9" fill="#ffffff" stroke="#ffd60a" stroke-width="2" filter="url(#glow-w)"/>
+              </g>
+
+              <!-- Critical Angle Threshold Dashed Lines -->
+              <line x1="40" y1="95" x2="170" y2="125" stroke="rgba(255, 59, 48, 0.35)" stroke-dasharray="4,4" stroke-width="1.5"/>
+              <line x1="170" y1="125" x2="300" y2="95" stroke="rgba(255, 59, 48, 0.35)" stroke-dasharray="4,4" stroke-width="1.5"/>
+            </svg>
+
+            <!-- Tilt Slider Control -->
+            <div style="margin-top: 12px; display: flex; flex-direction: column; gap: 6px;">
+              <div style="display: flex; justify-content: space-between; font-size: 0.8rem; font-weight: 700;">
+                <span id="tilt-status" style="color: #30d158;">🟢 Level Balance (0°)</span>
+                <span id="tilt-degrees" style="color: #ffd60a; font-family: monospace;">0.0°</span>
+              </div>
+              <input type="range" id="tilt-slider" min="-25" max="25" value="0" step="0.5" style="width: 100%; accent-color: #00e5ff; cursor: pointer;">
+              <div style="display: flex; justify-content: space-between; font-size: 0.68rem; color: #8b9bb4;">
+                <span>◄ Overweight Red (-25°)</span>
+                <span>Balanced Center</span>
+                <span>Overweight Blue (+25°) ►</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="card-body">
+        <div class="mechanics-box" style="border-left-color: #00e5ff;">
+          <h4 style="color: #00e5ff;">Why This Solves Both Of Your Concerns</h4>
+          <ul>
+            <li><strong>100% Real Physical Logic:</strong> No sharp 3D tips balancing on points. Triangles lie completely flat on other triangles or the platform.</li>
+            <li><strong>Real Stakes For Scoring:</strong> Stacking too many Red triangles tilts the rocker to the left. If tilt exceeds <strong>18°</strong>, friction is overcome: top triangles and the white core <em>physically slide down the slope</em> into the hazard pit!</li>
+            <li><strong>You Must Alternate Colors:</strong> When the left side gets heavy, taking another Red shot risks instant collapse. You are forced to place Green or Blue on the right side to re-level the beam.</li>
+          </ul>
+        </div>
+
+        <!-- The Cube -> 3 Pyramids Revelation -->
+        <div style="margin-top: 24px; padding: 18px; background: rgba(0, 0, 0, 0.45); border-radius: 14px; border: 1px solid rgba(255, 214, 10, 0.35);">
+          <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+            <span style="font-size: 1.4rem;">💡</span>
+            <h3 style="color: #ffd60a; font-size: 1.15rem; font-weight: 800; text-transform: uppercase;">
+              Mathematical Fact: Exactly 3 Pyramids Form 1 Cube!
+            </h3>
+          </div>
+          <p style="color: #e0e8f4; font-size: 0.92rem; line-height: 1.5; margin-bottom: 12px;">
+            You asked: <em>"Does a cube divide into pyramids?"</em> <br>
+            <strong>YES! A cube divides into exactly THREE identical square-based pyramids that join at a common corner.</strong>
+          </p>
+
+          <div style="display: flex; flex-wrap: wrap; gap: 20px; align-items: center; justify-content: center;">
+            <!-- Isometric SVG showing the 3 Pyramids = 1 Cube -->
+            <svg width="220" height="200" viewBox="0 0 220 200" style="display: block;">
+              <defs>
+                <filter id="cube-glow"><feGaussianBlur stdDeviation="3" result="c"/><feMerge><feMergeNode in="c"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+              </defs>
+              <!-- Center is at (110, 100) -->
+              <!-- Top Face / Pyramid 1 (Green) -->
+              <polygon points="110,100 170,65 110,30 50,65" fill="rgba(48, 209, 88, 0.35)" stroke="#30d158" stroke-width="2"/>
+              <text x="110" y="68" fill="#fff" font-size="11" font-weight="bold" text-anchor="middle">🟢 Green Pyramid (1/3)</text>
+
+              <!-- Left Face / Pyramid 2 (Red) -->
+              <polygon points="110,100 50,65 50,135 110,170" fill="rgba(255, 59, 48, 0.35)" stroke="#ff3b30" stroke-width="2"/>
+              <text x="75" y="125" fill="#fff" font-size="11" font-weight="bold" text-anchor="middle">🔴 Red (1/3)</text>
+
+              <!-- Right Face / Pyramid 3 (Blue) -->
+              <polygon points="110,100 170,65 170,135 110,170" fill="rgba(0, 229, 255, 0.35)" stroke="#00e5ff" stroke-width="2"/>
+              <text x="145" y="125" fill="#fff" font-size="11" font-weight="bold" text-anchor="middle">🔵 Blue (1/3)</text>
+
+              <!-- Central Apex Vertex -->
+              <circle cx="110" cy="100" r="5" fill="#ffffff" filter="url(#cube-glow)"/>
+              <circle cx="110" cy="100" r="2" fill="#ffd60a"/>
+            </svg>
+
+            <div style="flex: 1; min-width: 260px; font-size: 0.88rem; color: #b0c2d8;">
+              <ul style="padding-left: 18px; display: flex; flex-direction: column; gap: 6px;">
+                <li><strong style="color: #fff;">Euclid's Classic Proof:</strong> Each pyramid has a square base ($s \times s$) and height $s$. Volume of each is $\frac{1}{3} s^3$. Three of them together make $\frac{3}{3} s^3 = s^3$ (the full cube!).</li>
+                <li><strong style="color: #ffd60a;">The RGB Equilibrium Connection:</strong> 
+                  <br>• 1 Red Pyramid ($\frac{1}{3}$)
+                  <br>• 1 Green Pyramid ($\frac{1}{3}$)
+                  <br>• 1 Blue Pyramid ($\frac{1}{3}$)
+                  <br>➔ <strong>Merge into 1 Complete Solid White Cube!</strong>
+                </li>
+                <li>In 2D isometric projection, this is the classic 3-diamond cube: each diamond is one pyramid viewed from its base!</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <script>
+      // Live interactive tilt simulator
+      const tiltSlider = document.getElementById('tilt-slider');
+      const tiltingBeam = document.getElementById('tilting-beam');
+      const tiltDeg = document.getElementById('tilt-degrees');
+      const tiltStatus = document.getElementById('tilt-status');
+      const coreBall = document.getElementById('core-ball');
+      const svgR = document.getElementById('svg-r-val');
+      const svgB = document.getElementById('svg-b-val');
+
+      if (tiltSlider && tiltingBeam) {
+        tiltSlider.addEventListener('input', (e) => {
+          const angle = parseFloat(e.target.value);
+          tiltingBeam.setAttribute('transform', `rotate(${angle}, 170, 125)`);
+          tiltDeg.textContent = `${angle > 0 ? '+' : ''}${angle.toFixed(1)}°`;
+
+          // Simulate rolling core ball displacement with angle
+          const ballOffset = angle * 2.8;
+          coreBall.setAttribute('cx', 170 + ballOffset);
+
+          // Update dynamic weights
+          if (angle < 0) {
+            svgR.textContent = Math.round(8 + Math.abs(angle) * 0.8);
+            svgB.textContent = Math.round(8 - Math.abs(angle) * 0.2);
+          } else {
+            svgB.textContent = Math.round(8 + Math.abs(angle) * 0.8);
+            svgR.textContent = Math.round(8 - Math.abs(angle) * 0.2);
+          }
+
+          if (Math.abs(angle) >= 18) {
+            tiltStatus.textContent = '🚨 CRITICAL TILT (SLIDE FAILURE!)';
+            tiltStatus.style.color = '#ff3b30';
+          } else if (Math.abs(angle) >= 10) {
+            tiltStatus.textContent = '⚠️ WARNING: SLIPPERY SLOPE';
+            tiltStatus.style.color = '#ffd60a';
+          } else {
+            tiltStatus.textContent = '🟢 Level Balance (Safe)';
+            tiltStatus.style.color = '#30d158';
+          }
+        });
+      }
+    </script>
+
+    <!-- Sketch 1 -->
+    <article class="sketch-card">
+      <div class="img-wrap">
+        <a href="sketch1_tripod_table.jpg" target="_blank" title="Click to view full resolution">
+          <img src="sketch1_tripod_table.jpg" alt="Sketch 1: 3-Legged Hydraulic Balance Table">
+        </a>
+      </div>
+      <div class="card-body">
+        <span class="badge badge-1">Option A · Physical Balancing Act</span>
+        <h2 class="card-title">1. The 3-Legged Balance Table (RGB Stewart Platform)</h2>
+        <p class="card-desc">
+          A physical circular platform resting on three hydraulic legs (Red, Green, Blue at 120° angles). On top of the table rests a delicate, glowing white core orb. The heights of the three legs respond directly to accumulated or stacked RGB values.
+        </p>
+        <div class="mechanics-box">
+          <h4>Core Mechanics & Penalties</h4>
+          <ul>
+            <li><strong>Equal 1:1:1 Distribution:</strong> The platform is perfectly flat (0° tilt); the white orb stays balanced in the dead center.</li>
+            <li><strong>Imbalance Tilt:</strong> If Red accumulates to 18 while Blue is only 3, the Red leg pumps up, tipping the table toward the lower legs.</li>
+            <li><strong>The Roll-Off Penalty:</strong> If tilt passes a critical threshold (&gt;25°), the white core rolls downhill. If it falls off the edge into the hazard zone, you trigger a catastrophic collapse (lose lives or penalty).</li>
+            <li><strong>High-Stakes Decision Making:</strong> You can no longer mindlessly farm high-tier Red merges. You must actively hunt for Blue and Green to stabilize the table before taking another shot!</li>
+          </ul>
+        </div>
+        <a class="direct-link" href="sketch1_tripod_table.jpg" target="_blank">Open Full Image ↗</a>
+      </div>
+    </article>
+
+    <!-- Sketch 2 -->
+    <article class="sketch-card">
+      <div class="img-wrap">
+        <a href="sketch2_triangular_balance.jpg" target="_blank" title="Click to view full resolution">
+          <img src="sketch2_triangular_balance.jpg" alt="Sketch 2: Triangular Prism Tessellation & Slopes">
+        </a>
+      </div>
+      <div class="card-body">
+        <span class="badge badge-2">Option B · Geometric Shape Overhaul</span>
+        <h2 class="card-title">2. Triangular Prisms & Slope Avalanches</h2>
+        <p class="card-desc">
+          Replacing square blocks with equilateral triangular crystal prisms (▲ and ▼). Triangles interlock into diamonds, trapezoids, and complete chromatic hexagons.
+        </p>
+        <div class="mechanics-box" style="border-left-color: var(--accent-gold);">
+          <h4 style="color: var(--accent-gold);">Why Triangles Work Better Than Blocks</h4>
+          <ul>
+            <li><strong>Natural Interlocking:</strong> ▲ and ▼ snap together seamlessly into diamonds (Tier 2) and radiant hexagons (Tier 6).</li>
+            <li><strong>Slope & Slide Dynamics:</strong> Squares stack statically, but triangles have 60° sloped faces. When the 3-legged balance table tilts, upper triangles slide and trigger satisfying physical cascades!</li>
+            <li><strong>Optics Alignment:</strong> Triangles are natural prisms that physically represent light dispersion.</li>
+          </ul>
+        </div>
+        <a class="direct-link" href="sketch2_triangular_balance.jpg" target="_blank">Open Full Image ↗</a>
+      </div>
+    </article>
+
+    <!-- Sketch 3 -->
+    <article class="sketch-card">
+      <div class="img-wrap">
+        <a href="sketch3_prism_light_beams.jpg" target="_blank" title="Click to view full resolution">
+          <img src="sketch3_prism_light_beams.jpg" alt="Sketch 3: Optical Laser Beam Refraction Bench">
+        </a>
+      </div>
+      <div class="card-body">
+        <span class="badge badge-3">Option C · Laser Beam Analogy</span>
+        <h2 class="card-title">3. Optical Laser Beams & Refraction Bench</h2>
+        <p class="card-desc">
+          Replacing falling objects entirely with directed laser beam vents, rotating beam splitters, and reflective mirrors on an optical testing bench.
+        </p>
+        <div class="mechanics-box" style="border-left-color: #c56cf0;">
+          <h4 style="color: #c56cf0);">Core Mechanics & Thermal Stress</h4>
+          <ul>
+            <li><strong>Laser Synthesis:</strong> Red, Green, and Blue laser emitters fire continuous or pulsed beams that bounce off mirrors and combine inside crystal splitters.</li>
+            <li><strong>Thermal Overheat Penalty:</strong> If a prism receives pure un-opposed Red laser energy without cool Blue/Green balance, thermal stress rises. Overheating shatters the prism and terminates the circuit.</li>
+            <li><strong>Radiant Synthesis:</strong> Converging all three primary lasers into the central collector produces a high-energy pure white beam.</li>
+          </ul>
+        </div>
+        <a class="direct-link" href="sketch3_prism_light_beams.jpg" target="_blank">Open Full Image ↗</a>
+      </div>
+    </article>
+
+    <!-- Sketch 4 -->
+    <article class="sketch-card">
+      <div class="img-wrap">
+        <a href="sketch4_pyramid_of_pyramids.jpg" target="_blank" title="Click to view full resolution">
+          <img src="sketch4_pyramid_of_pyramids.jpg" alt="Sketch 4: Pyramid of Pyramids Fractal Stacking">
+        </a>
+      </div>
+      <div class="card-body">
+        <span class="badge" style="background: rgba(255, 255, 255, 0.2); color: #ffffff; border: 1px solid #ffffff;">Option D · Fractal Assembly</span>
+        <h2 class="card-title">4. Building a Pyramid From Pyramids (Hierarchical Assembly)</h2>
+        <p class="card-desc">
+          Can you build a pyramid out of smaller pyramids? <strong>Yes!</strong> Both in 2D (Triangles forming larger Triangles) and in 3D (Hierarchical Pyramids forming a Megalith).
+        </p>
+        <div class="mechanics-box" style="border-left-color: #ffffff;">
+          <h4 style="color: #ffffff;">Mathematical & Gameplay Models</h4>
+          <ul>
+            <li><strong>Stepped Pyramid Stacking:</strong> 1 peak pyramid rests in the saddle of 4 supporting pyramids below it (2×2), which in turn rest on 9 pyramids (3×3), totaling 14 pyramids to form a 3-tier monument.</li>
+            <li><strong>2D Equilateral Triforce Rule:</strong> 4 smaller triangles (3 pointing up ▲, 1 inverted ▼ in center) assemble into a 2× scale triangle without any empty space.</li>
+            <li><strong>3D Sierpinski Tetrahedron:</strong> 4 corner tetrahedra create a double-sized tetrahedron with an octahedral energy core cavity in the center!</li>
+            <li><strong>Balanced Construction:</strong> If you build up one side of the pyramid too fast with Red bricks, the center of mass moves off-axis, causing the pyramid to shear and tumble!</li>
+          </ul>
+        </div>
+        <a class="direct-link" href="sketch4_pyramid_of_pyramids.jpg" target="_blank">Open Full Image ↗</a>
+      </div>
+    </article>
+
+  </main>
+
+</body>
+</html>

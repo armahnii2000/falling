@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Into the Darkness — Overlaid Mobile View</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: #000000;
+      color: #e2f1ff;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      width: 430px;
+      height: 932px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+
+    /* LAYER 1 (BACKGROUND): LEO'S PHONE SCREEN */
+    #phone-background-layer {
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 50% 30%, #0d1527 0%, #03060c 100%);
+      display: flex;
+      flex-direction: column;
+      padding: 0 24px;
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    /* iPhone Hardware Top Notch / Island */
+    .dynamic-island {
+      position: absolute;
+      top: 12px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 124px;
+      height: 34px;
+      background: #000000;
+      border-radius: 24px;
+      z-index: 50;
+      box-shadow: 0 0 12px rgba(0,0,0,0.9);
+    }
+
+    /* Status Bar */
+    .status-bar {
+      height: 52px;
+      padding-top: 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 14px;
+      font-weight: 700;
+      color: #ffffff;
+      z-index: 40;
+    }
+    .battery-pill {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: #ff4757;
+      font-weight: 900;
+      font-size: 13px;
+    }
+    .battery-icon {
+      width: 25px;
+      height: 12px;
+      border: 1.5px solid #ff4757;
+      border-radius: 3px;
+      padding: 1px;
+      position: relative;
+    }
+    .battery-icon::after {
+      content: "";
+      position: absolute;
+      right: -3px;
+      top: 2.5px;
+      width: 2px;
+      height: 4px;
+      background: #ff4757;
+      border-radius: 0 1px 1px 0;
+    }
+    .battery-fill {
+      width: 14%;
+      height: 100%;
+      background: #ff4757;
+      border-radius: 1px;
+    }
+
+    /* Lockscreen Clock */
+    .lock-clock-section {
+      text-align: center;
+      margin-top: 24px;
+      opacity: 0.95;
+    }
+    .lock-time {
+      font-size: 64px;
+      font-weight: 800;
+      letter-spacing: -2.5px;
+      line-height: 1;
+      color: #ffffff;
+      text-shadow: 0 4px 20px rgba(0, 0, 0, 0.8);
+    }
+    .lock-date {
+      font-size: 14px;
+      font-weight: 600;
+      color: #94a3b8;
+      margin-top: 4px;
+      text-shadow: 0 2px 10px rgba(0, 0, 0, 0.8);
+    }
+
+    /* Story Notifications in the Background */
+    .story-cards-container {
+      margin-top: 32px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      max-width: 382px;
+    }
+    .bg-notif-card {
+      background: rgba(18, 26, 44, 0.75);
+      backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 20px;
+      padding: 14px 16px;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.6);
+      transition: all 0.3s;
+    }
+    .notif-top-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 6px;
+      font-size: 11px;
+    }
+    .notif-app-title {
+      font-weight: 800;
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .notif-timestamp {
+      font-size: 10px;
+      color: #94a3b8;
+    }
+    .notif-message-body {
+      font-size: 13px;
+      line-height: 1.4;
+      color: #f1f5f9;
+    }
+    .missed-alert-tag {
+      color: #ff4757;
+      font-weight: 800;
+      font-size: 12px;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    /* LAYER 2 (FOREGROUND): THE OVERLAID GAMEPLAY CHAMBER */
+    #game-overlay-layer {
+      position: absolute;
+      inset: 0;
+      z-index: 10;
+      display: flex;
+      flex-direction: column;
+      pointer-events: auto;
+    }
+
+    /* Top Dropper Track (Translucent Glass Rail) */
+    .overlay-dropper-rail {
+      margin-top: 180px; /* Sits right under the lock clock */
+      height: 60px;
+      position: relative;
+      border-top: 1px dashed rgba(255, 255, 255, 0.18);
+      border-bottom: 1px dashed rgba(255, 255, 255, 0.18);
+      background: rgba(0, 0, 0, 0.4);
+      backdrop-filter: blur(10px);
+    }
+    .overlay-ready-block {
+      position: absolute;
+      top: 8px;
+      left: 190px;
+      width: 44px;
+      height: 44px;
+      background: #00e5ff;
+      border: 2px solid #ffffff;
+      border-radius: 8px;
+      box-shadow: 0 0 25px rgba(0, 229, 255, 0.8), 0 8px 16px rgba(0,0,0,0.5);
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      grid-template-rows: repeat(2, 1fr);
+      gap: 1px;
+      padding: 2px;
+      animation: gentle-hover 2s infinite ease-in-out;
+    }
+    @keyframes gentle-hover {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-3px); }
+    }
+    .ready-subcell {
+      background: rgba(0, 229, 255, 0.85);
+      border-radius: 2px;
+    }
+    .ready-num {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 15px;
+      font-weight: 900;
+      color: #020712;
+    }
+
+    /* Laser Aim Guide Dropping Across the Phone Notifications */
+    .aim-laser-beam {
+      position: absolute;
+      top: 52px;
+      left: 211px;
+      width: 2px;
+      height: 520px;
+      background: linear-gradient(180deg, rgba(0, 229, 255, 0.9) 0%, rgba(0, 229, 255, 0.1) 100%);
+      pointer-events: none;
+    }
+
+    /* Floating Blocks in the Pit (Falling directly in front of notifications!) */
+    .overlay-pit {
+      flex: 1;
+      position: relative;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      padding-bottom: 90px;
+      gap: 10px;
+    }
+
+    /* Block Styling with Glass Depth & Cast Shadow onto Phone Screen */
+    .overlay-block {
+      border-radius: 8px;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-weight: 900;
+      box-shadow: 
+        0 15px 35px rgba(0, 0, 0, 0.8),
+        0 0 15px rgba(0, 0, 0, 0.4);
+      backdrop-filter: blur(4px);
+    }
+    .grid-mesh {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      border-radius: 8px;
+      overflow: hidden;
+      opacity: 0.3;
+      pointer-events: none;
+    }
+    .grid-cell {
+      border: 1px solid rgba(255, 255, 255, 0.7);
+    }
+    .block-value {
+      font-size: 16px;
+      font-weight: 900;
+      z-index: 5;
+    }
+    .block-tag {
+      font-size: 8px;
+      font-weight: 800;
+      font-family: monospace;
+      padding: 1px 5px;
+      border-radius: 5px;
+      background: rgba(0, 0, 0, 0.75);
+      color: #ffffff;
+      margin-top: 2px;
+      z-index: 5;
+    }
+
+    /* Blocks */
+    .ob-t1 {
+      width: 32px;
+      height: 32px;
+      background: #ffee00;
+      border: 1.5px solid #ffffff;
+      color: #332200;
+    }
+    .ob-t2 {
+      width: 54px;
+      height: 54px;
+      background: #ff007f;
+      border: 1.5px solid #ffffff;
+      color: #ffffff;
+    }
+    .ob-t3 {
+      width: 80px;
+      height: 80px;
+      background: #0066ff;
+      border: 2px solid #ffffff;
+      color: #ffffff;
+    }
+    .ob-t4 {
+      width: 106px;
+      height: 106px;
+      background: #00e676;
+      border: 2px solid #ffffff;
+      color: #003311;
+    }
+    /* Tier 6: Black Monolith (Absorbs the background!) */
+    .ob-t6-black {
+      width: 156px;
+      height: 156px;
+      background: #000000;
+      border: 2.5px solid #ffffff;
+      color: #ffffff;
+      box-shadow: 
+        0 0 35px rgba(255, 255, 255, 0.3),
+        0 20px 45px rgba(0, 0, 0, 0.95);
+      z-index: 5;
+    }
+    .ob-t6-black .block-value { font-size: 26px; }
+    .ob-t6-black .block-tag {
+      background: #ffffff;
+      color: #000000;
+      font-weight: 900;
+      font-size: 9px;
+      padding: 2px 6px;
+    }
+
+    /* HUD Bar Floating over Game */
+    .floating-mini-bar {
+      position: absolute;
+      top: 135px;
+      left: 20px;
+      right: 20px;
+      height: 34px;
+      background: rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 17px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 16px;
+      font-size: 11px;
+      color: #94a3b8;
+    }
+    .floating-mini-bar strong { color: #fff; font-weight: 900; }
+
+    /* Bottom Control Bar */
+    .overlay-bottom-bar {
+      position: absolute;
+      bottom: 24px;
+      left: 20px;
+      right: 20px;
+      height: 54px;
+      background: rgba(10, 16, 32, 0.85);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 27px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 16px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
+    }
+    .aim-cue {
+      font-size: 11px;
+      font-weight: 800;
+      color: #94a3b8;
+      letter-spacing: 0.5px;
+    }
+    .drop-trigger-btn {
+      background: #00e5ff;
+      color: #020712;
+      font-size: 12px;
+      font-weight: 900;
+      padding: 10px 20px;
+      border-radius: 20px;
+      border: none;
+      box-shadow: 0 0 15px rgba(0, 229, 255, 0.5);
+    }
+
+    /* iOS Home Bar */
+    .home-indicator {
+      position: absolute;
+      bottom: 8px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 140px;
+      height: 5px;
+      background: rgba(255, 255, 255, 0.35);
+      border-radius: 4px;
+      z-index: 60;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Dynamic Island -->
+  <div class="dynamic-island"></div>
+
+  <!-- LAYER 1 (BACKGROUND): LEO'S PHONE SCREEN -->
+  <div id="phone-background-layer">
+    <!-- Status Bar -->
+    <div class="status-bar">
+      <span>3:32</span>
+      <div class="battery-pill">
+        <span>14%</span>
+        <div class="battery-icon">
+          <div class="battery-fill"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Big Lockscreen Clock -->
+    <div class="lock-clock-section">
+      <div class="lock-time">3:32</div>
+      <div class="lock-date">Thursday, October 8</div>
+    </div>
+
+    <!-- The 3:32 AM Notifications Legible in Background -->
+    <div class="story-cards-container">
+      
+      <!-- Missed Calls -->
+      <div class="bg-notif-card">
+        <div class="missed-alert-tag">
+          <span>📞 2 MISSED CALLS</span>
+          <span style="font-size: 10px; color: #ff6b81;">WIFE</span>
+        </div>
+        <div style="font-size: 10px; color: #94a3b8; margin-top: 3px;">1:45 AM · 2:30 AM</div>
+      </div>
+
+      <!-- Wife Urgent Message -->
+      <div class="bg-notif-card">
+        <div class="notif-top-row">
+          <span class="notif-app-title">💬 Messages · Wife</span>
+          <span class="notif-timestamp">2:35 AM</span>
+        </div>
+        <div class="notif-message-body">
+          "Leo, it's almost 3 AM... are you still at the office? I left dinner in the fridge. Please get some sleep, I'm worried."
+        </div>
+      </div>
+
+      <!-- Slack Crisis -->
+      <div class="bg-notif-card">
+        <div class="notif-top-row">
+          <span class="notif-app-title">#war-room</span>
+          <span class="notif-timestamp">3:18 AM</span>
+        </div>
+        <div class="notif-message-body" style="color: #ff9ff3;">
+          "Runway under 60 days. Diligence audit repo must be clean by dawn."
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- LAYER 2 (FOREGROUND): THE OVERLAID GAMEPLAY CHAMBER -->
+  <div id="game-overlay-layer">
+    
+    <!-- Floating Mini HUD -->
+    <div class="floating-mini-bar">
+      <span>INTO THE DARKNESS</span>
+      <span>SCORE: <strong>24,850</strong></span>
+      <span>PEAK: <strong>T6 (6×6)</strong></span>
+    </div>
+
+    <!-- Dropper Track across the Phone Screen -->
+    <div class="overlay-dropper-rail">
+      <div class="overlay-ready-block">
+        <div class="ready-subcell"></div><div class="ready-subcell"></div>
+        <div class="ready-subcell"></div><div class="ready-subcell"></div>
+        <div class="ready-num">2</div>
+      </div>
+      <div class="aim-laser-beam"></div>
+    </div>
+
+    <!-- Pit: Discrete NxN Blocks Falling IN FRONT of the Story! -->
+    <div class="overlay-pit">
+      
+      <!-- 1x1 Yellow -->
+      <div class="overlay-block ob-t1">
+        <div class="grid-mesh" style="grid-template-columns: 1fr; grid-template-rows: 1fr;">
+          <div class="grid-cell"></div>
+        </div>
+        <span class="block-value" style="font-size: 13px;">1</span>
+      </div>
+
+      <!-- 2x2 Magenta -->
+      <div class="overlay-block ob-t2">
+        <div class="grid-mesh" style="grid-template-columns: repeat(2, 1fr); grid-template-rows: repeat(2, 1fr);">
+          <div class="grid-cell"></div><div class="grid-cell"></div>
+          <div class="grid-cell"></div><div class="grid-cell"></div>
+        </div>
+        <span class="block-value">2</span>
+        <div class="block-tag">M:2</div>
+      </div>
+
+      <!-- 3x3 Cobalt Blue -->
+      <div class="overlay-block ob-t3">
+        <div class="grid-mesh" style="grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(3, 1fr);">
+          <div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div>
+          <div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div>
+          <div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div>
+        </div>
+        <span class="block-value">4</span>
+        <div class="block-tag">C:2 M:2</div>
+      </div>
+
+      <!-- 4x4 Emerald Green -->
+      <div class="overlay-block ob-t4">
+        <div class="grid-mesh" style="grid-template-columns: repeat(4, 1fr); grid-template-rows: repeat(4, 1fr);">
+          <div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div>
+          <div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div>
+          <div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div>
+          <div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div>
+        </div>
+        <span class="block-value">8</span>
+        <div class="block-tag">C:4 Y:4</div>
+      </div>
+
+      <!-- 6x6 Black Monolith (Buries the notifications behind it!) -->
+      <div class="overlay-block ob-t6-black">
+        <div class="grid-mesh" style="grid-template-columns: repeat(6, 1fr); grid-template-rows: repeat(6, 1fr);">
+          <!-- 36 cells -->
+          <div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div>
+          <div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div>
+          <div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div>
+          <div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div>
+          <div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div>
+          <div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div>
+        </div>
+        <span class="block-value">32</span>
+        <div class="block-tag">★ 100% BLACK</div>
+      </div>
+
+    </div>
+
+    <!-- Bottom Controls Floating over Phone Screen -->
+    <div class="overlay-bottom-bar">
+      <div class="aim-cue">◄ DRAG TO AIM ►</div>
+      <button class="drop-trigger-btn">DROP BLOCK ▼</button>
+    </div>
+
+  </div>
+
+  <!-- iOS Home Bar -->
+  <div class="home-indicator"></div>
+
+</body>
+</html>

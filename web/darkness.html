@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>Into the Darkness — Mobile Experience</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="darkness.css?v=2">
+</head>
+<body class="mode-game theme-sumi">
+  <!-- Desktop / Header Theme Switcher Dock -->
+  <div id="theme-selector-bar">
+    <span class="theme-bar-label">BOARD THEME:</span>
+    <button class="theme-tab-btn active" data-theme="sumi">1. Sumi Ink & Stone</button>
+    <button class="theme-tab-btn" data-theme="amber_crt">2. Amber Phosphor CRT</button>
+    <button class="theme-tab-btn" data-theme="nordic">3. Nordic Brutalism</button>
+    <button class="theme-tab-btn" data-theme="classic">Classic Glass</button>
+    <div style="display: flex; align-items: center; gap: 6px; margin-left: 6px; padding-left: 8px; border-left: 1px solid rgba(255,255,255,0.15);">
+      <span class="theme-bar-label" style="font-size: 10px;">GLASS OPACITY:</span>
+      <input type="range" id="glass-opacity-slider" min="15" max="85" value="45" style="width: 70px; cursor: pointer; accent-color: #00f0ff;">
+      <span id="glass-opacity-val" style="font-size: 11px; color: #58a6ff; font-weight: 700; width: 28px;">45%</span>
+    </div>
+    <a href="themes.html" target="_blank" class="theme-tab-link">🖼️ View Translucent Showcase</a>
+  </div>
+
+  <!-- Outer Mobile Phone Frame -->
+  <div id="app-viewport">
+    
+    <!-- =========================================================
+         LAYER 1: THE PHONE SCREEN (BASE LAYER)
+         ========================================================= -->
+    <div id="layer-phone">
+      <img class="phone-bg-img" src="/layers/layer1_phone_screen.png" alt="Leo's Phone Screen">
+      <!-- Container for notifications that have sunk from the game layer -->
+      <div id="phone-notifications-tray"></div>
+    </div>
+
+    <!-- =========================================================
+         LAYER 2: FROSTED GLASS CHAMBER (MIDDLE FILTER)
+         ========================================================= -->
+    <div id="layer-glass">
+      <img class="glass-plate-img" src="/layers/layer2_frosted_glass_chamber.png" alt="Frosted Glass Chamber">
+    </div>
+
+    <!-- =========================================================
+         LAYER 3: THE GAME BOARD (TRANSPARENT FOREGROUND)
+         ========================================================= -->
+    <div id="layer-game">
+      <!-- Top Minimal Game HUD -->
+      <header id="game-hud">
+        <div class="hud-pill">
+          <span style="color: rgba(255,255,255,0.4);">SCORE</span>
+          <span class="hud-score" id="hud-score-val">0</span>
+        </div>
+        <div class="hud-pill">
+          <span class="hud-tier-badge" id="hud-tier-val">TIER 1</span>
+        </div>
+        <div class="hud-pill hud-black-meter">
+          <div class="black-indicator-dot"></div>
+          <span id="hud-black-val">0%</span>
+        </div>
+      </header>
+
+      <!-- Dropper Horizontal Slider Track -->
+      <div id="dropper-controls">
+        <input type="range" id="aim-slider" min="0" max="100" value="50" step="0.5" aria-label="Dropper Slider">
+      </div>
+
+      <!-- Floating Sinking Notification Card (Pops up on game screen!) -->
+      <div id="floating-notification" class="hidden">
+        <div class="alert-badge" id="notif-badge">MESSAGES</div>
+        <div class="alert-content">
+          <div class="alert-title" id="notif-title">Wife</div>
+          <div class="alert-msg" id="notif-msg">Leo, are you coming to bed?</div>
+          <div class="alert-tap-hint">▼ TAP TO MELT & SINK TO PHONE ▼</div>
+        </div>
+      </div>
+
+      <!-- Transparent Canvas for 3D Beveled Cubes & Dropper -->
+      <canvas id="game-canvas"></canvas>
+
+      <!-- Bottom Control Bar with Glowing SWAP Button -->
+      <footer id="bottom-bar">
+        <button class="swap-btn" id="btn-swap" title="Swap Focus (Phone ⇄ Game)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="16 3 21 3 21 8"></polyline>
+            <line x1="4" y1="20" x2="21" y2="3"></line>
+            <polyline points="21 16 21 21 16 21"></polyline>
+            <line x1="15" y1="15" x2="21" y2="21"></line>
+            <line x1="4" y1="4" x2="9" y2="9"></line>
+          </svg>
+          <span>SWAP</span>
+        </button>
+      </footer>
+    </div>
+
+  </div>
+
+  <script src="darkness.js?v=2"></script>
+</body>
+</html>
