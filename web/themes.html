@@ -2,7 +2,8 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Into the Darkness — Translucent Themes Showcase (Phone Screen Layered)</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Falling — 5 High-Fidelity Translucent Art Themes</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
@@ -25,38 +26,10 @@
       font-size: 15px;
       margin-bottom: 24px;
       text-align: center;
-      max-width: 820px;
+      max-width: 860px;
       line-height: 1.5;
     }
     
-    /* Top View Mode Switcher */
-    .view-toggle-bar {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      margin-bottom: 36px;
-      background: #111620;
-      border: 1px solid #232c3d;
-      padding: 6px;
-      border-radius: 999px;
-      box-shadow: 0 8px 24px rgba(0,0,0,0.5);
-    }
-    .toggle-btn {
-      padding: 8px 20px;
-      border-radius: 999px;
-      border: none;
-      background: transparent;
-      color: #8b949e;
-      font-size: 13px;
-      font-weight: 700;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-    .toggle-btn.active {
-      background: #238636;
-      color: #ffffff;
-      box-shadow: 0 2px 10px rgba(46, 160, 67, 0.4);
-    }
     .nav-links {
       display: flex;
       gap: 12px;
@@ -65,19 +38,51 @@
       justify-content: center;
     }
     .nav-pill {
-      padding: 6px 14px;
+      padding: 8px 16px;
       border-radius: 999px;
       background: #161f2e;
       border: 1px solid #303e54;
       color: #58a6ff;
       text-decoration: none;
-      font-size: 12px;
+      font-size: 13px;
       font-weight: 600;
       transition: all 0.2s;
     }
     .nav-pill:hover {
       background: #212e42;
       border-color: #58a6ff;
+    }
+
+    .panoramic-section {
+      max-width: 1400px;
+      width: 100%;
+      margin-bottom: 40px;
+      background: #111620;
+      border: 1px solid #232c3d;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 16px 40px rgba(0,0,0,0.6);
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .panoramic-section h2 {
+      font-size: 20px;
+      margin-bottom: 6px;
+      color: #f0f6fc;
+    }
+    .panoramic-section p {
+      font-size: 13px;
+      color: #8b949e;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+    .panoramic-img {
+      width: 100%;
+      height: auto;
+      border-radius: 12px;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.8);
     }
 
     .theme-grid {
@@ -108,15 +113,15 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      padding: 12px;
+      padding: 16px;
     }
     .board-img {
       max-width: 100%;
       height: auto;
+      max-height: 600px;
       display: block;
       border-radius: 14px;
       box-shadow: 0 8px 30px rgba(0,0,0,0.8);
-      transition: opacity 0.3s ease;
     }
     .theme-body {
       padding: 24px;
@@ -176,48 +181,48 @@
   </style>
 </head>
 <body>
-  <h1>Into the Darkness — Translucent Themes Showcase</h1>
+  <h1>Falling — 5 High-Fidelity Translucent Art Themes</h1>
   <p class="subtitle">
-    Revealing Leo Vance's dark smartphone screen (3:32 AM, 14% low battery, incoming Slack & Messages) visible directly underneath each physical material theme.
+    Production-grade visual art skins for the phone screen chamber ($390 \times 844$). Revealing Leo Vance's dark smartphone screen (3:32 AM, 14% low battery, incoming Slack & Messages) visible directly underneath each physical material theme.
   </p>
 
-  <!-- View Mode Switcher -->
-  <div class="view-toggle-bar">
-    <button class="toggle-btn active" id="btn-mode-translucent">📱 Translucent (Phone Screen Layered)</button>
-    <button class="toggle-btn" id="btn-mode-isolated">🧩 Isolated Game Boards</button>
+  <div class="nav-links">
+    <a href="/index.html" class="nav-pill" style="border-color: #00f0ff; color: #00f0ff;">🎮 Play Prototype</a>
+    <a href="/desktop_mockup.html" class="nav-pill">🖥️ Desktop Steam View</a>
+    <a href="/layered_mockup.html" class="nav-pill">📱 Layered Mockup Study</a>
   </div>
 
-  <div class="nav-links">
-    <a href="/darkness.html" class="nav-pill" style="border-color: #00f0ff; color: #00f0ff;">🎮 Play Darkness (Interactive Game)</a>
-    <a href="/desktop_mockup.html" class="nav-pill">🖥️ 16:9 Desktop View</a>
-    <a href="/block_proportions.html" class="nav-pill">📐 Block Proportions Chart</a>
-    <a href="/theme1_sumi_translucent.png" target="_blank" class="nav-pill">🔍 3D Exploded Layer Diagram</a>
+  <!-- Panoramic 5-Theme Board -->
+  <div class="panoramic-section">
+    <h2>5-Theme Panoramic Showcase (Side-by-Side)</h2>
+    <p>All five themes preserve the canonical 24 × 36 grid chamber, drop gantry, and 45.8% Titan Monolith ratio across unique tactile materials.</p>
+    <img src="/themes_art/themes_5_art_showcase.webp" alt="5 Art Themes Panoramic Showcase" class="panoramic-img">
   </div>
 
   <div class="theme-grid">
     <!-- Theme 1 -->
     <div class="theme-card">
       <div class="image-wrapper">
-        <img id="img-theme-1" src="/theme1_sumi_translucent_clean.png" alt="Theme 1 Translucent" class="board-img">
+        <img src="/themes_art/art_theme1_cyber_obsidian.png" alt="Theme 1 Cyber Obsidian" class="board-img">
       </div>
       <div class="theme-body">
-        <div class="theme-title">1. Japanese Sumi Ink & Stone</div>
-        <div class="theme-tag">Translucent Washi & Smoked Slate</div>
+        <div class="theme-title">1. Cyber Obsidian & Optical Glass</div>
+        <div class="theme-tag">Precision Sci-Fi · Borosilicate Glass</div>
         
         <div class="translucency-callout">
-          <strong>Translucent Glass Layer:</strong> Semi-transparent handmade mulberry washi parchment & smoked slate glass plate. Leo's 3:32 AM clock and incoming messages softly bleed through the fibrous, misty texture like an ink wash.
+          <strong>Translucent Glass Layer:</strong> Smoked borosilicate glass chamber floating over Leo's phone, softly blurring 3:32 AM notifications.
         </div>
 
         <p class="theme-desc">
-          Tactile mineral pigment stone cubes (ochre, cinnabar, lapis lazuli) stacked inside the translucent chamber, resting next to a massive pitch carbon charcoal monolith 11 with raw gold leaf trim. Dark ebony wood gantry at top with fine ink dropper needle, crimson cinnabar brushstroke limit arc, and vermilion wax seal SWAP button at the bottom.
+          Aerospace brushed titanium gantry rails with recessed neon cyan light pipes, precision cyan laser targeting drop line, and beveled polymer cubes (yellow 1x1, magenta 2x1, cyan 3x1, cobalt 2x2, and glossy black Titan Monolith with metallic chamfers). Top HUD features circular purity arc and score. Capacitive glowing circular SWAP button.
         </p>
         <div class="materials-list">
-          <span class="mat-pill">Translucent Mulberry Washi</span>
-          <span class="mat-pill">Bleeding Clock & Slack Text</span>
-          <span class="mat-pill">Mineral Pigment Stones</span>
-          <span class="mat-pill">Cinnabar Brushstroke Arc</span>
-          <span class="mat-pill">Charcoal & Gold Monolith 11</span>
-          <span class="mat-pill">Wax Seal Button</span>
+          <span class="mat-pill">Brushed Titanium Rails</span>
+          <span class="mat-pill">Cyan Laser Guide</span>
+          <span class="mat-pill">Borosilicate Glass</span>
+          <span class="mat-pill">Beveled Polymer Cubes</span>
+          <span class="mat-pill">Metallic Chamfer Titan 11</span>
+          <span class="mat-pill">Capacitive SWAP Button</span>
         </div>
       </div>
     </div>
@@ -225,26 +230,26 @@
     <!-- Theme 2 -->
     <div class="theme-card">
       <div class="image-wrapper">
-        <img id="img-theme-2" src="/theme2_amber_crt_translucent_clean.png" alt="Theme 2 Translucent" class="board-img">
+        <img src="/themes_art/art_theme2_sumi_washi.png" alt="Theme 2 Sumi Ink" class="board-img">
       </div>
       <div class="theme-body">
-        <div class="theme-title">2. Amber Phosphor CRT Terminal</div>
-        <div class="theme-tag">Translucent Cathode Scanline Glass</div>
+        <div class="theme-title">2. Sumi Ink & Washi Paper</div>
+        <div class="theme-tag">Zen Calligraphic Void · Handcrafted Washi</div>
 
         <div class="translucency-callout">
-          <strong>Translucent Glass Layer:</strong> Authentic 1980s monochrome CRT filter screen made of semi-transparent smoked cathode glass. Leo's 3:32 AM clock, 14% battery, and Slack alerts are clearly visible beneath the warm amber scanlines.
+          <strong>Translucent Glass Layer:</strong> Fibrous handmade mulberry washi parchment lantern with aged brass rivets. Leo's 3:32 AM clock and incoming messages softly bleed through the fibrous, misty texture like an ink wash.
         </div>
 
         <p class="theme-desc">
-          Warm P3 amber phosphor vector wireframe cubes (1 to 11) with phosphor persistence and CRT scanlines glowing over the protagonist's phone screen. Top HUD features bracketed dot-matrix [SCORE: 24,850] and analog needle gauge. Dashed [DANGER_LIMIT] warning line and mechanical terminal push-key [SWAP] at the bottom.
+          Tactile mineral pigment stone cubes (ochre, cinnabar, lapis lazuli) stacked inside the translucent chamber, resting next to a massive pitch carbon charcoal monolith 11 with raw hammered 24k gold leaf trim. Dark ebony wood gantry at top with fine glass ink dropper needle, crimson cinnabar brushstroke limit arc, and vermilion wax seal 換 (Swap) button.
         </p>
         <div class="materials-list">
-          <span class="mat-pill">Smoked Cathode Screen</span>
-          <span class="mat-pill">Horizontal Scanlines</span>
-          <span class="mat-pill">Visible Slack/Message Text</span>
-          <span class="mat-pill">Amber Phosphor Vectors</span>
-          <span class="mat-pill">Monolithic Wireframe 11</span>
-          <span class="mat-pill">Mechanical Terminal Key</span>
+          <span class="mat-pill">Mulberry Washi Paper</span>
+          <span class="mat-pill">Aged Brass Rivets</span>
+          <span class="mat-pill">Cinnabar & Lapis Stones</span>
+          <span class="mat-pill">24k Gold Leaf Monolith</span>
+          <span class="mat-pill">Ink Dropper Spigot</span>
+          <span class="mat-pill">Cinnabar Wax Seal</span>
         </div>
       </div>
     </div>
@@ -252,66 +257,83 @@
     <!-- Theme 3 -->
     <div class="theme-card">
       <div class="image-wrapper">
-        <img id="img-theme-3" src="/theme3_nordic_translucent_clean.png" alt="Theme 3 Translucent" class="board-img">
+        <img src="/themes_art/art_theme3_amber_crt.png" alt="Theme 3 Amber CRT" class="board-img">
       </div>
       <div class="theme-body">
-        <div class="theme-title">3. Nordic Brutalism & Obsidian</div>
-        <div class="theme-tag">Translucent Smoked Frosted Glass</div>
+        <div class="theme-title">3. Amber Phosphor CRT Terminal</div>
+        <div class="theme-tag">1980s Retro-Terminal · P3 Amber Bloom</div>
 
         <div class="translucency-callout">
-          <strong>Translucent Glass Layer:</strong> Heavy frosted smoked sapphire glass plate with beveled edges, suspended between raw architectural concrete pillars. Leo's 3:32 AM clock, battery, and message cards are softly diffused and visible underneath.
+          <strong>Translucent Glass Layer:</strong> Authentic 1980s monochrome CRT filter screen made of semi-transparent smoked cathode glass. Leo's 3:32 AM clock, 14% battery, and Slack alerts are visible beneath the warm amber scanlines.
         </div>
 
         <p class="theme-desc">
-          Tactile architectural blocks—terracotta, honed basalt stone, cast concrete, brushed machine steel, and a towering polished black obsidian monolith 11 with chamfered specular rims. Milled aluminum top chassis with rotary dial and score display. Recessed red optical indicator limit bar and knurled metal push button SWAP.
+          Warm P3 amber phosphor vector wireframe cubes (1 to 11) with phosphor persistence and CRT scanlines glowing over the protagonist's phone screen. Top HUD features bracketed dot-matrix [SCORE: 24,850] and analog needle gauge. Dashed [DANGER_LIMIT] warning line and mechanical terminal Cherry MX push-key [SWAP] at the bottom.
         </p>
         <div class="materials-list">
-          <span class="mat-pill">Frosted Smoked Glass</span>
-          <span class="mat-pill">Diffused 3:32 AM Clock</span>
-          <span class="mat-pill">Raw Concrete Pillars</span>
-          <span class="mat-pill">Terracotta & Basalt</span>
-          <span class="mat-pill">Polished Obsidian Monolith 11</span>
-          <span class="mat-pill">Knurled Metal Button</span>
+          <span class="mat-pill">Smoked Cathode Glass</span>
+          <span class="mat-pill">Phosphor Persistence</span>
+          <span class="mat-pill">Scanlines & Bloom</span>
+          <span class="mat-pill">Vector Wireframe Blocks</span>
+          <span class="mat-pill">Monolithic Wireframe 11</span>
+          <span class="mat-pill">Mechanical Cherry MX Key</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Theme 4 -->
+    <div class="theme-card">
+      <div class="image-wrapper">
+        <img src="/themes_art/art_theme4_nordic_brutalism.png" alt="Theme 4 Nordic Brutalism" class="board-img">
+      </div>
+      <div class="theme-body">
+        <div class="theme-title">4. Nordic Brutalism & Honed Basalt</div>
+        <div class="theme-tag">Architectural Monolith · Smoked Sapphire</div>
+
+        <div class="translucency-callout">
+          <strong>Translucent Glass Layer:</strong> Heavy smoked sapphire glass plate with beveled edges, suspended between raw architectural concrete pillars. Leo's 3:32 AM clock, battery, and message cards are softly diffused underneath.
+        </div>
+
+        <p class="theme-desc">
+          Tactile architectural blocks—terracotta, pitted concrete, brushed machine steel, and a towering diamond-faceted honed volcanic basalt monolith 11 with specular chamfers. Milled bead-blasted aluminum top chassis with rolling mechanical score odometer and red LED hazard strip. Knurled solid aluminum rotary dial SWAP button.
+        </p>
+        <div class="materials-list">
+          <span class="mat-pill">Smoked Sapphire Plate</span>
+          <span class="mat-pill">Cast Concrete Pillars</span>
+          <span class="mat-pill">Bead-Blasted Aluminum</span>
+          <span class="mat-pill">Rolling Score Odometer</span>
+          <span class="mat-pill">Honed Volcanic Basalt</span>
+          <span class="mat-pill">Knurled Metal Dial</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Theme 5 -->
+    <div class="theme-card">
+      <div class="image-wrapper">
+        <img src="/themes_art/art_theme5_neon_ink_gels.png" alt="Theme 5 Optical Neon Gels" class="board-img">
+      </div>
+      <div class="theme-body">
+        <div class="theme-title">5. Optical Neon Gels & Ink Contrast</div>
+        <div class="theme-tag">Electric Pop · Bioluminescent Dye Gels</div>
+
+        <div class="translucency-callout">
+          <strong>Translucent Glass Layer:</strong> Dark translucent optical gel chamber allowing late-night message ("Hey, are you still awake?") to bleed through the ink gradients and dissolutions.
+        </div>
+
+        <p class="theme-desc">
+          Saturated translucent optical dye gel blocks (vivid cyan, hot magenta, goldenrod, lime green, obsidian 64 block) with internal luminescence and ambient edge glow reflecting across the grid. Cyan laser drop line, deep sumi ink wash dissolving background text, and a vibrant dual-tone glowing neon pill button (FLIP TO PHONE / SWAP).
+        </p>
+        <div class="materials-list">
+          <span class="mat-pill">Bioluminescent Gel Cubes</span>
+          <span class="mat-pill">Ambient Neon Edge Glow</span>
+          <span class="mat-pill">Cyan Laser Guide</span>
+          <span class="mat-pill">Sumi Ink Dissolution</span>
+          <span class="mat-pill">Obsidian 64 Block</span>
+          <span class="mat-pill">Dual-Tone Neon Pill Button</span>
         </div>
       </div>
     </div>
   </div>
-
-  <script>
-    const btnTranslucent = document.getElementById('btn-mode-translucent');
-    const btnIsolated = document.getElementById('btn-mode-isolated');
-    const img1 = document.getElementById('img-theme-1');
-    const img2 = document.getElementById('img-theme-2');
-    const img3 = document.getElementById('img-theme-3');
-
-    const urls = {
-      translucent: {
-        t1: '/theme1_sumi_translucent_clean.png',
-        t2: '/theme2_amber_crt_translucent_clean.png',
-        t3: '/theme3_nordic_translucent_clean.png'
-      },
-      isolated: {
-        t1: '/board_theme1_sumi_ink.png',
-        t2: '/board_theme2_amber_crt.png',
-        t3: '/board_theme3_nordic_brutalist.png'
-      }
-    };
-
-    btnTranslucent.addEventListener('click', () => {
-      btnTranslucent.classList.add('active');
-      btnIsolated.classList.remove('active');
-      img1.src = urls.translucent.t1;
-      img2.src = urls.translucent.t2;
-      img3.src = urls.translucent.t3;
-    });
-
-    btnIsolated.addEventListener('click', () => {
-      btnIsolated.classList.add('active');
-      btnTranslucent.classList.remove('active');
-      img1.src = urls.isolated.t1;
-      img2.src = urls.isolated.t2;
-      img3.src = urls.isolated.t3;
-    });
-  </script>
 </body>
 </html>
