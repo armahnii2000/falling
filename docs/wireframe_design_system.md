@@ -32,7 +32,41 @@ All 5 wireframes on your **Falling** page in Lunacy have been verified and updat
 
 ---
 
-## Wireframe Carousel (Verified Outputs)
+## 3. High-Fidelity Art Skins (Row 3 in Lunacy: y = 2020)
+
+Replacing preliminary vector blockouts, Row 3 now exhibits 5 distinct, production-grade visual art skins for the phone screen chamber ($390 \times 844$). Each theme preserves the fundamental $24 \times 36$ chamber proportions, drop rail, and Titan Monolith ratio, while introducing rich tactile materials, dynamic lighting, and authentic translucency that lets Leo's 3:32 AM notifications bleed through.
+
+![5 Art Skins Panoramic Showcase](/Users/georgearmah/.gemini/antigravity/brain/2c3a64ae-9518-4997-82a0-7008e590a272/themes_5_art_showcase.webp)
+
+### Theme Breakdown:
+1. **Theme 1: Cyber Obsidian & Optical Glass (Precision Sci-Fi)**
+   * **Materials:** Brushed aerospace titanium gantry rails, recessed neon cyan light pipes, beveled polymer cubes (yellow 1x1, magenta 2x1, cyan 3x1, cobalt 2x2, and glossy black Titan Monolith with metallic chamfers).
+   * **Translucency:** Smoked borosilicate glass chamber floating over Leo's phone, softly blurring 3:32 AM notifications.
+   * **Controls:** Capacitive circular glowing SWAP button.
+
+2. **Theme 2: Sumi Ink, Washi & Mineral Stone (Zen Calligraphic Void)**
+   * **Materials:** Handcrafted mulberry washi paper lantern with aged brass rivets, suspended glass sumi ink dropper with falling droplet, red enso calligraphy brushstroke danger line, hand-carved mineral stone blocks (cinnabar red, lapis lazuli blue, ochre yellow, and hand-chiseled black inkstone Titan with hammered 24k gold leaf foil edging).
+   * **Translucency:** Fibrous translucent mulberry paper diffusing the glowing phone screen behind it.
+   * **Controls:** Stamped cinnabar red wax seal "換" (Swap) button.
+
+3. **Theme 3: Amber Phosphor CRT & Vector Cathode (1980s Terminal)**
+   * **Materials:** Curved cathode ray tube (CRT) convex glass with warm P3 amber phosphor bloom, glowing vector wireframe meshes for falling blocks, analog tachometer sweep density gauge, dashed danger limit line.
+   * **Translucency:** Phosphor raster and dark glass revealing the ambient lock screen through glowing scanlines.
+   * **Controls:** Heavy tactile mechanical Cherry MX keycap labeled `SWAP`.
+
+4. **Theme 4: Nordic Brutalism & Honed Basalt (Architectural Monolith)**
+   * **Materials:** Cast architectural concrete pillars flanking a floating plate of smoked sapphire glass, milled bead-blasted aluminum top header with mechanical rolling score counter and red LED hazard strip, architectural material blocks (terracotta, pitted concrete, brushed steel, honed volcanic basalt Titan monolith with diamond-beveled specular rims).
+   * **Translucency:** Smoked sapphire plate revealing blurred notifications and clock behind it.
+   * **Controls:** Knurled solid aluminum rotary dial SWAP button.
+
+5. **Theme 5: Optical Neon Gels & Ink Contrast (Electric Pop / Bioluminescent Glow)**
+   * **Materials:** Saturated translucent optical dye gel blocks (vivid cyan, hot magenta, goldenrod, lime green, obsidian 64 block) with internal luminescence and ambient edge glow, cyan laser drop line, floating in a dark chamber where deep ink wash bleeds and dissolves background text.
+   * **Translucency:** Dark translucent optical gel chamber allowing late-night message ("Hey, are you still awake?") to bleed through the ink gradients.
+   * **Controls:** Dual-tone glowing neon pill button `FLIP TO PHONE`.
+
+---
+
+## Wireframe & Art Carousel (Verified Outputs)
 
 ````carousel
 ![1. Phone Screen Only](/Users/georgearmah/.gemini/antigravity/brain/2c3a64ae-9518-4997-82a0-7008e590a272/wf1_phone_only.webp)
@@ -44,4 +78,15 @@ All 5 wireframes on your **Falling** page in Lunacy have been verified and updat
 ![4. Blurred Reality Composite](/Users/georgearmah/.gemini/antigravity/brain/2c3a64ae-9518-4997-82a0-7008e590a272/wf4_combo_blurred_reality.webp)
 <!-- slide -->
 ![5. Desktop Steam Version](/Users/georgearmah/.gemini/antigravity/brain/2c3a64ae-9518-4997-82a0-7008e590a272/wf5_desktop_steam.webp)
+<!-- slide -->
+![Art Theme 1: Cyber Obsidian](/Users/georgearmah/.gemini/antigravity/brain/2c3a64ae-9518-4997-82a0-7008e590a272/art_theme1_cyber_obsidian.png)
+<!-- slide -->
+![Art Theme 2: Sumi Ink & Washi](/Users/georgearmah/.gemini/antigravity/brain/2c3a64ae-9518-4997-82a0-7008e590a272/art_theme2_sumi_washi.png)
+<!-- slide -->
+![Art Theme 3: Amber CRT Terminal](/Users/georgearmah/.gemini/antigravity/brain/2c3a64ae-9518-4997-82a0-7008e590a272/art_theme3_amber_crt.png)
+<!-- slide -->
+![Art Theme 4: Nordic Brutalism](/Users/georgearmah/.gemini/antigravity/brain/2c3a64ae-9518-4997-82a0-7008e590a272/art_theme4_nordic_brutalism.png)
+<!-- slide -->
+![Art Theme 5: Optical Neon Gels](/Users/georgearmah/.gemini/antigravity/brain/2c3a64ae-9518-4997-82a0-7008e590a272/art_theme5_neon_ink_gels.png)
 ````
+

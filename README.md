@@ -27,6 +27,17 @@ You play as Leo Vance, a tech worker navigating absolute professional collapse. 
 
 ---
 
+## 5 High-Fidelity Art Skins (Lunacy Row 3)
+
+Moving beyond wireframe placeholders, the **Falling** page in Lunacy features 5 production-grade art treatments for the translucent mobile chamber ($390 \times 844$):
+1. **Cyber Obsidian Pro:** Aerospace brushed titanium gantry, cyan laser drop, and beveled polymer cubes over borosilicate glass.
+2. **Sumi Ink & Washi:** Mulberry paper lantern, glass ink dropper, red enso brushstroke limit line, lapis/ochre stones, and a 24k gold leaf inkstone Titan.
+3. **Amber CRT Terminal:** 1980s curved cathode tube with P3 phosphor bloom, glowing vector wireframe meshes, tachometer density gauge, and Cherry MX mechanical keycap.
+4. **Nordic Brutalism:** Architectural cast concrete pillars, bead-blasted aluminum rolling score odometer, smoked sapphire plate, and diamond-beveled basalt Titan.
+5. **Optical Neon Gels:** Bioluminescent dye gels with interior luminescence, ambient rim glow, cyan laser, and deep ink wash dissolving background text.
+
+---
+
 ## Web Prototypes
 
 The `web/` folder contains interactive playable prototypes and canvas visualizations:
