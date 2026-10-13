@@ -1,0 +1,222 @@
+{
+  "width": 1024,
+  "height": 1024,
+  "elements": {
+    "block_tier_1": {
+      "x": 16,
+      "y": 16,
+      "width": 14,
+      "height": 14,
+      "category": "block",
+      "source_file": "block_tier_1_14px.png"
+    },
+    "block_tier_2": {
+      "x": 46,
+      "y": 16,
+      "width": 28,
+      "height": 28,
+      "category": "block",
+      "source_file": "block_tier_2_28px.png"
+    },
+    "block_tier_3": {
+      "x": 90,
+      "y": 16,
+      "width": 42,
+      "height": 42,
+      "category": "block",
+      "source_file": "block_tier_3_42px.png"
+    },
+    "block_tier_4": {
+      "x": 148,
+      "y": 16,
+      "width": 56,
+      "height": 56,
+      "category": "block",
+      "source_file": "block_tier_4_56px.png"
+    },
+    "block_tier_5": {
+      "x": 220,
+      "y": 16,
+      "width": 70,
+      "height": 70,
+      "category": "block",
+      "source_file": "block_tier_5_70px.png"
+    },
+    "block_tier_6": {
+      "x": 306,
+      "y": 16,
+      "width": 84,
+      "height": 84,
+      "category": "block",
+      "source_file": "block_tier_6_84px.png"
+    },
+    "block_tier_7": {
+      "x": 406,
+      "y": 16,
+      "width": 80,
+      "height": 80,
+      "category": "block",
+      "source_file": "block_tier_7_80px.png"
+    },
+    "block_tier_8": {
+      "x": 502,
+      "y": 16,
+      "width": 90,
+      "height": 90,
+      "category": "block",
+      "source_file": "block_tier_8_90px.png"
+    },
+    "block_tier_9": {
+      "x": 608,
+      "y": 16,
+      "width": 100,
+      "height": 100,
+      "category": "block",
+      "source_file": "block_tier_9_100px.png"
+    },
+    "block_tier_10": {
+      "x": 724,
+      "y": 16,
+      "width": 110,
+      "height": 110,
+      "category": "block",
+      "source_file": "block_tier_10_110px.png"
+    },
+    "block_tier_11_titan": {
+      "x": 850,
+      "y": 16,
+      "width": 154,
+      "height": 154,
+      "category": "block",
+      "source_file": "block_tier_11_154px.png"
+    },
+    "dropper_rail": {
+      "x": 16,
+      "y": 186,
+      "width": 300,
+      "height": 8,
+      "category": "dropper",
+      "source_file": "dropper_rail_300px.png"
+    },
+    "dropper_spigot": {
+      "x": 332,
+      "y": 186,
+      "width": 32,
+      "height": 24,
+      "category": "dropper",
+      "source_file": "dropper_spigot_carriage_32px.png"
+    },
+    "aim_reticle": {
+      "x": 380,
+      "y": 186,
+      "width": 32,
+      "height": 32,
+      "category": "dropper",
+      "source_file": "laser_impact_reticle.png"
+    },
+    "chamber_floor": {
+      "x": 428,
+      "y": 186,
+      "width": 336,
+      "height": 14,
+      "category": "chamber",
+      "source_file": "chamber_floor_bed_336px.png"
+    },
+    "overflow_danger": {
+      "x": 16,
+      "y": 234,
+      "width": 336,
+      "height": 6,
+      "category": "chamber",
+      "source_file": "overflow_danger_line_336px.png"
+    },
+    "overflow_badge": {
+      "x": 368,
+      "y": 234,
+      "width": 140,
+      "height": 32,
+      "category": "chamber",
+      "source_file": "overflow_warning_badge.png"
+    },
+    "btn_swap_normal": {
+      "x": 524,
+      "y": 234,
+      "width": 64,
+      "height": 64,
+      "category": "control",
+      "source_file": "btn_swap_circular_normal_64px.png"
+    },
+    "btn_swap_hover": {
+      "x": 604,
+      "y": 234,
+      "width": 64,
+      "height": 64,
+      "category": "control",
+      "source_file": "btn_swap_circular_hover_64px.png"
+    },
+    "btn_swap_pressed": {
+      "x": 684,
+      "y": 234,
+      "width": 64,
+      "height": 64,
+      "category": "control",
+      "source_file": "btn_swap_circular_pressed_64px.png"
+    },
+    "btn_swap_pill": {
+      "x": 764,
+      "y": 234,
+      "width": 120,
+      "height": 48,
+      "category": "control",
+      "source_file": "btn_swap_pill_normal_120x48px.png"
+    },
+    "btn_nudge": {
+      "x": 900,
+      "y": 234,
+      "width": 70,
+      "height": 48,
+      "category": "control",
+      "source_file": "btn_nudge_normal_70x48px.png"
+    },
+    "hud_purity_gauge": {
+      "x": 16,
+      "y": 314,
+      "width": 80,
+      "height": 80,
+      "category": "hud",
+      "source_file": "hud_purity_gauge_radial_80px.png"
+    },
+    "hud_score_pill": {
+      "x": 112,
+      "y": 314,
+      "width": 110,
+      "height": 44,
+      "category": "hud",
+      "source_file": "hud_score_pill_110x44px.png"
+    },
+    "hud_next_capsule": {
+      "x": 238,
+      "y": 314,
+      "width": 110,
+      "height": 44,
+      "category": "hud",
+      "source_file": "hud_next_capsule_110x44px.png"
+    },
+    "theme2_wax_seal": {
+      "x": 364,
+      "y": 314,
+      "width": 64,
+      "height": 64,
+      "category": "theme_variant",
+      "source_file": "theme2_wax_seal_swap_64px.png"
+    },
+    "theme3_keycap": {
+      "x": 444,
+      "y": 314,
+      "width": 64,
+      "height": 64,
+      "category": "theme_variant",
+      "source_file": "theme3_cherry_keycap_swap_64px.png"
+    }
+  }
+}
