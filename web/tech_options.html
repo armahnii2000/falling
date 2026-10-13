@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Falling — Tech Aesthetic Explorations (Magenta #7 Block)</title>
+  <style>
+    :root {
+      --bg: #07090E;
+      --card-bg: rgba(22, 27, 34, 0.85);
+      --card-border: rgba(255, 255, 255, 0.1);
+      --accent: #00F0FF;
+      --magenta: #FF007F;
+      --text: #F0F6FC;
+      --text-muted: #8B949E;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      padding: 36px 24px;
+      line-height: 1.5;
+    }
+    header {
+      max-width: 1320px;
+      margin: 0 auto 36px;
+      border-bottom: 1px solid var(--card-border);
+      padding-bottom: 24px;
+    }
+    .badge {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      padding: 4px 10px;
+      border-radius: 20px;
+      background: rgba(255, 0, 127, 0.15);
+      color: var(--magenta);
+      border: 1px solid rgba(255, 0, 127, 0.4);
+      margin-bottom: 12px;
+    }
+    h1 { font-size: 32px; font-weight: 800; letter-spacing: -0.5px; margin-bottom: 8px; }
+    p.lead { color: var(--text-muted); font-size: 16px; max-width: 800px; }
+    
+    .container { max-width: 1320px; margin: 0 auto; display: flex; flex-direction: column; gap: 40px; }
+    
+    .cards-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 20px;
+    }
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      transition: all 0.2s;
+    }
+    .card:hover {
+      border-color: var(--magenta);
+      transform: translateY(-4px);
+      box-shadow: 0 10px 30px rgba(255, 0, 127, 0.15);
+    }
+    .img-wrap {
+      width: 200px;
+      height: 200px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #000;
+      border-radius: 10px;
+      margin-bottom: 16px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+    .img-wrap img {
+      max-width: 180px;
+      max-height: 180px;
+      display: block;
+    }
+    .card h3 {
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--accent);
+      margin-bottom: 6px;
+    }
+    .card .tech-tag {
+      font-size: 11px;
+      font-family: monospace;
+      color: var(--magenta);
+      margin-bottom: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .card p {
+      font-size: 13px;
+      color: var(--text-muted);
+      text-align: left;
+      line-height: 1.6;
+    }
+    .scale-row {
+      margin-top: 16px;
+      padding-top: 14px;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+    
+    .full-showcase-box {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      padding: 24px;
+    }
+    .full-showcase-box img {
+      width: 100%;
+      height: auto;
+      border-radius: 8px;
+      display: block;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="badge">Tech Aesthetic Exploration</div>
+    <h1>Falling — 5 Tech Hardware Directions (Magenta #7)</h1>
+    <p class="lead">
+      Comparing 5 distinct technical and hardware interpretations for the Magenta Tier 7 game block ($80\times 80\text{px}$ target scale, rendered at $512\times 512\text{px}$ master resolution with transparent alpha).
+    </p>
+  </header>
+
+  <div class="container">
+
+    <div class="full-showcase-box">
+      <h3 style="margin-bottom: 16px; font-size: 16px; color: var(--accent);">Panoramic 5-Option Comparison Sheet</h3>
+      <img src="/assets/ui/tech_explorations/magenta_7_tech_showcase.png" alt="5 Tech Options Showcase">
+    </div>
+
+    <div class="cards-row">
+      <!-- 1 -->
+      <div class="card">
+        <div class="img-wrap">
+          <img src="/assets/ui/tech_explorations/option1_vector_crt_master.png" alt="Option 1">
+        </div>
+        <h3>1. Vector Phosphor CRT</h3>
+        <div class="tech-tag">Analog Cathode Terminal</div>
+        <p>
+          Curved dark cathode glass aperture with horizontal raster scanlines, glowing electron beam persistence outline, and phosphor bloom halo.
+        </p>
+        <div class="scale-row">
+          <span>In-Game 80px:</span>
+          <img src="/assets/ui/tech_explorations/option1_vector_crt_80px.png" width="32" height="32" alt="80px">
+        </div>
+      </div>
+
+      <!-- 2 -->
+      <div class="card">
+        <div class="img-wrap">
+          <img src="/assets/ui/tech_explorations/option2_server_blade_master.png" alt="Option 2">
+        </div>
+        <h3>2. Enterprise Server Blade</h3>
+        <div class="tech-tag">Datacenter Silicon Module</div>
+        <p>
+          Matte dark titanium server chassis with corner hex-drive mounting bolts, gold PCB circuit traces, recessed neon magenta status lightpipe, and laser-etched industrial stencil "7".
+        </p>
+        <div class="scale-row">
+          <span>In-Game 80px:</span>
+          <img src="/assets/ui/tech_explorations/option2_server_blade_80px.png" width="32" height="32" alt="80px">
+        </div>
+      </div>
+
+      <!-- 3 -->
+      <div class="card">
+        <div class="img-wrap">
+          <img src="/assets/ui/tech_explorations/option3_optical_prism_master.png" alt="Option 3">
+        </div>
+        <h3>3. Optical Silicon Prism</h3>
+        <div class="tech-tag">Quantum Polarized Glass</div>
+        <p>
+          Smoked dark dichroic glass prism with internal subsurface magenta laser refraction, chromatic aberration edge highlights, and a floating volumetric holographic glyph.
+        </p>
+        <div class="scale-row">
+          <span>In-Game 80px:</span>
+          <img src="/assets/ui/tech_explorations/option3_optical_prism_80px.png" width="32" height="32" alt="80px">
+        </div>
+      </div>
+
+      <!-- 4 -->
+      <div class="card">
+        <div class="img-wrap">
+          <img src="/assets/ui/tech_explorations/option4_industrial_instrument_master.png" alt="Option 4">
+        </div>
+        <h3>4. Bench Instrument</h3>
+        <div class="tech-tag">Tektronix Oscilloscope</div>
+        <p>
+          Heavy molded slate-polycarbonate housing with corner impact bumpers, recessed display bezel with an engraved millimeter graticule crosshair grid, and backlit LED numerals.
+        </p>
+        <div class="scale-row">
+          <span>In-Game 80px:</span>
+          <img src="/assets/ui/tech_explorations/option4_industrial_instrument_80px.png" width="32" height="32" alt="80px">
+        </div>
+      </div>
+
+      <!-- 5 -->
+      <div class="card">
+        <div class="img-wrap">
+          <img src="/assets/ui/tech_explorations/option5_cyber_obsidian_lightpipe_master.png" alt="Option 5">
+        </div>
+        <h3>5. Cyber Obsidian Lightpipe</h3>
+        <div class="tech-tag">Precision Clean-Tech</div>
+        <p>
+          Satin aerospace alloy frame with specular top rim, mirror obsidian core, crisp neon magenta lightpipe channel, and sharp modern typography.
+        </p>
+        <div class="scale-row">
+          <span>In-Game 80px:</span>
+          <img src="/assets/ui/tech_explorations/option5_cyber_obsidian_lightpipe_80px.png" width="32" height="32" alt="80px">
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</body>
+</html>
