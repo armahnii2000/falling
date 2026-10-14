@@ -96,45 +96,40 @@ Unlike additive RGB (which mixes to white), *Falling* uses **subtractive CMY** l
 
 ---
 
-## 5. Storyboard & Narrative Progression (6 Beats)
+## 5. Storyboard & Narrative Progression (Complete 11-Stage Dual-Track)
 
-The narrative is never told through cutscenes. It lives on Leo Vance's phone behind the motherboard.
+The narrative is never told through conventional cutscenes. It is told strictly through **Screenlife** UI states: the phone screen glowing through the semi-translucent motherboard chamber, cross-referenced with the MacBook Pro paper trail. Every gameplay tier corresponds 1-to-1 with an emotional and financial beat in infrastructure engineer Leo Vance's collapse.
 
-![Falling 6-Beat Storyboard](/Users/georgearmah/.gemini/antigravity/brain/2c3a64ae-9518-4997-82a0-7008e590a272/falling_storyboard_6_panels.png)
+### Master Dual-Track Panoramic Storyboard
+![Master Dual-Track Storyboard](/Users/georgearmah/.gemini/antigravity/brain/2c3a64ae-9518-4997-82a0-7008e590a272/falling_dual_track_master_storyboard.png)
 
-### Beat 1: The Frozen Night (03:32 AM, 14% Battery)
-- **Scene:** Pitch-black bedroom. Leo sits at his desk illuminated only by the faint OLED glow of his iPhone. The clock is frozen at `3:32 AM`. Battery is at `14%`.
-- **Gameplay Action:** The game boots into the BIOS initialization screen.
-- **Audio:** Low ambient mains hum (60 Hz room tone). Faint muffled breathing.
+*Interactive web viewer available at `http://localhost:8089/storyboard.html` and live phone demo at `http://localhost:8089/phone_story_prototype.html`.*
 
-### Beat 2: Motherboard Boots & First Chip Drop
-- **Scene:** The chamber powers up as a high-end computer motherboard. An SMT robotic vacuum head slides across the top gantry rail with a collimated cyan crosshair laser.
-- **Gameplay Action:** The first silver processor chip (Tier 1 Yellow Mote) is aimed and dropped with gravity, landing firmly onto the gold LGA socket pins.
-- **Audio:** Mechanical stepper motor whine, vacuum release hiss, tactile metal-on-pin click.
+---
 
-### Beat 3: The Bleed (The Real World Breaks In)
-- **Scene:** As blocks stack, the first alert arrives on Leo's phone behind the semi-translucent motherboard:
-  > **SLACK • IT Security (3:28 AM):** "Apex Tech Security: Enterprise credentials revoked for user l_vance. VPN Session Terminated: Code 403."
-- **Gameplay Action:** The notification card illuminates through the solder mask. Merges continue; ink absorption rises to ~35%.
-- **Audio:** Muffled iOS tri-tone notification ping leaking through the board.
+### The 11-Stage Screenlife Matrix
 
-### Beat 4: The SWAP (Unfiltered Reality)
-- **Scene:** Player clicks/taps the tactile **SWAP** switch. The motherboard cross-fades out; Leo's phone screen comes into sharp focus, exposing the full collapse:
-  > **MESSAGES • Sarah (3:30 AM):** "Leo, please come to bed... You haven't slept in two days."
-  > **CHASE • Account Alert (3:15 AM):** "COBRA deduction: -$1,842.00. Account balance: $314.12."
-  > **CALENDAR (9:00 AM Today):** "Mandatory HR Exit Interview (Portal) — In 5h 28m."
-- **Gameplay Action:** Player reads the crisis. *Neglect cost:* In the background, the chip dropper continues to simulate — hesitation risks overflow!
-- **Audio:** Phone haptic buzz, muffled hum of the simulated dropper above.
+| Tier & Subtractive Ink | 💻 MacBook Pro Track (Corporate & Code Paper Trail) | 📱 iPhone Track (Personal, Family & Financial Reality) |
+| :--- | :--- | :--- |
+| **Tier 1: Spark**<br>`(0,0,0)` Clean White | **VS Code Clean Prototype:**<br>• `main.py` commit `git commit -m "initial prototype"`<br>• Terminal: 100% test pass. Clean dark editor. | **9:41 AM Lockscreen (100% Battery):**<br>• Wallpaper: First framed baby ultrasound Polaroid.<br>• *Wife text: "We're pregnant! 💕 Can't wait to tell our families tonight."*<br>• Calendar: 4:00 PM Hackathon AI Demo. |
+| **Tier 2: Traction**<br>`(1,0,0)` Pure Cyan | **Hacker News #1 & GitHub Star Surge:**<br>• Hacker News front page: *"Show HN: Synapse AI — Distributed Neural Engine"*<br>• Slack: `#general: Traffic spike incoming! 🚀` | **App Store Connect Viral Alert:**<br>• *10,000 active users in 24 hours.*<br>• *CEO Alex: "You're a genius Leo. The algorithm works. Let's talk your equity refresh on Monday."*<br>• Twitter/X trending banner. |
+| **Tier 3: Seed Round**<br>`(1,1,0)` Magenta Injected | **Tier-1 VC Pitch & Carta Grant:**<br>• Zoom gallery with VC partners in Patagonia vests.<br>• Carta Equity Dashboard: 1.5% Common Stock (Est. Value: $450,000). | **Chase Direct Deposit (+$15,000.00):**<br>• Seed Closing Bonus clears into checking.<br>• *Leo: "Seed bonus just hit! We finally have enough for the house down payment 🎉"*<br>• *Wife: "I love you so much! Looking at 3-bedroom houses near the park right now 🏡"* |
+| **Tier 4: Series A Euphoria**<br>`(1,1,1)` Yellow Flooded | **TechCrunch Feature ($100M Valuation):**<br>• TechCrunch headline: *"Synapse AI Raises $25M Series A at $100M Valuation"*<br>• Carta paper equity: **$1,500,000.00**. | **Zillow Escrow Deposit ($50,000):**<br>• 342 Elm Street ($750k). Offer Accepted.<br>• $50,000 earnest money deposit wired.<br>• *Wife text: "Wire sent! The nursery gets the most beautiful morning sunlight ☀️"* |
+| **Tier 5: Market Cools**<br>`(1,1,2)` Sickly Olive | **Board Deck: Burn Rate Warning:**<br>• Q3 Board Deck: *"Revenue: 48% of Target. Burn rate: $1.2M/mo. Runway: 5 months."*<br>• Slack: `#hiring-freeze` created. | **Mortgage Lender Underwriter Condition:**<br>• Alert: *"Loan approval conditional on verified proof of common stock vesting in 14 days."*<br>• *Wife: "Baby kicked during my lunch break! 💕 Doctor says everything is right on track. Pick up Thai on your way home?"* (Marked Read 7:45 PM, no reply). |
+| **Tier 6: The Crunch**<br>`(2,2,2)` Murky Brown | **3:30 AM Diligence Audit Terminal:**<br>• Dark-mode terminal with red security audit logs: *"Audit for Acquisition Due Diligence"*. Runway sub-60 days.<br>• Private locked Slack: `#founders-only 🔒`. | **3:32 AM Dark Lockscreen (14% Battery):**<br>• 📞 2 Missed Calls from Wife (1:45 AM, 2:30 AM).<br>• *Wife text: "Leo, it's almost 3 AM... are you still at the office? I left dinner in the fridge. Please get some sleep, I'm worried."*<br>• Slack #war-room: *"Repo must be clean by dawn."* |
+| **Tier 7: Acquisition Rumors**<br>`(3,2,2)` Bruised Plum | **Bloomberg Distress Report:**<br>• Bloomberg News: *"TitanCorp in Advanced Talks for Distressed Acqui-Hire of Synapse AI as Runway Vanishes"*<br>• CEO Slack: *"Ignore press rumors. Heads down, keep building!"* | **Calendar Alert: 32-Week Ultrasound [MISSED]:**<br>• Scheduled 1:30 PM today (Marked MISSED).<br>• *Leo text: "So sorry honey, emergency board meeting called. How is our little guy?"*<br>• *Wife: "He's fine. 4.5 lbs now. I wish you were there."* |
+| **Tier 8: The Deal Announcement**<br>`(3,3,3)` Dark Charcoal | **Zoom All-Hands: Acqui-Hire Slide:**<br>• CEO Alex and CTO smiling on Zoom beside TitanCorp VP.<br>• Slide: *"Exciting New Chapter: Synapse AI Joins TitanCorp!"* | **LinkedIn CEO Exit Announcement:**<br>• Post: *"Thrilled to announce Synapse AI has been acquired by TitanCorp! Huge thanks to our founders and investors for this exit. 🚀"*<br>• *Wife: "Saw Alex's post online!! Does this mean we're safe? I made dinner to celebrate 🎉"*<br>• Loan Officer: *"Send closing docs ASAP before tomorrow's escrow deadline."* |
+| **Tier 9: The Liquidation Wipeout**<br>`(4,3,3)` Violet-Black | **DocuSign Shareholder Liquidation Waterfall:**<br>• Series A Preferred: $25M (100% to VCs)<br>• Founder Retention Pool: $8M<br>• <b style="color:#ef4444;">Common Stock Payout Per Share: $0.00</b> | **Carta Cancellation & Mortgage Default:**<br>• Carta Alert: *"Acquisition proceeds allocated 100% to preferred. Options cancelled. Payout: $0.00"*<br>• Loan Officer Voicemail: *"Leo, without equity liquidity, your mortgage is denied. The seller has issued a default notice claiming your $50,000 earnest deposit."* |
+| **Tier 10: Deactivation & Ruin**<br>`(4,4,4)` Cold Slate | **Okta SSO Authentication Lockout:**<br>• <b style="color:#ef4444;">403 FORBIDDEN: Account disabled by administrator</b><br>• Slack: `Disconnected (Session Terminated)`<br>• Google Workspace: `Access Denied` | **Chase Checking Drops to $842.10:**<br>• -$50,000.00 default deduction (Escrow Forfeited).<br>• TitanCorp People Ops: *"Employment separation notice. Mobile credentials revoked."*<br>• Calendar: **Baby Due Date in 7 Days**.<br>• *Wife panicked text: "Leo, the escrow agent emailed me... what does 'deposit forfeited' mean? Please tell me this is a mistake. Where are you?"* |
+| **Tier 11: The Void (Titan)**<br>`(5,5,5)` Pitch Black | **Closed MacBook Pro Lid:**<br>• MacBook lid closed on desk in dark room.<br>• Cold reflection of torrential rain against the window. | **Dead Battery Blackout Void:**<br>• Inside dark car parked in the rain. 1% red empty battery icon flashes.<br>• Phone display shuts off completely.<br>• Total, silent, pitch-black void. Leo's night is finally at peace. |
 
-### Beat 5: Buffer Overflow (Critical Density)
-- **Scene:** The chip stack rises near the red high-voltage danger limit line (`// VBUS_OVERVOLTAGE_LIMIT //`). The motherboard voltage telemetry spikes (`VCC_CORE: 1.45V OVERVOLT`).
-- **Gameplay Action:** The red line strobes. The player has 3 seconds to clear or fuse blocks before overvoltage triggers a kernel panic / run failure.
-- **Audio:** High-pitched capacitor coil whine, rapid rhythmic warning pulse.
+---
 
-### Beat 6: 100% Darkness (The Titan Monolith Apex)
-- **Scene:** The player executes the final merge. Two Tier 10 processors combine to form the massive **Tier 11 Obsidian Titan Monolith** ($154\text{px}$, pure `#000000`).
-- **Gameplay Action:** Total light absorption is achieved. Darkness Purity hits `100.0%`. A gravitational singularity consumes all remaining light. The phone screen turns completely off. All notifications vanish.
-- **Audio:** Deep sub-bass implosion bloom, followed by complete, total silence. Leo's night is finally at peace.
+### Track 1: Phone Screen Storyboard Panels
+![Phone Screens Tiers 1-11 Panoramic](/Users/georgearmah/.gemini/antigravity/brain/2c3a64ae-9518-4997-82a0-7008e590a272/falling_11_scene_storyboard_panoramic.png)
+
+### Track 2: MacBook Pro Storyboard Panels
+![MacBook Pro Screens Tiers 1-11 Panoramic](/Users/georgearmah/.gemini/antigravity/brain/2c3a64ae-9518-4997-82a0-7008e590a272/falling_macbook_track_panoramic.png)
 
 ---
 

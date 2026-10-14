@@ -1,0 +1,1605 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>A.I.r. Bubble — Screenlife Live Animated Phone</title>
+  <style>
+    :root {
+      --bg: #090d16;
+      --card-bg: rgba(255, 255, 255, 0.96);
+      --card-dark: rgba(26, 26, 30, 0.96);
+      --text: #111827;
+      --text-muted: #6b7280;
+      --accent: #2563eb;
+      --danger: #dc2626;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; }
+
+    body {
+      background: radial-gradient(circle at center, #152238 0%, #06090f 100%);
+      color: #f3f4f6;
+      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      overflow-x: hidden;
+    }
+
+    .app-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 14px;
+      max-width: 900px;
+      width: 100%;
+    }
+
+    .header-bar {
+      text-align: center;
+    }
+
+    .header-bar h1 {
+      font-size: 1.5rem;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      background: linear-gradient(135deg, #60a5fa, #ffffff, #f59e0b);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 2px;
+    }
+
+    .header-bar p {
+      font-size: 0.85rem;
+      color: #9ca3af;
+    }
+
+    .control-deck {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(17, 24, 39, 0.85);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      padding: 8px 18px;
+      border-radius: 40px;
+      backdrop-filter: blur(12px);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+    }
+
+    .btn {
+      background: #1f2937;
+      color: #f3f4f6;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.15s ease;
+    }
+
+    .btn:hover {
+      background: #374151;
+      border-color: rgba(255, 255, 255, 0.3);
+      transform: translateY(-1px);
+    }
+
+    .btn.active {
+      background: #2563eb;
+      border-color: #60a5fa;
+      color: #fff;
+    }
+
+    .tier-indicator {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: #fbbf24;
+      padding: 0 6px;
+      min-width: 170px;
+      text-align: center;
+    }
+
+    /* Phone Shell */
+    .phone-stage {
+      position: relative;
+      margin: 6px 0;
+    }
+
+    .phone-chassis {
+      width: 324px;
+      height: 648px;
+      background: #000;
+      border-radius: 50px;
+      padding: 10px;
+      box-shadow: 
+        0 25px 60px -15px rgba(0, 0, 0, 0.8),
+        0 0 0 4px #27272a,
+        0 0 0 8px #09090b;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Phone Screen Surface */
+    .phone-screen {
+      width: 100%;
+      height: 100%;
+      background: #fdfdfd;
+      border-radius: 40px;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: background 0.4s ease, filter 0.6s ease;
+    }
+
+    .phone-screen.dark-theme {
+      background: #000000;
+      color: #fff;
+    }
+
+    .phone-screen.dimmed {
+      filter: brightness(0.35);
+    }
+
+    .phone-screen.blackout {
+      background: #000000 !important;
+      filter: brightness(0) !important;
+    }
+
+    /* Dynamic Island with Spring Physics */
+    .dynamic-island {
+      width: 90px;
+      height: 24px;
+      background: #000;
+      border-radius: 20px;
+      margin: 7px auto 4px;
+      z-index: 100;
+      transition: all 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: 9px;
+      font-weight: 700;
+      overflow: hidden;
+    }
+
+    .dynamic-island.expand-call {
+      width: 220px;
+      height: 38px;
+      background: #18181b;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.5);
+      border: 1px solid #333;
+    }
+
+    .dynamic-island.expand-alert {
+      width: 200px;
+      height: 32px;
+      background: #18181b;
+      border: 1px solid #ff453a;
+    }
+
+    /* Status Bar */
+    .status-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 2px 22px 4px;
+      font-size: 11px;
+      font-weight: 700;
+      color: #111;
+      z-index: 90;
+      transition: color 0.3s ease;
+    }
+
+    .phone-screen.dark-theme .status-bar {
+      color: #888;
+    }
+
+    .status-icons {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .battery-icon {
+      display: inline-flex;
+      align-items: center;
+      border: 1.5px solid currentColor;
+      padding: 1px;
+      border-radius: 4px;
+      width: 20px;
+      height: 10px;
+      position: relative;
+    }
+
+    .battery-icon::after {
+      content: '';
+      position: absolute;
+      right: -3px;
+      top: 2px;
+      width: 2px;
+      height: 4px;
+      background: currentColor;
+      border-radius: 0 1px 1px 0;
+    }
+
+    .battery-fill {
+      height: 100%;
+      background: #10b981;
+      border-radius: 2px;
+      transition: width 0.6s ease, background 0.6s ease;
+    }
+
+    .battery-fill.low {
+      background: #ef4444 !important;
+    }
+
+    /* Screen Viewport */
+    .screen-content {
+      flex: 1;
+      padding: 8px 14px 14px;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      overflow-y: hidden;
+    }
+
+    /* Notification Banner (Animated Drop-Down) */
+    .notif-banner {
+      background: rgba(255, 255, 255, 0.96);
+      border: 1px solid rgba(0, 0, 0, 0.12);
+      border-radius: 16px;
+      padding: 10px 12px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.16);
+      margin-bottom: 8px;
+      opacity: 0;
+      transform: translateY(-50px) scale(0.92);
+      transition: all 0.45s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .phone-screen.dark-theme .notif-banner {
+      background: rgba(28, 28, 30, 0.96);
+      border-color: rgba(255, 255, 255, 0.15);
+      color: #fff;
+    }
+
+    .notif-banner.slide-down {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+
+    .notif-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 10px;
+      font-weight: 700;
+      color: #6b7280;
+      margin-bottom: 3px;
+    }
+
+    .phone-screen.dark-theme .notif-header { color: #9ca3af; }
+
+    .notif-title {
+      font-size: 11.5px;
+      font-weight: 700;
+      color: #111827;
+      margin-bottom: 2px;
+    }
+
+    .phone-screen.dark-theme .notif-title { color: #fff; }
+
+    .notif-body {
+      font-size: 11px;
+      color: #374151;
+      line-height: 1.35;
+    }
+
+    .phone-screen.dark-theme .notif-body { color: #d1d5db; }
+
+    /* App Cards with Animation */
+    .app-card {
+      border: 1.5px solid #222;
+      border-radius: 14px;
+      padding: 10px 12px;
+      background: #fff;
+      font-size: 11px;
+      margin-bottom: 8px;
+      box-shadow: 2px 2px 0px rgba(0,0,0,0.06);
+      opacity: 0;
+      transform: translateY(20px) scale(0.96);
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .phone-screen.dark-theme .app-card {
+      background: #18181b;
+      border-color: #3f3f46;
+      color: #f3f4f6;
+    }
+
+    .app-card.pop-in {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+
+    .card-label {
+      font-size: 9.5px;
+      font-weight: 800;
+      color: #6b7280;
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 4px;
+      letter-spacing: 0.3px;
+    }
+
+    .phone-screen.dark-theme .card-label { color: #9ca3af; }
+
+    .card-value {
+      font-size: 24px;
+      font-weight: 800;
+      color: #111;
+      margin: 2px 0 4px;
+      transition: color 0.3s ease;
+    }
+
+    .phone-screen.dark-theme .card-value { color: #fff; }
+
+    /* Typing Dots Indicator */
+    .typing-indicator {
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+      background: #e5e7eb;
+      padding: 7px 12px;
+      border-radius: 14px;
+      align-self: flex-start;
+      margin-bottom: 6px;
+      opacity: 0;
+      transform: translateY(8px);
+      transition: all 0.25s ease;
+    }
+
+    .phone-screen.dark-theme .typing-indicator {
+      background: #27272a;
+    }
+
+    .typing-indicator.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .typing-dot {
+      width: 5px;
+      height: 5px;
+      background: #6b7280;
+      border-radius: 50%;
+      animation: bounceDot 1.2s infinite ease-in-out;
+    }
+
+    .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+    .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+
+    @keyframes bounceDot {
+      0%, 60%, 100% { transform: translateY(0); }
+      30% { transform: translateY(-4px); }
+    }
+
+    /* Messaging Feed */
+    .messages-stream {
+      margin-top: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .bubble {
+      max-width: 86%;
+      padding: 8px 12px;
+      font-size: 11.5px;
+      line-height: 1.35;
+      border-radius: 16px;
+      opacity: 0;
+      transform: translateY(14px) scale(0.92);
+      transition: all 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .bubble.show {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+
+    .bubble.incoming {
+      background: #e5e7eb;
+      border: 1px solid #d1d5db;
+      color: #111827;
+      align-self: flex-start;
+      border-bottom-left-radius: 4px;
+    }
+
+    .phone-screen.dark-theme .bubble.incoming {
+      background: #27272a;
+      border-color: #3f3f46;
+      color: #f3f4f6;
+    }
+
+    .bubble.outgoing {
+      background: #2563eb;
+      color: #fff;
+      align-self: flex-end;
+      border-bottom-right-radius: 4px;
+    }
+
+    .bubble-meta {
+      font-size: 8.5px;
+      color: #6b7280;
+      margin-top: 3px;
+      text-align: right;
+    }
+
+    .bubble.outgoing .bubble-meta {
+      color: rgba(255, 255, 255, 0.75);
+    }
+
+    /* Lock Screen Clock */
+    .lockscreen-hero {
+      text-align: center;
+      margin: 15px 0 10px;
+    }
+
+    .lock-time {
+      font-size: 48px;
+      font-weight: 300;
+      letter-spacing: -2px;
+      line-height: 1;
+      color: #111;
+    }
+
+    .phone-screen.dark-theme .lock-time { color: #fff; }
+
+    .lock-date {
+      font-size: 11px;
+      font-weight: 600;
+      color: #6b7280;
+      margin-top: 4px;
+    }
+
+    /* Polaroid Ultrasound */
+    .polaroid-frame {
+      width: 140px;
+      background: #fff;
+      border: 1.5px solid #222;
+      border-radius: 6px;
+      padding: 6px 6px 14px;
+      margin: 6px auto;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+      text-align: center;
+      opacity: 0;
+      transform: scale(0.9);
+      transition: all 0.4s ease;
+    }
+
+    .polaroid-frame.show {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    .polaroid-img {
+      width: 100%;
+      height: 110px;
+      background: #111;
+      border-radius: 3px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: #9ca3af;
+      font-size: 10px;
+      gap: 4px;
+    }
+
+    .polaroid-caption {
+      font-size: 10px;
+      font-weight: 800;
+      color: #111;
+      margin-top: 6px;
+    }
+
+    /* Power-down glyph */
+    .power-glyph {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      color: #ef4444;
+      gap: 12px;
+    }
+
+    .power-glyph.active { display: flex; }
+
+    .spinning-wheel {
+      width: 24px;
+      height: 24px;
+      border: 3px solid rgba(255,255,255,0.2);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* Timeline Stepper */
+    .timeline-bar {
+      display: flex;
+      gap: 4px;
+      width: 100%;
+      max-width: 600px;
+      margin-top: 6px;
+    }
+
+    .timeline-dot {
+      flex: 1;
+      height: 5px;
+      background: #374151;
+      border-radius: 3px;
+      cursor: pointer;
+      transition: background 0.2s ease;
+    }
+
+    .timeline-dot.active { background: #60a5fa; }
+    .timeline-dot.danger { background: #ef4444; }
+  </style>
+</head>
+<body>
+
+  <div class="app-wrapper">
+    <div class="header-bar">
+      <h1>A.I.r. Bubble — Screenlife Live Animated Phone</h1>
+      <p>Watch incoming notifications slide down from the Dynamic Island with synchronized sound</p>
+    </div>
+
+    <!-- Playback Controls -->
+    <div class="control-deck">
+      <button class="btn" id="btn-sound">🔊 Audio: Active</button>
+      <button class="btn" id="btn-prev">◀ Prev</button>
+      <button class="btn active" id="btn-play">▶ Auto Play</button>
+      <button class="btn" id="btn-next">Next ▶</button>
+      <button class="btn" id="btn-replay">🔄 Replay Tier</button>
+      <div class="tier-indicator" id="tier-title">Tier 1: Spark</div>
+    </div>
+
+    <!-- Phone Chassis -->
+    <div class="phone-stage">
+      <div class="phone-chassis">
+        <div class="phone-screen" id="screen">
+          <div class="dynamic-island" id="dynamic-island"></div>
+          
+          <div class="status-bar">
+            <span id="status-time">9:41 AM</span>
+            <div class="status-icons">
+              <span id="status-signal">5G</span>
+              <div class="battery-icon">
+                <div class="battery-fill" id="battery-fill" style="width: 100%;"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="screen-content" id="screen-content">
+            <!-- Animated items will mount and animate here -->
+          </div>
+
+          <!-- Power off overlay -->
+          <div class="power-glyph" id="power-glyph">
+            <div style="font-size: 28px;">🪫</div>
+            <div class="spinning-wheel"></div>
+            <div style="font-size: 11px; color:#9ca3af; font-weight:600;">Shutting Down...</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 11 Tier Scrubber -->
+    <div class="timeline-bar" id="timeline-bar"></div>
+  </div>
+
+  <script>
+    // --- PROCEDURAL WEB AUDIO SYNTHESIZER ---
+    class SoundEngine {
+      constructor() {
+        this.ctx = null;
+        this.enabled = true;
+      }
+
+      init() {
+        if (!this.ctx) {
+          const AudioContext = window.AudioContext || window.webkitAudioContext;
+          this.ctx = new AudioContext();
+        }
+        if (this.ctx.state === 'suspended') {
+          this.ctx.resume();
+        }
+      }
+
+      playIMessage() {
+        if (!this.enabled || !this.ctx) return;
+        const now = this.ctx.currentTime;
+        const notes = [587.33, 739.99, 880.00];
+        notes.forEach((freq, i) => {
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(freq, now + i * 0.08);
+          gain.gain.setValueAtTime(0, now + i * 0.08);
+          gain.gain.linearRampToValueAtTime(0.2, now + i * 0.08 + 0.015);
+          gain.gain.exponentialRampToValueAtTime(0.0001, now + i * 0.08 + 0.35);
+          osc.connect(gain);
+          gain.connect(this.ctx.destination);
+          osc.start(now + i * 0.08);
+          osc.stop(now + i * 0.08 + 0.36);
+        });
+      }
+
+      playVibrate() {
+        if (!this.enabled || !this.ctx) return;
+        const now = this.ctx.currentTime;
+        [0, 0.16].forEach(offset => {
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(75, now + offset);
+          gain.gain.setValueAtTime(0.28, now + offset);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + offset + 0.12);
+          osc.connect(gain);
+          gain.connect(this.ctx.destination);
+          osc.start(now + offset);
+          osc.stop(now + offset + 0.13);
+        });
+      }
+
+      playCashChime() {
+        if (!this.enabled || !this.ctx) return;
+        const now = this.ctx.currentTime;
+        [523.25, 659.25, 783.99, 1046.50].forEach((freq, i) => {
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(freq, now + i * 0.05);
+          gain.gain.setValueAtTime(0.18, now + i * 0.05);
+          gain.gain.exponentialRampToValueAtTime(0.0001, now + i * 0.05 + 0.4);
+          osc.connect(gain);
+          gain.connect(this.ctx.destination);
+          osc.start(now + i * 0.05);
+          osc.stop(now + i * 0.05 + 0.42);
+        });
+      }
+
+      playWarning() {
+        if (!this.enabled || !this.ctx) return;
+        const now = this.ctx.currentTime;
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(820, now);
+        osc.frequency.setValueAtTime(410, now + 0.15);
+        gain.gain.setValueAtTime(0.22, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.35);
+        osc.connect(gain);
+        gain.connect(this.ctx.destination);
+        osc.start(now);
+        osc.stop(now + 0.36);
+      }
+
+      playLowBattery() {
+        if (!this.enabled || !this.ctx) return;
+        const now = this.ctx.currentTime;
+        [440, 330].forEach((freq, i) => {
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(freq, now + i * 0.14);
+          gain.gain.setValueAtTime(0.2, now + i * 0.14);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.14 + 0.2);
+          osc.connect(gain);
+          gain.connect(this.ctx.destination);
+          osc.start(now + i * 0.14);
+          osc.stop(now + i * 0.14 + 0.22);
+        });
+      }
+
+      playSendPop() {
+        if (!this.enabled || !this.ctx) return;
+        const now = this.ctx.currentTime;
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(600, now);
+        osc.frequency.exponentialRampToValueAtTime(900, now + 0.08);
+        gain.gain.setValueAtTime(0.12, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.09);
+        osc.connect(gain);
+        gain.connect(this.ctx.destination);
+        osc.start(now);
+        osc.stop(now + 0.1);
+      }
+
+      startRain() {
+        if (!this.enabled || !this.ctx || this.rainSource) return;
+        const bufferSize = this.ctx.sampleRate * 2;
+        const buffer = this.ctx.createBuffer(1, bufferSize, this.ctx.sampleRate);
+        const data = buffer.getChannelData(0);
+        for (let i = 0; i < bufferSize; i++) {
+          data[i] = (Math.random() * 2 - 1) * 0.05;
+        }
+        this.rainSource = this.ctx.createBufferSource();
+        this.rainSource.buffer = buffer;
+        this.rainSource.loop = true;
+
+        const filter = this.ctx.createBiquadFilter();
+        filter.type = 'lowpass';
+        filter.frequency.setValueAtTime(800, this.ctx.currentTime);
+
+        this.rainGain = this.ctx.createGain();
+        this.rainGain.gain.setValueAtTime(0.1, this.ctx.currentTime);
+
+        this.rainSource.connect(filter);
+        filter.connect(this.rainGain);
+        this.rainGain.connect(this.ctx.destination);
+        this.rainSource.start();
+      }
+
+      stopRain() {
+        if (this.rainSource) {
+          try { this.rainSource.stop(); } catch(e) {}
+          this.rainSource = null;
+        }
+      }
+    }
+
+    const sound = new SoundEngine();
+
+    // --- TIMED ANIMATED TIER DEFINITIONS ---
+    const TIERS = [
+      {
+        id: 1,
+        title: "Tier 1: Spark",
+        colorName: "Clean White",
+        time: "9:41 AM",
+        battery: 100,
+        dark: false,
+        duration: 4800,
+        timeline: [
+          {
+            delay: 100,
+            exec: (c) => {
+              c.innerHTML = `
+                <div class="polaroid-frame" id="t1-polaroid">
+                  <div class="polaroid-img">
+                    <span style="font-size:24px;">👶</span>
+                    <span>Baby Scan · 10 Wks</span>
+                  </div>
+                  <div class="polaroid-caption">BABY ON THE WAY!</div>
+                </div>
+              `;
+              setTimeout(() => document.getElementById('t1-polaroid')?.classList.add('show'), 50);
+            }
+          },
+          {
+            delay: 700,
+            exec: (c) => {
+              pulseIsland();
+              sound.playIMessage();
+              const b = document.createElement('div');
+              b.className = 'notif-banner';
+              b.innerHTML = `
+                <div class="notif-header"><span>MESSAGES · Wife</span><span>9:41 AM</span></div>
+                <div class="notif-title">We're pregnant! 💕</div>
+                <div class="notif-body">Can't wait to tell our families tonight at dinner.</div>
+              `;
+              c.appendChild(b);
+              setTimeout(() => b.classList.add('slide-down'), 40);
+            }
+          },
+          {
+            delay: 2400,
+            exec: (c) => {
+              const card = document.createElement('div');
+              card.className = 'app-card';
+              card.style.marginTop = 'auto';
+              card.innerHTML = `
+                <div class="card-label"><span>CALENDAR REMINDER</span><span>TODAY</span></div>
+                <div class="card-body"><b>4:00 PM:</b> Hackathon Prototype Demo with Team</div>
+              `;
+              c.appendChild(card);
+              setTimeout(() => card.classList.add('pop-in'), 40);
+            }
+          }
+        ]
+      },
+      {
+        id: 2,
+        title: "Tier 2: Traction",
+        colorName: "Pure Cyan",
+        time: "11:15 AM",
+        battery: 96,
+        dark: false,
+        duration: 5200,
+        timeline: [
+          {
+            delay: 100,
+            exec: (c) => { c.innerHTML = ''; }
+          },
+          {
+            delay: 400,
+            exec: (c) => {
+              pulseIsland();
+              sound.playIMessage();
+              const b = document.createElement('div');
+              b.className = 'notif-banner';
+              b.innerHTML = `
+                <div class="notif-header"><span>APP STORE CONNECT</span><span>NOW</span></div>
+                <div class="notif-title">🎉 10,000 Active Users in 24 Hours!</div>
+                <div class="notif-body">Server load holding steady at 99.8%. Traffic soaring!</div>
+              `;
+              c.appendChild(b);
+              setTimeout(() => b.classList.add('slide-down'), 40);
+            }
+          },
+          {
+            delay: 1800,
+            exec: (c) => {
+              pulseIsland();
+              sound.playIMessage();
+              const b = document.createElement('div');
+              b.className = 'notif-banner';
+              b.innerHTML = `
+                <div class="notif-header"><span>MESSAGES · Alex (CEO)</span><span>11:14 AM</span></div>
+                <div class="notif-title">You're a genius Leo.</div>
+                <div class="notif-body">The algorithm works. Let's talk your equity refresh on Monday.</div>
+              `;
+              c.appendChild(b);
+              setTimeout(() => b.classList.add('slide-down'), 40);
+            }
+          },
+          {
+            delay: 3200,
+            exec: (c) => {
+              const card = document.createElement('div');
+              card.className = 'app-card';
+              card.style.marginTop = 'auto';
+              card.innerHTML = `
+                <div class="card-label"><span>TWITTER / X</span><span>TRENDING</span></div>
+                <div class="card-body">"Synapse AI is the most impressive agent demo this year." — 1,200 reposts</div>
+              `;
+              c.appendChild(card);
+              setTimeout(() => card.classList.add('pop-in'), 40);
+            }
+          }
+        ]
+      },
+      {
+        id: 3,
+        title: "Tier 3: Seed Round",
+        colorName: "Magenta",
+        time: "2:30 PM",
+        battery: 88,
+        dark: false,
+        duration: 5400,
+        timeline: [
+          {
+            delay: 100,
+            exec: (c) => {
+              c.innerHTML = `
+                <div class="app-card" id="t3-bank">
+                  <div class="card-label"><span>CHASE CHECKING</span><span>DIRECT DEPOSIT</span></div>
+                  <div class="card-value" style="color:#10b981;">+$15,000.00</div>
+                  <div style="font-size:10px; color:#6b7280;">Synapse AI — Seed Closing Bonus</div>
+                </div>
+                <div class="messages-stream" id="t3-stream"></div>
+              `;
+              sound.playCashChime();
+              setTimeout(() => document.getElementById('t3-bank')?.classList.add('pop-in'), 50);
+            }
+          },
+          {
+            delay: 1600,
+            exec: () => {
+              const stream = document.getElementById('t3-stream');
+              if (!stream) return;
+              sound.playSendPop();
+              const b = document.createElement('div');
+              b.className = 'bubble outgoing';
+              b.innerHTML = `
+                Seed bonus just cleared!! We finally have enough for the house down payment 🎉
+                <div class="bubble-meta">Delivered 2:32 PM</div>
+              `;
+              stream.appendChild(b);
+              setTimeout(() => b.classList.add('show'), 30);
+            }
+          },
+          {
+            delay: 3000,
+            exec: () => {
+              const stream = document.getElementById('t3-stream');
+              if (!stream) return;
+              const dots = document.createElement('div');
+              dots.className = 'typing-indicator show';
+              dots.id = 't3-dots';
+              dots.innerHTML = '<div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div>';
+              stream.appendChild(dots);
+            }
+          },
+          {
+            delay: 4100,
+            exec: () => {
+              document.getElementById('t3-dots')?.remove();
+              const stream = document.getElementById('t3-stream');
+              if (!stream) return;
+              sound.playIMessage();
+              const b = document.createElement('div');
+              b.className = 'bubble incoming';
+              b.innerHTML = `
+                I love you so much! Looking at 3-bedroom houses near the park right now 🏡
+                <div class="bubble-meta">2:34 PM</div>
+              `;
+              stream.appendChild(b);
+              setTimeout(() => b.classList.add('show'), 30);
+            }
+          }
+        ]
+      },
+      {
+        id: 4,
+        title: "Tier 4: Series A Euphoria",
+        colorName: "Yellow",
+        time: "1:20 PM",
+        battery: 81,
+        dark: false,
+        duration: 5200,
+        timeline: [
+          {
+            delay: 100,
+            exec: (c) => {
+              c.innerHTML = `
+                <div class="app-card" id="t4-carta">
+                  <div class="card-label"><span>CARTA EQUITY</span><span class="badge" style="background:#111; color:#fff; padding:1px 5px; border-radius:3px;">SERIES A</span></div>
+                  <div class="card-value">$1,500,000.00</div>
+                  <div style="font-size:10px; color:#6b7280;">Estimated Common Options ($100M valuation)</div>
+                </div>
+                <div class="messages-stream" id="t4-stream"></div>
+              `;
+              sound.playCashChime();
+              setTimeout(() => document.getElementById('t4-carta')?.classList.add('pop-in'), 40);
+            }
+          },
+          {
+            delay: 1500,
+            exec: (c) => {
+              pulseIsland();
+              sound.playIMessage();
+              const b = document.createElement('div');
+              b.className = 'notif-banner';
+              b.innerHTML = `
+                <div class="notif-header"><span>ZILLOW REAL ESTATE</span><span style="color:#10b981; font-weight:800;">OFFER ACCEPTED</span></div>
+                <div class="notif-title">342 Elm Street ($750k)</div>
+                <div class="notif-body">Escrow opened. $50,000 earnest money deposit wired.</div>
+              `;
+              c.insertBefore(b, document.getElementById('t4-stream'));
+              setTimeout(() => b.classList.add('slide-down'), 40);
+            }
+          },
+          {
+            delay: 3200,
+            exec: () => {
+              const stream = document.getElementById('t4-stream');
+              if (!stream) return;
+              sound.playIMessage();
+              const b = document.createElement('div');
+              b.className = 'bubble incoming';
+              b.innerHTML = `
+                Deposit sent! The nursery gets the most beautiful morning sunlight ☀️
+                <div class="bubble-meta">1:25 PM</div>
+              `;
+              stream.appendChild(b);
+              setTimeout(() => b.classList.add('show'), 40);
+            }
+          }
+        ]
+      },
+      {
+        id: 5,
+        title: "Tier 5: Market Cools",
+        colorName: "Sickly Olive",
+        time: "11:42 AM",
+        battery: 68,
+        dark: false,
+        duration: 5200,
+        timeline: [
+          {
+            delay: 100,
+            exec: (c) => {
+              c.innerHTML = `<div class="messages-stream" id="t5-stream"></div>`;
+            }
+          },
+          {
+            delay: 600,
+            exec: (c) => {
+              pulseIsland();
+              sound.playWarning();
+              const b = document.createElement('div');
+              b.className = 'notif-banner';
+              b.style.borderLeft = '4px solid #f59e0b';
+              b.innerHTML = `
+                <div class="notif-header"><span>MORTGAGE LENDER</span><span style="color:#f59e0b; font-weight:800;">ACTION REQ</span></div>
+                <div class="notif-title">Loan Approval Condition</div>
+                <div class="notif-body">Underwriter needs verified proof of stock option vesting before contingency deadline in 14 days.</div>
+              `;
+              c.insertBefore(b, document.getElementById('t5-stream'));
+              setTimeout(() => b.classList.add('slide-down'), 40);
+            }
+          },
+          {
+            delay: 2400,
+            exec: () => {
+              const stream = document.getElementById('t5-stream');
+              if (!stream) return;
+              sound.playIMessage();
+              const b = document.createElement('div');
+              b.className = 'bubble incoming';
+              b.innerHTML = `
+                Baby kicked during my lunch break! 💕 Doctor says everything is right on track. Can you pick up Thai on your way home?
+                <div class="bubble-meta">Read 7:45 PM</div>
+              `;
+              stream.appendChild(b);
+              setTimeout(() => b.classList.add('show'), 40);
+            }
+          },
+          {
+            delay: 3800,
+            exec: () => {
+              const stream = document.getElementById('t5-stream');
+              if (!stream) return;
+              const note = document.createElement('div');
+              note.style.fontSize = '9.5px';
+              note.style.color = '#9ca3af';
+              note.style.textAlign = 'center';
+              note.style.fontStyle = 'italic';
+              note.textContent = '(No reply sent · Leo working late)';
+              stream.appendChild(note);
+            }
+          }
+        ]
+      },
+      {
+        id: 6,
+        title: "Tier 6: The Crunch",
+        colorName: "Murky Brown",
+        time: "3:32 AM",
+        battery: 14,
+        dark: true,
+        duration: 5400,
+        timeline: [
+          {
+            delay: 100,
+            exec: (c) => {
+              c.innerHTML = `
+                <div class="lockscreen-hero">
+                  <div class="lock-time">3:32</div>
+                  <div class="lock-date">Tuesday, October 24</div>
+                </div>
+              `;
+            }
+          },
+          {
+            delay: 600,
+            exec: (c) => {
+              sound.playVibrate();
+              pulseIsland();
+              const b = document.createElement('div');
+              b.className = 'notif-banner';
+              b.style.borderLeft = '4px solid #ef4444';
+              b.innerHTML = `
+                <div class="notif-header"><span style="color:#ef4444; font-weight:800;">📞 2 MISSED CALLS</span><span>Wife</span></div>
+                <div class="notif-body">1:45 AM · 2:30 AM</div>
+              `;
+              c.appendChild(b);
+              setTimeout(() => b.classList.add('slide-down'), 40);
+            }
+          },
+          {
+            delay: 2000,
+            exec: (c) => {
+              sound.playIMessage();
+              const card = document.createElement('div');
+              card.className = 'app-card';
+              card.innerHTML = `
+                <div class="card-label"><span>MESSAGES · Wife</span><span>2:35 AM</span></div>
+                <div class="card-body">Leo, it's almost 3 AM... are you still at the office? I left dinner in the fridge. Please get some sleep, I'm worried.</div>
+              `;
+              c.appendChild(card);
+              setTimeout(() => card.classList.add('pop-in'), 40);
+            }
+          },
+          {
+            delay: 3600,
+            exec: (c) => {
+              sound.playWarning();
+              const card = document.createElement('div');
+              card.className = 'app-card';
+              card.style.marginTop = 'auto';
+              card.style.border = '1px solid #ef4444';
+              card.innerHTML = `
+                <div class="card-label"><span style="color:#ef4444;">SLACK · #war-room-emergency</span><span style="background:#ef4444; color:#fff; padding:1px 4px; border-radius:3px;">CRITICAL</span></div>
+                <div class="card-body">Runway under 60 days. Diligence audit repo must be clean by dawn.</div>
+              `;
+              c.appendChild(card);
+              setTimeout(() => card.classList.add('pop-in'), 40);
+            }
+          }
+        ]
+      },
+      {
+        id: 7,
+        title: "Tier 7: Acquisition Rumors",
+        colorName: "Bruised Plum",
+        time: "2:15 PM",
+        battery: 42,
+        dark: false,
+        duration: 5400,
+        timeline: [
+          {
+            delay: 100,
+            exec: (c) => {
+              c.innerHTML = `
+                <div class="app-card pop-in" style="border-left: 4px solid #ef4444;">
+                  <div class="card-label"><span>CALENDAR ALERT</span><span style="background:#ef4444; color:#fff; padding:1px 5px; border-radius:3px;">MISSED</span></div>
+                  <div class="card-body"><b>OB/GYN: 32-Week Baby Ultrasound</b><br>Scheduled: 1:30 PM today</div>
+                </div>
+                <div class="messages-stream" id="t7-stream"></div>
+              `;
+            }
+          },
+          {
+            delay: 700,
+            exec: (c) => {
+              pulseIsland();
+              sound.playWarning();
+              const b = document.createElement('div');
+              b.className = 'notif-banner';
+              b.innerHTML = `
+                <div class="notif-header"><span>BLOOMBERG TECH</span><span>BREAKING</span></div>
+                <div class="notif-title">TitanCorp in Talks to Acqui-Hire Synapse AI</div>
+                <div class="notif-body">Distressed deal rumored to absorb patents as venture cash dries up.</div>
+              `;
+              c.insertBefore(b, document.getElementById('t7-stream'));
+              setTimeout(() => b.classList.add('slide-down'), 40);
+            }
+          },
+          {
+            delay: 2400,
+            exec: () => {
+              const stream = document.getElementById('t7-stream');
+              if (!stream) return;
+              sound.playSendPop();
+              const b = document.createElement('div');
+              b.className = 'bubble outgoing';
+              b.innerHTML = `
+                So sorry honey, emergency board meeting called. How is our little guy?
+                <div class="bubble-meta">Delivered 2:05 PM</div>
+              `;
+              stream.appendChild(b);
+              setTimeout(() => b.classList.add('show'), 40);
+            }
+          },
+          {
+            delay: 3800,
+            exec: () => {
+              const stream = document.getElementById('t7-stream');
+              if (!stream) return;
+              sound.playIMessage();
+              const b = document.createElement('div');
+              b.className = 'bubble incoming';
+              b.innerHTML = `
+                He's fine. 4.5 lbs now. I wish you were there.
+                <div class="bubble-meta">2:18 PM</div>
+              `;
+              stream.appendChild(b);
+              setTimeout(() => b.classList.add('show'), 40);
+            }
+          }
+        ]
+      },
+      {
+        id: 8,
+        title: "Tier 8: Deal Announcement",
+        colorName: "Dark Charcoal",
+        time: "4:30 PM",
+        battery: 31,
+        dark: false,
+        duration: 5200,
+        timeline: [
+          {
+            delay: 100,
+            exec: (c) => {
+              c.innerHTML = `
+                <div class="app-card pop-in">
+                  <div class="card-label"><span>LINKEDIN · CEO Alex R.</span><span style="background:#111; color:#fff; padding:1px 5px; border-radius:3px;">EXIT</span></div>
+                  <div class="card-body"><b>Thrilled to announce Synapse AI has been acquired by TitanCorp!</b> Huge thanks to our founders and investors for this exit. 🚀</div>
+                </div>
+                <div class="messages-stream" id="t8-stream"></div>
+              `;
+            }
+          },
+          {
+            delay: 800,
+            exec: (c) => {
+              pulseIsland();
+              sound.playIMessage();
+              const b = document.createElement('div');
+              b.className = 'notif-banner';
+              b.innerHTML = `
+                <div class="notif-header"><span>LOAN OFFICER</span><span>MORTGAGE</span></div>
+                <div class="notif-title">Congratulations on Acquisition!</div>
+                <div class="notif-body">Send closing docs ASAP to clear financing before tomorrow's escrow deadline.</div>
+              `;
+              c.insertBefore(b, document.getElementById('t8-stream'));
+              setTimeout(() => b.classList.add('slide-down'), 40);
+            }
+          },
+          {
+            delay: 2600,
+            exec: () => {
+              const stream = document.getElementById('t8-stream');
+              if (!stream) return;
+              sound.playIMessage();
+              const b = document.createElement('div');
+              b.className = 'bubble incoming';
+              b.innerHTML = `
+                Saw Alex's post online!! Does this mean we're safe? I made dinner to celebrate 🎉
+                <div class="bubble-meta">Read 4:35 PM</div>
+              `;
+              stream.appendChild(b);
+              setTimeout(() => b.classList.add('show'), 40);
+            }
+          }
+        ]
+      },
+      {
+        id: 9,
+        title: "Tier 9: The Liquidation Wipeout",
+        colorName: "Violet-Black",
+        time: "5:45 PM",
+        battery: 18,
+        dark: false,
+        duration: 5400,
+        timeline: [
+          {
+            delay: 100,
+            exec: (c) => { c.innerHTML = ''; }
+          },
+          {
+            delay: 600,
+            exec: (c) => {
+              pulseIsland(true);
+              sound.playWarning();
+              const card = document.createElement('div');
+              card.className = 'app-card';
+              card.style.borderLeft = '4px solid #ef4444';
+              card.innerHTML = `
+                <div class="card-label"><span style="color:#ef4444;">CARTA EQUITY</span><span style="background:#ef4444; color:#fff; padding:1px 5px; border-radius:3px;">LIQUIDATION NOTICE</span></div>
+                <div class="card-body">
+                  <b>Transaction Waterfall Summary:</b><br>
+                  Acquisition proceeds ($25M) allocated 100% to preferred investors.<br>Common stock options cancelled.<br>
+                  <b style="color:#ef4444; font-size:15px; display:block; margin-top:6px;">Payout per share: $0.00</b>
+                </div>
+              `;
+              c.appendChild(card);
+              setTimeout(() => card.classList.add('pop-in'), 40);
+            }
+          },
+          {
+            delay: 2800,
+            exec: (c) => {
+              sound.playVibrate();
+              pulseIsland();
+              const card = document.createElement('div');
+              card.className = 'app-card';
+              card.style.borderLeft = '4px solid #ef4444';
+              card.innerHTML = `
+                <div class="card-label"><span style="color:#ef4444;">VOICEMAIL (1)</span><span>Loan Officer</span></div>
+                <div class="card-body">"Leo, without the equity liquidity, your mortgage is denied. The seller has issued a default notice claiming your $50,000 earnest deposit."</div>
+              `;
+              c.appendChild(card);
+              setTimeout(() => card.classList.add('pop-in'), 40);
+            }
+          }
+        ]
+      },
+      {
+        id: 10,
+        title: "Tier 10: Bank Ruin & Layoff",
+        colorName: "Cold Slate",
+        time: "9:04 AM",
+        battery: 8,
+        dark: false,
+        duration: 5600,
+        timeline: [
+          {
+            delay: 100,
+            exec: (c) => {
+              c.innerHTML = `
+                <div class="app-card pop-in" id="t10-chase">
+                  <div class="card-label"><span>CHASE CHECKING</span><span>...4821</span></div>
+                  <div class="card-value" id="t10-val">$50,842.10</div>
+                  <div id="t10-sub" style="font-size:10px; color:#6b7280;">Available Balance</div>
+                </div>
+                <div class="messages-stream" id="t10-stream"></div>
+              `;
+            }
+          },
+          {
+            delay: 1000,
+            exec: () => {
+              sound.playWarning();
+              const valEl = document.getElementById('t10-val');
+              const subEl = document.getElementById('t10-sub');
+              if (valEl) {
+                valEl.style.color = '#ef4444';
+                valEl.textContent = '$842.10';
+              }
+              if (subEl) {
+                subEl.style.color = '#ef4444';
+                subEl.style.fontWeight = '700';
+                subEl.textContent = '-$50,000.00 (Escrow Deposit Forfeited to Seller)';
+              }
+            }
+          },
+          {
+            delay: 2400,
+            exec: (c) => {
+              pulseIsland(true);
+              sound.playWarning();
+              const b = document.createElement('div');
+              b.className = 'notif-banner';
+              b.style.borderLeft = '4px solid #ef4444';
+              b.innerHTML = `
+                <div class="notif-header"><span style="color:#ef4444; font-weight:800;">TITANCORP PEOPLE OPS</span><span>NOTICE</span></div>
+                <div class="notif-title">Employment Separation Notice</div>
+                <div class="notif-body">Your role has not been transitioned. Mobile credentials revoked effective immediately.</div>
+              `;
+              c.insertBefore(b, document.getElementById('t10-stream'));
+              setTimeout(() => b.classList.add('slide-down'), 40);
+            }
+          },
+          {
+            delay: 4000,
+            exec: () => {
+              const stream = document.getElementById('t10-stream');
+              if (!stream) return;
+              sound.playVibrate();
+              const b = document.createElement('div');
+              b.className = 'bubble incoming';
+              b.style.border = '2px solid #ef4444';
+              b.innerHTML = `
+                Leo, the escrow agent emailed me... what does "deposit forfeited" mean? Please tell me this is a mistake. Where are you?
+                <div class="bubble-meta" style="color:#ef4444; font-weight:800;">Unopened · 8:58 AM</div>
+              `;
+              stream.appendChild(b);
+              setTimeout(() => b.classList.add('show'), 40);
+            }
+          }
+        ]
+      },
+      {
+        id: 11,
+        title: "Tier 11: The Void / Blackout",
+        colorName: "Pitch Black",
+        time: "12:48 AM",
+        battery: 1,
+        dark: true,
+        duration: 5000,
+        timeline: [
+          {
+            delay: 100,
+            exec: (c) => {
+              c.innerHTML = '';
+              screenEl.classList.add('dark-theme');
+              batteryFillEl.style.width = '1%';
+              batteryFillEl.classList.add('low');
+            }
+          },
+          {
+            delay: 500,
+            exec: () => {
+              sound.playLowBattery();
+              screenEl.classList.add('dimmed');
+            }
+          },
+          {
+            delay: 1800,
+            exec: () => {
+              powerGlyphEl.classList.add('active');
+            }
+          },
+          {
+            delay: 3400,
+            exec: () => {
+              powerGlyphEl.classList.remove('active');
+              screenEl.classList.add('blackout');
+              sound.startRain();
+            }
+          }
+        ]
+      }
+    ];
+
+    // --- PLAYBACK CONTROLLER ---
+    let currentIdx = 0;
+    let autoPlayTimer = null;
+    let tierTimeouts = [];
+
+    const screenEl = document.getElementById('screen');
+    const screenContentEl = document.getElementById('screen-content');
+    const timeEl = document.getElementById('status-time');
+    const batteryFillEl = document.getElementById('battery-fill');
+    const tierTitleEl = document.getElementById('tier-title');
+    const timelineBarEl = document.getElementById('timeline-bar');
+    const btnPlayEl = document.getElementById('btn-play');
+    const btnSoundEl = document.getElementById('btn-sound');
+    const powerGlyphEl = document.getElementById('power-glyph');
+    const dynamicIslandEl = document.getElementById('dynamic-island');
+
+    function pulseIsland(isAlert = false) {
+      if (isAlert) {
+        dynamicIslandEl.classList.add('expand-alert');
+      } else {
+        dynamicIslandEl.classList.add('expand-call');
+      }
+      setTimeout(() => {
+        dynamicIslandEl.classList.remove('expand-alert', 'expand-call');
+      }, 700);
+    }
+
+    // Build timeline dots
+    TIERS.forEach((t, i) => {
+      const dot = document.createElement('div');
+      dot.className = `timeline-dot ${i === 0 ? 'active' : ''}`;
+      dot.title = t.title;
+      dot.onclick = () => jumpToTier(i);
+      timelineBarEl.appendChild(dot);
+    });
+
+    function clearTierTimeouts() {
+      tierTimeouts.forEach(t => clearTimeout(t));
+      tierTimeouts = [];
+    }
+
+    function runTierAnimation(index) {
+      clearTierTimeouts();
+      currentIdx = index;
+      const t = TIERS[currentIdx];
+
+      // Update Top Status
+      tierTitleEl.textContent = `${t.title} (${t.colorName})`;
+      timeEl.textContent = t.time;
+      batteryFillEl.style.width = `${t.battery}%`;
+
+      if (t.battery <= 20) {
+        batteryFillEl.classList.add('low');
+      } else {
+        batteryFillEl.classList.remove('low');
+      }
+
+      // Reset Screen Surface
+      screenEl.classList.remove('dimmed', 'blackout');
+      powerGlyphEl.classList.remove('active');
+      screenContentEl.style.display = 'flex';
+      screenContentEl.innerHTML = '';
+
+      if (t.dark) {
+        screenEl.classList.add('dark-theme');
+      } else {
+        screenEl.classList.remove('dark-theme');
+      }
+
+      if (t.id !== 11) {
+        sound.stopRain();
+      }
+
+      // Run Timeline Actions
+      t.timeline.forEach(step => {
+        const timeout = setTimeout(() => {
+          step.exec(screenContentEl);
+        }, step.delay);
+        tierTimeouts.push(timeout);
+      });
+
+      // Update Scrubber UI
+      const dots = timelineBarEl.querySelectorAll('.timeline-dot');
+      dots.forEach((dot, i) => {
+        dot.className = 'timeline-dot';
+        if (i === currentIdx) {
+          dot.classList.add('active');
+          if (t.id >= 9) dot.classList.add('danger');
+        }
+      });
+    }
+
+    function jumpToTier(index) {
+      sound.init();
+      if (autoPlayTimer) clearInterval(autoPlayTimer);
+      runTierAnimation(index);
+      if (btnPlayEl.classList.contains('active')) {
+        startAutoPlayLoop();
+      }
+    }
+
+    function startAutoPlayLoop() {
+      if (autoPlayTimer) clearInterval(autoPlayTimer);
+      autoPlayTimer = setInterval(() => {
+        if (currentIdx < TIERS.length - 1) {
+          runTierAnimation(currentIdx + 1);
+        } else {
+          runTierAnimation(0);
+        }
+      }, 5800);
+    }
+
+    document.getElementById('btn-next').onclick = () => {
+      sound.init();
+      if (currentIdx < TIERS.length - 1) {
+        jumpToTier(currentIdx + 1);
+      } else {
+        jumpToTier(0);
+      }
+    };
+
+    document.getElementById('btn-prev').onclick = () => {
+      sound.init();
+      if (currentIdx > 0) {
+        jumpToTier(currentIdx - 1);
+      }
+    };
+
+    document.getElementById('btn-replay').onclick = () => {
+      sound.init();
+      runTierAnimation(currentIdx);
+    };
+
+    btnPlayEl.onclick = () => {
+      sound.init();
+      if (btnPlayEl.classList.contains('active')) {
+        clearInterval(autoPlayTimer);
+        autoPlayTimer = null;
+        btnPlayEl.textContent = '▶ Auto Play';
+        btnPlayEl.classList.remove('active');
+      } else {
+        btnPlayEl.textContent = '⏸ Pause';
+        btnPlayEl.classList.add('active');
+        startAutoPlayLoop();
+      }
+    };
+
+    btnSoundEl.onclick = () => {
+      sound.init();
+      sound.playIMessage();
+    };
+
+    // Start with user gesture readiness
+    window.addEventListener('click', () => sound.init(), { once: true });
+
+    // Initial play
+    runTierAnimation(0);
+    startAutoPlayLoop();
+  </script>
+</body>
+</html>

@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Falling — Complete 11-Stage Dual-Track Storyboard</title>
+  <style>
+    :root {
+      --bg: #090d16;
+      --card-bg: #111827;
+      --border: rgba(255, 255, 255, 0.12);
+      --accent-blue: #3b82f6;
+      --accent-cyan: #06b6d4;
+      --accent-green: #10b981;
+      --accent-amber: #f59e0b;
+      --accent-red: #ef4444;
+      --text: #f3f4f6;
+      --text-muted: #9ca3af;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: radial-gradient(circle at 50% 0%, #172554 0%, #090d16 60%, #030712 100%);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      min-height: 100vh;
+      padding: 30px 20px 80px;
+      line-height: 1.5;
+    }
+
+    .container {
+      max-width: 1440px;
+      margin: 0 auto;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .badge-bar {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(30, 41, 59, 0.8);
+      border: 1px solid var(--border);
+      padding: 6px 16px;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: #93c5fd;
+      margin-bottom: 14px;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      font-size: 2.6rem;
+      font-weight: 800;
+      letter-spacing: -1px;
+      background: linear-gradient(135deg, #ffffff 30%, #93c5fd 70%, #38bdf8 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 10px;
+    }
+
+    p.subtitle {
+      font-size: 1.1rem;
+      color: var(--text-muted);
+      max-width: 860px;
+      margin: 0 auto 20px;
+    }
+
+    .nav-links {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      margin-top: 14px;
+      flex-wrap: wrap;
+    }
+
+    .nav-btn {
+      background: rgba(31, 41, 55, 0.7);
+      border: 1px solid var(--border);
+      color: #e5e7eb;
+      padding: 8px 18px;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s ease;
+    }
+
+    .nav-btn:hover {
+      background: #2563eb;
+      border-color: #60a5fa;
+      color: #fff;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 14px rgba(37, 99, 235, 0.4);
+    }
+
+    .tabs {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin: 30px 0 24px;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 12px;
+      flex-wrap: wrap;
+    }
+
+    .tab-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      font-weight: 700;
+      padding: 10px 20px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .tab-btn:hover {
+      color: #fff;
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .tab-btn.active {
+      color: #fff;
+      background: #2563eb;
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.35);
+    }
+
+    .tab-content {
+      display: none;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 24px;
+      margin-bottom: 30px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      padding-bottom: 12px;
+    }
+
+    .card-title {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: #f3f4f6;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .image-viewer {
+      background: #020617;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      overflow: hidden;
+      text-align: center;
+      position: relative;
+    }
+
+    .image-viewer img {
+      max-width: 100%;
+      height: auto;
+      display: block;
+      margin: 0 auto;
+      transition: transform 0.25s ease;
+      cursor: zoom-in;
+    }
+
+    .image-viewer.zoomed img {
+      transform: scale(1.6);
+      cursor: zoom-out;
+    }
+
+    .matrix-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 14px;
+      font-size: 0.9rem;
+    }
+
+    .matrix-table th {
+      background: rgba(30, 41, 59, 0.9);
+      color: #93c5fd;
+      text-align: left;
+      padding: 12px 14px;
+      font-weight: 700;
+      border-bottom: 2px solid var(--border);
+    }
+
+    .matrix-table td {
+      padding: 14px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      vertical-align: top;
+    }
+
+    .matrix-table tr:hover {
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    .tier-badge {
+      display: inline-block;
+      padding: 3px 8px;
+      border-radius: 4px;
+      font-weight: 800;
+      font-size: 0.75rem;
+      letter-spacing: 0.5px;
+    }
+
+    .quote-box {
+      background: rgba(15, 23, 42, 0.6);
+      border-left: 3px solid #3b82f6;
+      padding: 10px 14px;
+      border-radius: 0 6px 6px 0;
+      margin-top: 6px;
+      font-size: 0.85rem;
+      color: #e2e8f0;
+      font-style: italic;
+    }
+
+    .row-grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    @media (max-width: 900px) {
+      .row-grid-2 { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <header>
+    <div class="badge-bar">
+      <span>● Screenlife Physics Narrative</span>
+      <span>•</span>
+      <span>11 Tiers 1-to-1</span>
+      <span>•</span>
+      <span>Dual-Device Parallel</span>
+    </div>
+    <h1>Falling (Into the Darkness)</h1>
+    <p class="subtitle">
+      Complete 11-Stage Screenlife Storyboard: Following infrastructure engineer Leo Vance from euphoric hackathon spark through Series A house deposit, 3:32 AM burnout, liquidation wipeout, and final blackout void.
+    </p>
+
+    <div class="nav-links">
+      <a href="/phone_story_prototype.html" class="nav-btn" target="_blank">📱 Live Interactive Phone Demo ↗</a>
+      <a href="/tech_options.html" class="nav-btn" target="_blank">⚡ Motherboard & Silver Chips Viewer ↗</a>
+      <a href="/components.html" class="nav-btn" target="_blank">🧩 Component Atlas ↗</a>
+    </div>
+
+    <div class="tabs">
+      <button class="tab-btn active" onclick="switchTab('dual')">Master Dual-Track (Side-by-Side)</button>
+      <button class="tab-btn" onclick="switchTab('phone')">📱 Phone Track (11 Tiers)</button>
+      <button class="tab-btn" onclick="switchTab('macbook')">💻 MacBook Pro Track (11 Tiers)</button>
+      <button class="tab-btn" onclick="switchTab('matrix')">📊 11-Stage Narrative Matrix</button>
+    </div>
+  </header>
+
+  <!-- TAB 1: DUAL-TRACK MASTER -->
+  <div id="tab-dual" class="tab-content active">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">
+          <span>⚡ Complete 11-Tier Dual-Track Master Sheet</span>
+        </div>
+        <span style="font-size: 0.8rem; color: var(--text-muted);">2570 × 2417 px • Click image to zoom</span>
+      </div>
+      <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 16px;">
+        Both screens run in strict chronological lockstep across all 11 Tiers. The MacBook Pro (left) captures the corporate and code paper trail (git commits, Carta equity, board decks, DocuSign waterfall, Okta lockout). The iPhone (right) captures Leo's intimate domestic and financial reality (baby ultrasound, escrow deposit, missed doctor visits, bank default, and dying battery).
+      </p>
+      <div class="image-viewer" onclick="this.classList.toggle('zoomed')">
+        <img src="/storyboard_assets/falling_dual_track_master_storyboard.png" alt="Master Dual-Track Storyboard">
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB 2: PHONE TRACK -->
+  <div id="tab-phone" class="tab-content">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">
+          <span>📱 Track 1: Phone Screen Progression (Tiers 1–11)</span>
+        </div>
+        <a href="/phone_story_prototype.html" class="nav-btn" target="_blank">Launch Live Interactive Simulator ↗</a>
+      </div>
+      <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 16px;">
+        Direct frontal phone UI states visible behind the semi-translucent motherboard chamber.
+      </p>
+
+      <h3 style="margin: 20px 0 10px; color: #93c5fd;">Panoramic Composite (All 11 Tiers)</h3>
+      <div class="image-viewer" onclick="this.classList.toggle('zoomed')">
+        <img src="/storyboard_assets/falling_11_scene_storyboard_panoramic.png" alt="Phone Track Panoramic">
+      </div>
+
+      <h3 style="margin: 30px 0 10px; color: #93c5fd;">Individual Storyboard Sheets (Full Resolution)</h3>
+      <div style="display: flex; flex-direction: column; gap: 24px;">
+        <div>
+          <h4 style="color: #34d399; margin-bottom: 8px;">Sheet 1: The Euphoric Ascent (Tiers 1–4)</h4>
+          <div class="image-viewer" onclick="this.classList.toggle('zoomed')">
+            <img src="/storyboard_assets/phone_refined_tiers_1_to_4.png" alt="Phone Tiers 1-4">
+          </div>
+        </div>
+
+        <div>
+          <h4 style="color: #fbbf24; margin-bottom: 8px;">Sheet 2: The Crunch & The Sham Acquisition (Tiers 5–8)</h4>
+          <div class="image-viewer" onclick="this.classList.toggle('zoomed')">
+            <img src="/storyboard_assets/phone_refined_tiers_5_to_8.png" alt="Phone Tiers 5-8">
+          </div>
+        </div>
+
+        <div>
+          <h4 style="color: #f87171; margin-bottom: 8px;">Sheet 3: The Liquidation Wipeout, Default & Void (Tiers 9–11)</h4>
+          <div class="image-viewer" onclick="this.classList.toggle('zoomed')">
+            <img src="/storyboard_assets/phone_refined_tiers_9_to_11.png" alt="Phone Tiers 9-11">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB 3: MACBOOK TRACK -->
+  <div id="tab-macbook" class="tab-content">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">
+          <span>💻 Track 2: MacBook Pro Progression (Tiers 1–11)</span>
+        </div>
+      </div>
+      <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 16px;">
+        The technical, architectural, and corporate documentation tracking Leo's startup journey from VS Code to Okta SSO 403 Forbidden.
+      </p>
+
+      <h3 style="margin: 20px 0 10px; color: #93c5fd;">Panoramic Composite (All 11 Tiers)</h3>
+      <div class="image-viewer" onclick="this.classList.toggle('zoomed')">
+        <img src="/storyboard_assets/falling_macbook_track_panoramic.png" alt="MacBook Track Panoramic">
+      </div>
+
+      <h3 style="margin: 30px 0 10px; color: #93c5fd;">Individual Storyboard Sheets (Full Resolution)</h3>
+      <div style="display: flex; flex-direction: column; gap: 24px;">
+        <div>
+          <h4 style="color: #60a5fa; margin-bottom: 8px;">Sheet 1: Git Commits, Hacker News #1 & Carta Valuation (Tiers 1–4)</h4>
+          <div class="image-viewer" onclick="this.classList.toggle('zoomed')">
+            <img src="/storyboard_assets/macbook_track_tiers_1_to_4_1791471747464.jpg" alt="MacBook Tiers 1-4">
+          </div>
+        </div>
+
+        <div>
+          <h4 style="color: #fbbf24; margin-bottom: 8px;">Sheet 2: Burn Rate Crisis, 3:30 AM Terminal & Acquisition Rumors (Tiers 5–8)</h4>
+          <div class="image-viewer" onclick="this.classList.toggle('zoomed')">
+            <img src="/storyboard_assets/macbook_track_tiers_5_to_8_1791471766388.jpg" alt="MacBook Tiers 5-8">
+          </div>
+        </div>
+
+        <div>
+          <h4 style="color: #ef4444; margin-bottom: 8px;">Sheet 3: DocuSign 100% Preferred Waterfall, Okta Lockout & Dark Screen (Tiers 9–11)</h4>
+          <div class="image-viewer" onclick="this.classList.toggle('zoomed')">
+            <img src="/storyboard_assets/macbook_track_tiers_9_to_11_1791471784204.jpg" alt="MacBook Tiers 9-11">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB 4: NARRATIVE MATRIX -->
+  <div id="tab-matrix" class="tab-content">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">
+          <span>📊 Full 11-Stage Dual-Track Matrix</span>
+        </div>
+      </div>
+      <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 16px;">
+        1:1 mapping between subtractive color physics, motherboard hardware states, and the two parallel screenlife narratives.
+      </p>
+
+      <div style="overflow-x: auto;">
+        <table class="matrix-table">
+          <thead>
+            <tr>
+              <th style="width: 130px;">Tier & Subtractive Ink</th>
+              <th style="width: 38%;">💻 MacBook Pro (Corporate & Code)</th>
+              <th style="width: 48%;">📱 iPhone Screen (Personal & Family)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                <span class="tier-badge" style="background: #ffffff; color: #111;">TIER 1</span><br>
+                <b style="color: #e5e7eb;">Clean White</b><br>
+                <small style="color: #9ca3af;">(0, 0, 0)</small>
+              </td>
+              <td>
+                <b>VS Code Prototype Commit:</b><br>
+                <code>git commit -m "initial prototype"</code><br>
+                Clean terminal, 100% test pass.
+              </td>
+              <td>
+                <b>9:41 AM Lockscreen (100% Battery):</b><br>
+                Ultrasound wallpaper. Messages: <i>"Wife: We're pregnant! 💕 Can't wait to tell our families tonight."</i><br>
+                Calendar: 4:00 PM Hackathon AI Demo.
+              </td>
+            </tr>
+
+            <tr>
+              <td>
+                <span class="tier-badge" style="background: #06b6d4; color: #000;">TIER 2</span><br>
+                <b style="color: #38bdf8;">Pure Cyan</b><br>
+                <small style="color: #9ca3af;">(1, 0, 0)</small>
+              </td>
+              <td>
+                <b>Hacker News #1 & GitHub Surge:</b><br>
+                5,000 GitHub stars in 12 hours. Slack: <code>#general: Traffic spike incoming! 🚀</code>
+              </td>
+              <td>
+                <b>App Store Viral Alert:</b><br>
+                <i>10,000 active users in 24h.</i><br>
+                CEO Alex: <i>"You're a genius Leo. Let's talk equity refresh on Monday."</i><br>
+                Twitter/X: Trending AI demo.
+              </td>
+            </tr>
+
+            <tr>
+              <td>
+                <span class="tier-badge" style="background: #ec4899; color: #fff;">TIER 3</span><br>
+                <b style="color: #f472b6;">Magenta Injected</b><br>
+                <small style="color: #9ca3af;">(1, 1, 0)</small>
+              </td>
+              <td>
+                <b>Zoom VC Pitch & Carta Equity:</b><br>
+                Tier-1 VC term sheet signed. Carta shows 1.5% Common Stock (Est. Value: $450k).
+              </td>
+              <td>
+                <b>Chase Direct Deposit (+$15,000):</b><br>
+                Seed Closing Bonus clears.<br>
+                Leo texts: <i>"Seed bonus just hit! We have enough for the down payment 🎉"</i><br>
+                Wife replies: <i>"Looking at 3-bedroom houses near the park right now 🏡"</i>
+              </td>
+            </tr>
+
+            <tr>
+              <td>
+                <span class="tier-badge" style="background: #eab308; color: #000;">TIER 4</span><br>
+                <b style="color: #fde047;">Yellow Flooded</b><br>
+                <small style="color: #9ca3af;">(1, 1, 1)</small>
+              </td>
+              <td>
+                <b>TechCrunch Feature ($100M Valuation):</b><br>
+                <i>"Synapse AI Raises $25M Series A."</i><br>
+                Carta paper equity value: <b>$1,500,000.00</b>.
+              </td>
+              <td>
+                <b>Zillow Escrow Opened:</b><br>
+                342 Elm Street ($750k). $50,000 earnest money deposit wired.<br>
+                Wife text: <i>"Wire sent! The nursery gets the most beautiful morning sunlight ☀️"</i>
+              </td>
+            </tr>
+
+            <tr>
+              <td>
+                <span class="tier-badge" style="background: #65a30d; color: #fff;">TIER 5</span><br>
+                <b style="color: #a3e635;">Sickly Olive</b><br>
+                <small style="color: #9ca3af;">(1, 1, 2)</small>
+              </td>
+              <td>
+                <b>Board Deck: Burn Rate Warning:</b><br>
+                <i>"Revenue: 48% of Target. Burn rate: $1.2M/mo. Runway: 5 months."</i><br>
+                Slack: <code>#hiring-freeze</code> created.
+              </td>
+              <td>
+                <b>Mortgage Lender Contingency Warning:</b><br>
+                <i>"Loan approval conditional on verified proof of common stock vesting in 14 days."</i><br>
+                Wife text: <i>"Baby kicked during lunch! Pick up dinner on your way home?"</i> (Marked Read 7:45 PM, no reply).
+              </td>
+            </tr>
+
+            <tr>
+              <td>
+                <span class="tier-badge" style="background: #78350f; color: #fff;">TIER 6</span><br>
+                <b style="color: #d97706;">Murky Brown</b><br>
+                <small style="color: #9ca3af;">(2, 2, 2)</small>
+              </td>
+              <td>
+                <b>3:30 AM Diligence Audit Terminal:</b><br>
+                Red security alerts. Private locked Slack: <code>#founders-only 🔒</code>.<br>
+                Runway sub-60 days.
+              </td>
+              <td>
+                <b>3:32 AM Dark Lockscreen (14% Battery):</b><br>
+                📞 2 Missed Calls from Wife.<br>
+                Wife text: <i>"Leo, it's almost 3 AM... are you still at the office? I left dinner in the fridge. Please get some sleep."</i>
+              </td>
+            </tr>
+
+            <tr>
+              <td>
+                <span class="tier-badge" style="background: #581c87; color: #fff;">TIER 7</span><br>
+                <b style="color: #c084fc;">Bruised Plum</b><br>
+                <small style="color: #9ca3af;">(3, 2, 2)</small>
+              </td>
+              <td>
+                <b>Bloomberg Distress Report:</b><br>
+                <i>"TitanCorp in Advanced Talks for Distressed Acqui-Hire of Synapse AI."</i><br>
+                CEO Slack: <i>"Ignore press rumors. Heads down, keep building!"</i>
+              </td>
+              <td>
+                <b>Calendar: 32-Week Ultrasound [MISSED]:</b><br>
+                Leo texts: <i>"So sorry honey, emergency board meeting called. How is our little guy?"</i><br>
+                Wife replies: <i>"He's fine. 4.5 lbs now. I wish you were there."</i>
+              </td>
+            </tr>
+
+            <tr>
+              <td>
+                <span class="tier-badge" style="background: #334155; color: #fff;">TIER 8</span><br>
+                <b style="color: #94a3b8;">Dark Charcoal</b><br>
+                <small style="color: #9ca3af;">(3, 3, 3)</small>
+              </td>
+              <td>
+                <b>Zoom All-Hands: Acqui-Hire Slide:</b><br>
+                CEO & CTO smiling next to TitanCorp VP.<br>
+                Slide: <i>"Exciting New Chapter: Synapse Joins TitanCorp!"</i>
+              </td>
+              <td>
+                <b>LinkedIn CEO Announcement Post:</b><br>
+                <i>"Thrilled to announce Synapse AI has been acquired!"</i><br>
+                Wife text: <i>"Saw Alex's post online!! Does this mean we're safe? I made dinner to celebrate 🎉"</i><br>
+                Loan Officer: <i>"Send closing docs ASAP before tomorrow's escrow deadline."</i>
+              </td>
+            </tr>
+
+            <tr>
+              <td>
+                <span class="tier-badge" style="background: #312e81; color: #fff;">TIER 9</span><br>
+                <b style="color: #818cf8;">Violet-Black</b><br>
+                <small style="color: #9ca3af;">(4, 3, 3)</small>
+              </td>
+              <td>
+                <b>DocuSign Shareholder Liquidation Waterfall:</b><br>
+                • Series A Preferred: $25M (100% to VCs)<br>
+                • Founder Retention Pool: $8M<br>
+                <b style="color: #ef4444;">• Common Stock Payout Per Share: $0.00</b>
+              </td>
+              <td>
+                <b>Carta Cancellation & Mortgage Default:</b><br>
+                Carta Alert: <i>"Acquisition proceeds allocated 100% to preferred. Options cancelled. Payout: $0.00"</i><br>
+                Loan Officer Voicemail: <i>"Without equity liquidity, mortgage is denied. Seller default notice issued claiming your $50,000 deposit."</i>
+              </td>
+            </tr>
+
+            <tr>
+              <td>
+                <span class="tier-badge" style="background: #475569; color: #fff;">TIER 10</span><br>
+                <b style="color: #cbd5e1;">Cold Slate</b><br>
+                <small style="color: #9ca3af;">(4, 4, 4)</small>
+              </td>
+              <td>
+                <b>Okta SSO Authentication Revocation:</b><br>
+                <b style="color: #ef4444;">403 FORBIDDEN: Account disabled by administrator</b><br>
+                Slack: <code>Disconnected (Session Terminated)</code><br>
+                Google Workspace: <code>Access Denied</code>
+              </td>
+              <td>
+                <b>Chase Balance Drops to $842.10:</b><br>
+                -$50,000.00 default deduction (Escrow forfeited).<br>
+                TitanCorp People Ops: <i>"Employment separation notice. Credentials revoked."</i><br>
+                Calendar: <b>Baby Due Date in 7 Days</b>.<br>
+                Wife panicked text: <i>"Leo, escrow agent emailed me... what does deposit forfeited mean? Where are you?"</i>
+              </td>
+            </tr>
+
+            <tr>
+              <td>
+                <span class="tier-badge" style="background: #000000; color: #fff; border: 1px solid #555;">TIER 11</span><br>
+                <b style="color: #fff;">Pitch Black Titan</b><br>
+                <small style="color: #9ca3af;">(5, 5, 5)</small>
+              </td>
+              <td>
+                <b>Dark Closed MacBook Pro:</b><br>
+                Lid closed on desk. Cold reflection of the dark room and pouring rain outside the window.
+              </td>
+              <td>
+                <b>Dead Battery Blackout Void:</b><br>
+                Inside cold car in rain. 1% red empty battery icon flashes.<br>
+                Phone shuts down. Total, silent, pitch-black void.
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  function switchTab(name) {
+    document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+    
+    event.currentTarget.classList.add('active');
+    document.getElementById('tab-' + name).classList.add('active');
+  }
+</script>
+
+</body>
+</html>
