@@ -3,13 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Falling — Tech Aesthetic Explorations (Magenta #7 Block)</title>
+  <title>Falling — Silicon Architecture & Circuit Board Options</title>
   <style>
     :root {
       --bg: #07090E;
-      --card-bg: rgba(22, 27, 34, 0.85);
+      --card-bg: rgba(20, 25, 34, 0.88);
       --card-border: rgba(255, 255, 255, 0.1);
       --accent: #00F0FF;
+      --gold: #FFD700;
       --magenta: #FF007F;
       --text: #F0F6FC;
       --text-muted: #8B949E;
@@ -19,11 +20,11 @@
       background: var(--bg);
       color: var(--text);
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-      padding: 36px 24px;
+      padding: 36px 24px 80px;
       line-height: 1.5;
     }
     header {
-      max-width: 1320px;
+      max-width: 1360px;
       margin: 0 auto 36px;
       border-bottom: 1px solid var(--card-border);
       padding-bottom: 24px;
@@ -36,26 +37,38 @@
       text-transform: uppercase;
       padding: 4px 10px;
       border-radius: 20px;
-      background: rgba(255, 0, 127, 0.15);
-      color: var(--magenta);
-      border: 1px solid rgba(255, 0, 127, 0.4);
+      background: rgba(0, 240, 255, 0.15);
+      color: var(--accent);
+      border: 1px solid rgba(0, 240, 255, 0.4);
       margin-bottom: 12px;
     }
     h1 { font-size: 32px; font-weight: 800; letter-spacing: -0.5px; margin-bottom: 8px; }
-    p.lead { color: var(--text-muted); font-size: 16px; max-width: 800px; }
+    p.lead { color: var(--text-muted); font-size: 16px; max-width: 860px; }
     
-    .container { max-width: 1320px; margin: 0 auto; display: flex; flex-direction: column; gap: 40px; }
+    .container { max-width: 1360px; margin: 0 auto; display: flex; flex-direction: column; gap: 48px; }
     
+    .section-head {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      border-left: 4px solid var(--accent);
+      padding-left: 14px;
+      margin-bottom: 20px;
+    }
+    .section-head h2 { font-size: 22px; font-weight: 800; color: #fff; }
+    .section-head p { font-size: 14px; color: var(--text-muted); }
+
+    /* Cards Grid */
     .cards-row {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
       gap: 20px;
     }
     .card {
       background: var(--card-bg);
       border: 1px solid var(--card-border);
       border-radius: 14px;
-      padding: 20px;
+      padding: 22px;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -63,13 +76,13 @@
       transition: all 0.2s;
     }
     .card:hover {
-      border-color: var(--magenta);
+      border-color: var(--accent);
       transform: translateY(-4px);
-      box-shadow: 0 10px 30px rgba(255, 0, 127, 0.15);
+      box-shadow: 0 10px 30px rgba(0, 240, 255, 0.12);
     }
     .img-wrap {
-      width: 200px;
-      height: 200px;
+      width: 220px;
+      height: 220px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -77,14 +90,15 @@
       border-radius: 10px;
       margin-bottom: 16px;
       border: 1px solid rgba(255, 255, 255, 0.05);
+      position: relative;
     }
     .img-wrap img {
-      max-width: 180px;
-      max-height: 180px;
+      max-width: 200px;
+      max-height: 200px;
       display: block;
     }
     .card h3 {
-      font-size: 17px;
+      font-size: 16px;
       font-weight: 700;
       color: var(--accent);
       margin-bottom: 6px;
@@ -92,7 +106,7 @@
     .card .tech-tag {
       font-size: 11px;
       font-family: monospace;
-      color: var(--magenta);
+      color: var(--gold);
       margin-bottom: 12px;
       text-transform: uppercase;
       letter-spacing: 0.5px;
@@ -127,106 +141,155 @@
       border-radius: 8px;
       display: block;
     }
+
+    .split-layout {
+      display: grid;
+      grid-template-columns: 420px 1fr;
+      gap: 32px;
+      align-items: start;
+    }
+    @media (max-width: 900px) {
+      .split-layout { grid-template-columns: 1fr; }
+    }
   </style>
 </head>
 <body>
 
   <header>
-    <div class="badge">Tech Aesthetic Exploration</div>
-    <h1>Falling — 5 Tech Hardware Directions (Magenta #7)</h1>
+    <div class="badge">Theme Finalization // Options Suite</div>
+    <h1>Falling — Silicon Chip Blocks & Circuit Board Chamber</h1>
     <p class="lead">
-      Comparing 5 distinct technical and hardware interpretations for the Magenta Tier 7 game block ($80\times 80\text{px}$ target scale, rendered at $512\times 512\text{px}$ master resolution with transparent alpha).
+      Complete hardware architecture exploration requested by the player: computer processor chips for all game blocks, and a circuit board motherboard chamber with matching hardware support elements.
     </p>
   </header>
 
   <div class="container">
 
-    <div class="full-showcase-box">
-      <h3 style="margin-bottom: 16px; font-size: 16px; color: var(--accent);">Panoramic 5-Option Comparison Sheet</h3>
-      <img src="/assets/ui/tech_explorations/magenta_7_tech_showcase.png" alt="5 Tech Options Showcase">
-    </div>
-
-    <div class="cards-row">
-      <!-- 1 -->
-      <div class="card">
-        <div class="img-wrap">
-          <img src="/assets/ui/tech_explorations/option1_vector_crt_master.png" alt="Option 1">
-        </div>
-        <h3>1. Vector Phosphor CRT</h3>
-        <div class="tech-tag">Analog Cathode Terminal</div>
-        <p>
-          Curved dark cathode glass aperture with horizontal raster scanlines, glowing electron beam persistence outline, and phosphor bloom halo.
-        </p>
-        <div class="scale-row">
-          <span>In-Game 80px:</span>
-          <img src="/assets/ui/tech_explorations/option1_vector_crt_80px.png" width="32" height="32" alt="80px">
-        </div>
+    <!-- 1. PROCESSOR CHIP OPTIONS (BLOCK TIERS) -->
+    <section>
+      <div class="section-head">
+        <h2>1. Game Block Options — Computer Processor Chips (Solid Magenta #7)</h2>
+        <p>Comparing 4 distinct physical processor packages for the game blocks. All variants are solid vibrant magenta with transparent alphas.</p>
       </div>
 
-      <!-- 2 -->
-      <div class="card">
-        <div class="img-wrap">
-          <img src="/assets/ui/tech_explorations/option2_server_blade_master.png" alt="Option 2">
-        </div>
-        <h3>2. Enterprise Server Blade</h3>
-        <div class="tech-tag">Datacenter Silicon Module</div>
-        <p>
-          Matte dark titanium server chassis with corner hex-drive mounting bolts, gold PCB circuit traces, recessed neon magenta status lightpipe, and laser-etched industrial stencil "7".
-        </p>
-        <div class="scale-row">
-          <span>In-Game 80px:</span>
-          <img src="/assets/ui/tech_explorations/option2_server_blade_80px.png" width="32" height="32" alt="80px">
-        </div>
+      <div class="full-showcase-box" style="margin-bottom: 24px;">
+        <img src="/assets/ui/tech_explorations/processor_chips_showcase.png" alt="Processor Chips Showcase">
       </div>
 
-      <!-- 3 -->
-      <div class="card">
-        <div class="img-wrap">
-          <img src="/assets/ui/tech_explorations/option3_optical_prism_master.png" alt="Option 3">
+      <div class="cards-row">
+        <!-- Option 1 -->
+        <div class="card">
+          <div class="img-wrap">
+            <img src="/assets/ui/tech_explorations/chip_option1_server_cpu_master.png" alt="Server CPU">
+          </div>
+          <h3>1. Server CPU (IHS Lid)</h3>
+          <div class="tech-tag">Anodized Heat Spreader</div>
+          <p>Anodized magenta aluminum lid with CNC diamond chamfers, laser-etched neural specs, gold pin-1 index triangle, and perimeter gold test pads.</p>
+          <div class="scale-row">
+            <span>In-game (80px):</span>
+            <img src="/assets/ui/tech_explorations/chip_option1_server_cpu_80px.png" width="40" height="40" alt="80px">
+          </div>
         </div>
-        <h3>3. Optical Silicon Prism</h3>
-        <div class="tech-tag">Quantum Polarized Glass</div>
-        <p>
-          Smoked dark dichroic glass prism with internal subsurface magenta laser refraction, chromatic aberration edge highlights, and a floating volumetric holographic glyph.
-        </p>
-        <div class="scale-row">
-          <span>In-Game 80px:</span>
-          <img src="/assets/ui/tech_explorations/option3_optical_prism_80px.png" width="32" height="32" alt="80px">
+
+        <!-- Option 2 -->
+        <div class="card">
+          <div class="img-wrap">
+            <img src="/assets/ui/tech_explorations/chip_option2_silicon_die_master.png" alt="Silicon Die">
+          </div>
+          <h3>2. Bare Silicon Die (MCM)</h3>
+          <div class="tech-tag">Exposed Multi-Core Die</div>
+          <p>Exposed solid magenta silicon compute die partitioned into 7 neural cores, resting on dark FR4 carrier with perimeter SMD capacitors and radiating bus traces.</p>
+          <div class="scale-row">
+            <span>In-game (80px):</span>
+            <img src="/assets/ui/tech_explorations/chip_option2_silicon_die_80px.png" width="40" height="40" alt="80px">
+          </div>
         </div>
+
+        <!-- Option 3 -->
+        <div class="card">
+          <div class="img-wrap">
+            <img src="/assets/ui/tech_explorations/chip_option3_ceramic_processor_master.png" alt="Ceramic Processor">
+          </div>
+          <h3>3. Vintage Ceramic Package</h3>
+          <div class="tech-tag">Gold Braze Seal Lid</div>
+          <p>Rich magenta textured ceramic body with 24k gold braze-seal frame, gold silkscreen 'APX 7000' marking, and embossed metallic gold numeral '7'.</p>
+          <div class="scale-row">
+            <span>In-game (80px):</span>
+            <img src="/assets/ui/tech_explorations/chip_option3_ceramic_processor_80px.png" width="40" height="40" alt="80px">
+          </div>
+        </div>
+
+        <!-- Option 4 -->
+        <div class="card">
+          <div class="img-wrap">
+            <img src="/assets/ui/tech_explorations/chip_option4_minimalist_soc_master.png" alt="Minimalist SoC">
+          </div>
+          <h3>4. Minimalist BGA SoC</h3>
+          <div class="tech-tag">M-Series Monolith</div>
+          <p>Ultra-clean satin anodized magenta lid with 45° diamond corner relief cuts, subtle substrate rim, and crisp laser typography.</p>
+          <div class="scale-row">
+            <span>In-game (80px):</span>
+            <img src="/assets/ui/tech_explorations/chip_option4_minimalist_soc_80px.png" width="40" height="40" alt="80px">
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. CIRCUIT BOARD CHAMBER (3 SOLDER MASK OPTIONS) -->
+    <section>
+      <div class="section-head">
+        <h2>2. Game Board Options — Circuit Board Chamber (3 Solder Mask Finishes)</h2>
+        <p>Exact 336×560px dimensions (24×36 grid). Solder mask translucency allows Leo Vance's 3:32 AM notifications to glow through.</p>
       </div>
 
-      <!-- 4 -->
-      <div class="card">
-        <div class="img-wrap">
-          <img src="/assets/ui/tech_explorations/option4_industrial_instrument_master.png" alt="Option 4">
-        </div>
-        <h3>4. Bench Instrument</h3>
-        <div class="tech-tag">Tektronix Oscilloscope</div>
-        <p>
-          Heavy molded slate-polycarbonate housing with corner impact bumpers, recessed display bezel with an engraved millimeter graticule crosshair grid, and backlit LED numerals.
-        </p>
-        <div class="scale-row">
-          <span>In-Game 80px:</span>
-          <img src="/assets/ui/tech_explorations/option4_industrial_instrument_80px.png" width="32" height="32" alt="80px">
-        </div>
+      <div class="full-showcase-box">
+        <img src="/assets/ui/tech_explorations/circuit_board_chambers_showcase.png" alt="3 Circuit Board Chamber Options">
+      </div>
+    </section>
+
+    <!-- 3. FULL CHAMBER PROTOTYPE IN PHONE STAGE -->
+    <section>
+      <div class="section-head">
+        <h2>3. Full In-Game Chamber Prototype (390×844 Mobile Frame)</h2>
+        <p>Complete integration: Motherboard PCB chamber plate, SMT vacuum dropper, gold LGA socket floor, SWAP switch, and processor chips.</p>
       </div>
 
-      <!-- 5 -->
-      <div class="card">
-        <div class="img-wrap">
-          <img src="/assets/ui/tech_explorations/option5_cyber_obsidian_lightpipe_master.png" alt="Option 5">
+      <div class="split-layout">
+        <div class="full-showcase-box" style="padding: 16px; text-align: center;">
+          <img src="/assets/ui/tech_explorations/circuit_board_chamber_preview.png" style="max-height: 720px; width: auto; margin: 0 auto;" alt="Chamber Prototype">
         </div>
-        <h3>5. Cyber Obsidian Lightpipe</h3>
-        <div class="tech-tag">Precision Clean-Tech</div>
-        <p>
-          Satin aerospace alloy frame with specular top rim, mirror obsidian core, crisp neon magenta lightpipe channel, and sharp modern typography.
-        </p>
-        <div class="scale-row">
-          <span>In-Game 80px:</span>
-          <img src="/assets/ui/tech_explorations/option5_cyber_obsidian_lightpipe_80px.png" width="32" height="32" alt="80px">
+        <div style="display: flex; flex-direction: column; gap: 20px;">
+          <div class="card" style="text-align: left; align-items: flex-start;">
+            <h3 style="color: var(--accent); margin-bottom: 8px;">Technical Parity & Architectural Notes</h3>
+            <ul style="color: var(--text-muted); font-size: 14px; line-height: 1.8; padding-left: 20px;">
+              <li><strong style="color: #fff;">Chamber Dimensions:</strong> Exactly 336 × 560 px (24 × 36 grid cells at 14px unit scale).</li>
+              <li><strong style="color: #fff;">Titan Monolith (Tier 11):</strong> Exactly 154 × 154 px (45.8% of chamber width), seated firmly in the gold LGA socket pins.</li>
+              <li><strong style="color: #fff;">Dropper Assembly:</strong> Precision SMT pick-and-place carriage with collimated optical crosshair laser projector.</li>
+              <li><strong style="color: #fff;">Translucency & Story:</strong> Leo Vance's 3:32 AM failed build alerts and message from Sarah glow faintly behind the semi-translucent solder mask.</li>
+              <li><strong style="color: #fff;">Telemetry HUD:</strong> Live motherboard BIOS readout displaying BUS_CLK (4.80 GHz), VCC_CORE (1.248 V), and SILICON_PURITY (98.4%).</li>
+            </ul>
+          </div>
+          <div class="card" style="text-align: left; align-items: flex-start;">
+            <h3 style="color: var(--gold); margin-bottom: 8px;">Interactive Web Preview Available</h3>
+            <p style="font-size: 13px; color: var(--text-muted);">
+              All components and live assembly sandboxes are live at <code>http://localhost:8089/tech_options.html</code> and <code>http://localhost:8089/components.html</code>.
+            </p>
+          </div>
         </div>
       </div>
-    </div>
+    </section>
+
+    <!-- 4. SUPPORTING HARDWARE COMPONENTS (3 OPTIONS FOR EACH) -->
+    <section>
+      <div class="section-head">
+        <h2>4. Supporting Hardware Components — 3 Options for Each Element</h2>
+        <p>Options for the Dropper Gantry, Chamber Floor Sockets, and Interactive SWAP Buttons.</p>
+      </div>
+
+      <div class="full-showcase-box">
+        <img src="/assets/ui/tech_explorations/circuit_board_hardware_showcase.png" alt="Hardware Components 3 Options Showcase">
+      </div>
+    </section>
 
   </div>
 
