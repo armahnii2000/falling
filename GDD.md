@@ -1,16 +1,16 @@
 # Falling (Into the Darkness) — Game Design Document
 
-> **Logline:** A 3:32 AM existential physics puzzler. You are Leo Vance, a tech worker whose life is collapsing in real time on the phone screen behind the game — and your only escape is fusing colored monoliths down into 100% pure black.
-> **Status:** Design consolidation (Oct 2026) — mechanics spec'd, wireframes + 5 art themes done, web prototypes exist.
+> **Logline:** A 3:32 AM existential tech physics puzzler. You are Leo Vance, an infrastructure engineer whose life is collapsing in real time on the phone screen behind the game — and your only escape is fusing processor chip blocks down into 100% pure black.
+> **Status:** Current (Updated October 2026) — Mechanics spec'd, Silicon Architecture & Motherboard Theme finalized, 6-Beat Storyboard documented, web prototypes live.
 > **Genre:** Physics puzzle / block-fusion
 > **Engine & Target:** Godot 4 (PC/Steam, Mobile, Web)
-> **Source materials:** `README.md`, `docs/wireframe_design_system.md`, `.summer/specs/into-the-darkness-design.md`, web prototypes, Lunacy wireframes.
+> **Source materials:** `README.md`, `docs/wireframe_design_system.md`, web prototypes, Lunacy wireframes.
 
 ---
 
 ## 1. High Concept & Hook
 
-**The hook:** Every puzzle game is an escape. *Falling* makes the thing you're escaping from visible the entire time — your phone, face-down on the desk behind the frosted glass, lighting up with Slack revocations, a wife's worried texts, and a bank balance in freefall — while you chase the only peace on offer: total darkness.
+**The hook:** Every puzzle game is an escape. *Falling* makes the thing you're escaping from visible the entire time — your phone, face-down on the desk behind the translucent motherboard plate, lighting up with Slack credential revocations, your wife's worried texts, and an empty bank account — while you chase the only peace on offer: total darkness.
 
 **Core fantasy:** Total light absorption. Every merge drinks color out of the world until nothing is left but black.
 
@@ -20,9 +20,9 @@
 
 ## 2. Design Pillars
 
-1. **Darkness is the score.** Progress is measured in light absorbed, not points stacked. The win state is a color (#000000), not a number.
-2. **The background is the story.** Leo's collapse unfolds entirely through the phone layer — no cutscenes, no dialogue boxes. The game never interrupts the puzzle to tell story.
-3. **Fusion feels physical.** Blocks are rigid monoliths with mass. Merges land with weight; the Titan is a presence, not a sprite.
+1. **Darkness is the score.** Progress is measured in light absorbed, not points stacked. The win state is a color (`#000000`), not an arbitrary number.
+2. **The background is the story.** Leo's collapse unfolds entirely through the phone layer beneath the motherboard — no cutscenes, no dialogue boxes. The game never interrupts the puzzle to tell story.
+3. **Fusion feels physical.** Blocks are rigid computer processor packages with mass and metallic sheen. Merges land with weight; the Titan is a massive enterprise socket presence, not a sprite.
 4. **Calm surface, dread underneath.** The puzzle loop is meditative; the context is a panic attack at 3:32 AM. The tension between them *is* the game.
 
 ---
@@ -30,148 +30,160 @@
 ## 3. Core Gameplay Loop
 
 ```
-[Block drops from rail] → [Steer / position while falling]
-  → [Block lands, settles among stack]
-  → [Two same-tier blocks touch → FUSE into next tier, inks combine]
+[SMT Pick-and-Place Gantry aligns] → [Steer / position silver processor chip]
+  → [Chip drops with gravity, settles among stack on motherboard]
+  → [Two same-tier chips touch → FUSE into next tier package, CMY pigments combine]
   → [Board darkens toward #000000 → Darkness Purity % rises]
-  → [Repeat — chase 100%]
+  → [Repeat — chase 100% Darkness Purity]
 ```
 
-- **Session shape:** endless until overflow. One run = one night.
-- **Win condition:** reach **100% Darkness Purity** (all settled ink at C=M=Y=max).
-- **Lose condition (proposed):** stack breaches the danger line for more than 3 seconds → the chamber overflows → run ends. *(Proposed — source docs specify a danger line and critical density limit but not the exact fail rule.)*
+- **Session shape:** Endless until buffer overflow. One run = one night.
+- **Win condition:** Reach **100% Darkness Purity** (all settled ink at $C=M=Y=\max$, culminating in the Tier 11 Titan).
+- **Lose condition:** Stack breaches the high-voltage danger line (`// VBUS_OVERVOLTAGE_LIMIT //`) for more than 3 seconds $\rightarrow$ overvoltage shutdown $\rightarrow$ run ends.
 
 ---
 
 ## 4. Mechanics & Systems
 
-### 4.1 The Chamber
-- Grid: **24 × 36 cells**, constant 1:1.5 aspect ratio.
-  - Mobile (390×844 viewport): 14px unit → 336×560px chamber.
-  - Desktop Steam (1440×900): 20px unit → 480×720px chamber.
-- Top: dropper slider rail with glowing cube preview + laser guide line.
-- Bottom: circular **SWAP** button (toggles Game ↔ Phone focus).
-- Danger line: dashed limit above which overflow is counted.
+### 4.1 The Chamber & Motherboard Playfield
+- Grid: **$24 \times 36$ cells**, constant 1:1.5 aspect ratio.
+  - Mobile ($390 \times 844\text{px}$ viewport): $14\text{px}$ unit $\rightarrow$ $336 \times 560\text{px}$ chamber.
+  - Desktop Steam ($1440 \times 900\text{px}$ viewport): $20\text{px}$ unit $\rightarrow$ $480 \times 720\text{px}$ chamber.
+- Top: SMT robotic vacuum placement gantry with collimated optical crosshair laser guide.
+- Floor: Gold-plated LGA CPU socket contact bed with spring retention fingers.
+- Danger line: High-voltage red hazard bus line (`// VBUS_OVERVOLTAGE_LIMIT //`) at row 6.
+- Bottom: SMT tactile illuminated **SWAP** switch (toggles Game $\leftrightarrow$ Phone focus).
 
-### 4.2 Block Tiers (11)
-Strictly square N×N rigid monoliths. No polyominoes.
+### 4.2 Block Tiers: Silicon Processor Packaging Hierarchy
+Strictly square $N \times N$ rigid monoliths. Each block is authored with an **authentic brushed silver / metallic heat spreader backdrop** and an **inset square solid-color die** with a mathematically centered tier numeral:
 
-| Tier | Size | Pixels | Mass feel |
-|------|------|--------|-----------|
-| 1 | 1×1 | 24 | mote |
-| 2 | 2×2 | 38 | pebble |
-| 3 | 3×3 | 52 | stone |
-| 4 | 4×4 | 68 | brick |
-| 5 | 5×5 | 84 | slab |
-| 6 | 6×6 | 102 | boulder |
-| 7 | 7×7 | 122 | pillar |
-| 8 | 8×8 | 144 | column |
-| 9 | 9×9 | 168 | monolith |
-| 10 | 10×10 | 194 | great monolith |
-| 11 | 11×11 | 224 | **Obsidian Titan** — 45.8% of chamber width |
+| Tier | Size | Units | In-Game Pixels | Physical Package Architecture | Ink Color |
+|:---:|:---:|:---:|:---:|:---|:---|
+| **1** | $1\times 1$ | 1 | $14\text{px}$ | SOT-23 Micro-Chip Mote | Pure Yellow (`#FACC15`) |
+| **2** | $2\times 2$ | 2 | $28\text{px}$ | QFN Surface-Mount Package | Pure Magenta (`#EC4899`) |
+| **3** | $3\times 3$ | 3 | $42\text{px}$ | Small-Outline IC (SOIC) | Pure Cyan (`#06B6D4`) |
+| **4** | $4\times 4$ | 4 | $56\text{px}$ | Dual-Core BGA Package | Cobalt (`#2563EB`) |
+| **5** | $5\times 5$ | 5 | $70\text{px}$ | Quad-Core Ceramic IC | Amethyst (`#7C3AED`) |
+| **6** | $6\times 6$ | 6 | $84\text{px}$ | Multi-Die Heterogeneous SoC | Ruby (`#BE123C`) |
+| **7** | $7\times 7$ | 7 | $80\text{px}$ | Brushed Nickel Server CPU (IHS) | Magenta Core (`#EC2882`) |
+| **8** | $8\times 8$ | 8 | $90\text{px}$ | Workstation Processor Package | Amber (`#B45309`) |
+| **9** | $9\times 9$ | 9 | $100\text{px}$ | MCM Neural Accelerator | Slate (`#334155`) |
+| **10** | $10\times 10$ | 10 | $110\text{px}$ | Multi-Socket High-Compute Module | Midnight Basalt (`#0F172A`) |
+| **11** | $11\times 11$ | 11 | **$154\text{px}$** | **Obsidian Titan Enterprise Monolith** | **Pure Black (`#000000`)** |
 
-- Physics: downward gravity **g = 980 px/s²**. Blocks are rigid bodies; they tumble, settle, and stack.
-- Spawns: tiers 1–3 only (pure inks — see 4.3). Higher tiers arise only from fusion.
+- **Mass & Gravity:** Downward gravity $g = 980\text{px/s}^2$. Blocks have mass proportional to area ($N^2$); they tumble, collide, and seat into the socket bed.
+- **Spawns:** Tiers 1–3 only (pure primary pigments). Higher tiers arise exclusively through fusion.
+- **Titan Scale Parity:** Exactly $154 \times 154\text{px}$, occupying **45.8% of the total chamber width**.
 
-### 4.3 Subtractive CMY Ink Synthesis (the core rule)
-Unlike RGB (additive — mixing makes white), *Falling* uses **subtractive CMY** like physical ink: combining pigments absorbs light.
+### 4.3 Subtractive CMY Ink Synthesis
+Unlike additive RGB (which mixes to white), *Falling* uses **subtractive CMY** like physical printing ink: combining pigments absorbs light.
 
-- Fusion rule: two touching blocks of the **same tier** fuse into one block of the **next tier**.
-- Ink rule: `C_child = C₁ + C₂`, `M_child = M₁ + M₂`, `Y_child = Y₁ + Y₂` (clamped at max).
-- Display: `R = 1−C`, `G = 1−M`, `B = 1−Y`.
-- Base spawns:
-  - Pure Cyan `(1,0,0)` → RGB(0, 240, 255)
-  - Pure Magenta `(0,1,0)` → RGB(255, 0, 127)
-  - Pure Yellow `(0,0,1)` → RGB(255, 215, 0)
-- Secondary mixes: C+M → cobalt/violet · C+Y → emerald · M+Y → crimson.
-- **Tier 11 Apex:** C=M=Y=max → **RGB(0,0,0) pure obsidian black**. Fusing *into* the Titan is the moment the board goes dark.
+- **Fusion rule:** Two touching blocks of the **same tier** fuse into one block of the **next tier**.
+- **Ink synthesis rule:**
+  $$C_{\text{child}} = \min(1.0, C_1 + C_2), \quad M_{\text{child}} = \min(1.0, M_1 + M_2), \quad Y_{\text{child}} = \min(1.0, Y_1 + Y_2)$$
+- **RGB Output Mapping:**
+  $$R = 1 - C, \quad G = 1 - M, \quad B = 1 - Y$$
+- **Primary Spawns:**
+  - Pure Cyan $(1,0,0) \rightarrow \text{RGB}(0, 240, 255)$
+  - Pure Magenta $(0,1,0) \rightarrow \text{RGB}(255, 0, 127)$
+  - Pure Yellow $(0,0,1) \rightarrow \text{RGB}(255, 215, 0)$
+- **Tier 11 Apex:** $C=M=Y=\max \rightarrow \text{RGB}(0,0,0)$ pure obsidian black. Fusing into the Titan is the moment the board achieves total light absorption.
 
-### 4.4 Darkness Purity (score)
-- `Purity % = 100 × (average ink absorption across settled blocks)`.
-- Each fusion visibly darkens the board. The HUD purity meter is the score — no separate points.
-- 100% = every settled block at full C=M=Y. Run complete.
-
-### 4.5 Dual-Screen Interactivity (SWAP)
-- The **SWAP** button (or `S` / Space) cross-fades focus between the game chamber and Leo's phone screen.
-- Phone layer is live: notifications arrive on a schedule during the run (Slack revocation → wife's texts escalating → Chase alert → HR exit interview at 9:00 AM "today").
-- Gameplay effect (proposed): while phone focus is active, the chamber keeps simulating — neglect has a cost. *(Proposed — spec confirms the SWAP transition; the neglect cost is new.)*
-
-### 4.6 Controls
-- **Steer:** A/D or ←/→ (or drag) — move falling block horizontally.
-- **Drop:** S / ↓ / Space — fast-drop.
-- **SWAP:** Tab or on-screen button — toggle Game/Phone focus.
-- Touch: drag to steer, tap SWAP.
+### 4.4 Darkness Purity (Score Metric)
+- $\text{Purity \%} = 100 \times \text{average CMY absorption across all settled blocks}$.
+- Displayed in the BIOS hardware telemetry HUD (`SILICON_PURITY: 98.4%`).
+- Reaching $100\%$ triggers victory: the entire screen goes black.
 
 ---
 
-## 5. Narrative (background layer only)
+## 5. Storyboard & Narrative Progression (6 Beats)
 
-**Leo Vance**, lead infrastructure engineer at Apex Technologies. 3:32 AM. Phone at 14%.
+The narrative is never told through cutscenes. It lives on Leo Vance's phone behind the motherboard.
 
-The four notifications (in arrival order):
-1. **Slack:** "Apex Tech Security: Enterprise credentials revoked for user l_vance."
-2. **Messages (Sarah Vance, wife):** "Leo, please come to bed... You haven't slept in two days."
-3. **Chase:** "COBRA health deduction: −$1,842.00. Account balance: $314.12."
-4. **Calendar:** "Mandatory HR Exit Interview (Portal) — 9:00 AM Today."
+![Falling 6-Beat Storyboard](/Users/georgearmah/.gemini/antigravity/brain/2c3a64ae-9518-4997-82a0-7008e590a272/falling_storyboard_6_panels.png)
 
-No cutscenes. The trilogy hook (*Book 1 of an existential tech trilogy*) is noted but out of scope for the prototype.
+### Beat 1: The Frozen Night (03:32 AM, 14% Battery)
+- **Scene:** Pitch-black bedroom. Leo sits at his desk illuminated only by the faint OLED glow of his iPhone. The clock is frozen at `3:32 AM`. Battery is at `14%`.
+- **Gameplay Action:** The game boots into the BIOS initialization screen.
+- **Audio:** Low ambient mains hum (60 Hz room tone). Faint muffled breathing.
 
----
+### Beat 2: Motherboard Boots & First Chip Drop
+- **Scene:** The chamber powers up as a high-end computer motherboard. An SMT robotic vacuum head slides across the top gantry rail with a collimated cyan crosshair laser.
+- **Gameplay Action:** The first silver processor chip (Tier 1 Yellow Mote) is aimed and dropped with gravity, landing firmly onto the gold LGA socket pins.
+- **Audio:** Mechanical stepper motor whine, vacuum release hiss, tactile metal-on-pin click.
 
-## 6. Art Direction
+### Beat 3: The Bleed (The Real World Breaks In)
+- **Scene:** As blocks stack, the first alert arrives on Leo's phone behind the semi-translucent motherboard:
+  > **SLACK • IT Security (3:28 AM):** "Apex Tech Security: Enterprise credentials revoked for user l_vance. VPN Session Terminated: Code 403."
+- **Gameplay Action:** The notification card illuminates through the solder mask. Merges continue; ink absorption rises to ~35%.
+- **Audio:** Muffled iOS tri-tone notification ping leaking through the board.
 
-**3-layer visual architecture:**
-1. **Phone screen** (base): realistic dark-mode smartphone, 3:32 clock, 14% battery, Dynamic Island, 4 notifications.
-2. **Frosted glass** (filter): beveled crystal chamber plate, smoked diffuse body (~35% alpha, ~6px blur) — phone visible but soft beneath the playfield.
-3. **Game board** (overlay): 100% transparent background; glowing dropper rail, laser line, beveled numbered blocks, SWAP button.
+### Beat 4: The SWAP (Unfiltered Reality)
+- **Scene:** Player clicks/taps the tactile **SWAP** switch. The motherboard cross-fades out; Leo's phone screen comes into sharp focus, exposing the full collapse:
+  > **MESSAGES • Sarah (3:30 AM):** "Leo, please come to bed... You haven't slept in two days."
+  > **CHASE • Account Alert (3:15 AM):** "COBRA deduction: -$1,842.00. Account balance: $314.12."
+  > **CALENDAR (9:00 AM Today):** "Mandatory HR Exit Interview (Portal) — In 5h 28m."
+- **Gameplay Action:** Player reads the crisis. *Neglect cost:* In the background, the chip dropper continues to simulate — hesitation risks overflow!
+- **Audio:** Phone haptic buzz, muffled hum of the simulated dropper above.
 
-**Five production art themes** (all preserve 24×36 proportions + Titan ratio):
-1. **Cyber Obsidian** — brushed titanium gantry, cyan laser, beveled polymer cubes.
-2. **Sumi Ink & Washi** — mulberry paper lantern, glass ink dropper, red enso danger line, gold-leaf inkstone Titan.
-3. **Amber CRT** — curved cathode tube, P3 phosphor bloom, vector wireframe blocks, tachometer density gauge.
-4. **Nordic Brutalism** — cast concrete pillars, smoked sapphire plate, basalt Titan with diamond-beveled rims.
-5. **Optical Neon Gels** — bioluminescent dye-gel blocks, cyan laser, ink-wash background.
+### Beat 5: Buffer Overflow (Critical Density)
+- **Scene:** The chip stack rises near the red high-voltage danger limit line (`// VBUS_OVERVOLTAGE_LIMIT //`). The motherboard voltage telemetry spikes (`VCC_CORE: 1.45V OVERVOLT`).
+- **Gameplay Action:** The red line strobes. The player has 3 seconds to clear or fuse blocks before overvoltage triggers a kernel panic / run failure.
+- **Audio:** High-pitched capacitor coil whine, rapid rhythmic warning pulse.
 
-**Prototype default:** Cyber Obsidian (most legible for CMY ink reads).
-
----
-
-## 7. Audio Direction (TBD)
-*Not yet specified in source materials.* Proposed: low synth hum that deepens in pitch as purity rises; soft stone-on-stone thuds for landings; a near-sub-bass bloom on Titan fusion; phone notification pings leak through the glass muffled. Full pass needed.
-
----
-
-## 8. UI / HUD
-- **Purity meter:** dominant HUD element — a darkness gradient bar, 0→100%.
-- **Next-block preview** on the dropper rail.
-- **Density gauge:** tachometer-style readout of stack height vs. danger line.
-- **Phone clock** persistent at 3:32 AM (time does not advance — the night is frozen).
+### Beat 6: 100% Darkness (The Titan Monolith Apex)
+- **Scene:** The player executes the final merge. Two Tier 10 processors combine to form the massive **Tier 11 Obsidian Titan Monolith** ($154\text{px}$, pure `#000000`).
+- **Gameplay Action:** Total light absorption is achieved. Darkness Purity hits `100.0%`. A gravitational singularity consumes all remaining light. The phone screen turns completely off. All notifications vanish.
+- **Audio:** Deep sub-bass implosion bloom, followed by complete, total silence. Leo's night is finally at peace.
 
 ---
 
-## 9. Technical Notes
-- Engine: Godot 4. Rigid-body physics for blocks; custom `_draw()` or shader for CMY→RGB ink rendering.
-- Viewports: 390×844 mobile primary; 1440×900 desktop.
-- Web prototypes exist (`web/index.html` physics prototype, mockups) — reuse for feel validation.
+## 6. Art Direction & Visual Hierarchy
+
+### 3-Layer Visual Architecture
+1. **Layer 1: Phone Screen (Base):**
+   - iPhone lockscreen, OLED black wallpaper, `3:32` clock, `14% 🪫` battery, Dynamic Island.
+   - 4 native iOS notification cards (Slack, Sarah, Chase, Calendar).
+2. **Layer 2: Photorealistic Motherboard Chamber (Filter):**
+   - High-end computer motherboard plate ($336 \times 560\text{px}$):
+     - Black anodized aluminum VRM heatsinks.
+     - Dual DDR5 memory channels flanking the playfield.
+     - Steel-reinforced PCIe card-edge slot.
+     - Solid polymer cylindrical capacitors and serpentine copper bus trace meanders.
+   - Solder mask is tuned to ~80% opacity so phone notification text leaks through the dark FR4 substrate like backlighting.
+3. **Layer 3: Playfield Overlay (Foreground):**
+   - Anti-aliased $24 \times 36$ coordinate grid ($14\text{px}$ unit scale).
+   - SMT pick-and-place gantry with precision linear guide rod and crosshair laser.
+   - LGA spring-loaded gold contact pins on floor bed.
+   - Silver Metallic Processor Chip Blocks with centered square color dies.
+   - SMT tactile illuminated SWAP micro-switch button.
+   - Motherboard BIOS hardware telemetry HUD (`BUS_CLK: 4.80 GHz`, `VCC_CORE: 1.248V`, `SILICON_PURITY: 98.4%`).
 
 ---
 
-## 10. MVP Scope (prototype checklist)
-- [ ] 24×36 chamber, dropper rail, laser guide, gravity + settle physics
-- [ ] Tiers 1–3 spawn (pure C/M/Y), same-tier fusion → next tier with CMY combine
-- [ ] Purity meter 0–100%, Titan fusion = visible board-darkening moment
-- [ ] Danger line + overflow lose condition
-- [ ] Phone base layer with 4 notifications on schedule + SWAP toggle
-- [ ] One art theme (Cyber Obsidian)
+## 7. Controls & Interactivity
 
-## 11. Open Questions
-1. Exact overflow rule (proposed: 3s above danger line — confirm).
-2. Spawn distribution across C/M/Y tiers (equal? weighted?).
-3. Does the Titan (11×11) merge further or is it terminal? (Proposed: terminal — it *is* the darkness.)
-4. Phone-neglect cost — real mechanic or pure atmosphere?
-5. Audio direction (untouched).
+| Input Action | Keyboard | Touch / Mobile | Function |
+|:---|:---|:---|:---|
+| **Steer** | `A` / `D` or `←` / `→` | Drag horizontally | Move SMT dropper gantry along linear rail |
+| **Fast Drop** | `S` / `↓` / `Space` | Swipe down / Tap | Fast-drop processor chip into socket bed |
+| **SWAP** | `Tab` / `Space` / Click | Tap on-screen button | Cross-fade focus between Motherboard and Phone Screen |
 
 ---
 
-*Consolidated 2026-10-12 from README.md, docs/wireframe_design_system.md, .summer/specs/into-the-darkness-design.md, and Lunacy wireframes. Proposals are marked "(proposed)".*
-*Note: GAME_RULES.md, LLM_HANDOFF.md, FORK_INSTRUCTIONS.md in this folder previously contained A.I.r Bubbles content (stale copy-paste) — quarantined to *.stale-airbubbles.bak.*
+## 8. MVP Implementation Checklist
+
+- [x] Consolidate $24 \times 36$ grid parity ($336 \times 560\text{px}$ chamber, $14\text{px}$ unit scale).
+- [x] Lock in Titan Monolith mathematical ratio ($154 \times 154\text{px}$, 45.8% width).
+- [x] Finalize Silicon Processor Chip architecture (Brushed silver nickel IHS + centered colored die).
+- [x] Render photorealistic computer motherboard chamber.
+- [x] Design and document 6-Beat Narrative Storyboard.
+- [ ] Connect Godot 4 rigid-body physics for falling/colliding chip blocks.
+- [ ] Wire subtractive CMY ink fusion shader in Godot 4.
+- [ ] Implement scheduled arrival of the 4 phone notifications during gameplay.
+- [ ] Implement 3-second buffer overflow fail timer.
+- [ ] Wire audio stems (coil whine, relay clicks, sub-bass Titan void).
+
+---
+
+*Last revised: October 2026. Consolidated and updated with the Silicon Processor & Motherboard architecture and 6-Beat Storyboard.*
