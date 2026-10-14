@@ -258,26 +258,67 @@ The audio landscape reinforces the contrast between cold digital mechanics and r
 
 This section is authored specifically as an **ingestion specification for online game design platforms, vibe coding environments, and generative game creation tools** (e.g., Ludo.ai, Rosebud AI, FRVR Forge, EdenSpark, GDevelop). 
 
-### 9.1 Directory of Game Vibe Coding & Generation Platforms
+### 9.1 Directory of Web-Based Game Vibe Coding & Generation Platforms
 
-Based on current game vibe coding research and development platforms (referenced in the *Muse: Game Vibe Coding Prototypes* index):
+Based on the verified 21-platform landscape researched and cataloged in the user's **Muse: *Game Vibe Coding Prototypes*** workspace (all 100% web-based with active free tiers and verified single-sign-on access):
 
-1. **Ludo.ai** (`https://ludo.ai` | `app.ludo.ai`):
-   - *Best for:* AI-assisted game design document breakdown, mechanics ideation, competitive market analysis, and generative 2D sprite/asset concepting.
-   - *Workflow:* Paste the High Concept and Core Mechanics into Ludo's Game Ideator to generate mechanics variants, power-up systems, and UI wireframes.
-2. **Rosebud AI** (`https://rosebud.ai`):
-   - *Best for:* Browser-based natural-language game generation and vibe coding. Direct prompt-to-Phaser/Three.js code.
-   - *Workflow:* Feed the Rosebud prompt below to spin up a fully playable 2D browser prototype in minutes.
-3. **FRVR Forge / Playcraft** (`https://forge.frvr.com`):
-   - *Best for:* Instant web/mobile hyper-casual and puzzle vibe coding with integrated physics and monetization templates.
-   - *Workflow:* Use for rapid touch-screen physics tuning and instant viral web deployment.
-4. **EdenSpark** (`https://edenspark.io`):
-   - *Best for:* Open-source AI-assisted multiplatform game creation, live community jams, and cross-engine logic generation.
-5. **Zoud GameLab** (`https://zoudgamelab.org`):
-   - *Best for:* Narrative-driven and financial literacy game jams ($140k prize pool partnerships), exploring the real financial consequences of startup equity collapse and mortgage default.
-6. **Playable Web Deployment Portals:**
-   - **Poki** (`https://poki.com`) & **CrazyGames** (`https://crazygames.com`): Target platforms for lightweight HTML5/WASM builds.
-   - **Itch.io** (`https://itch.io`): Primary target for narrative and indie physics puzzle game jams.
+#### A. Dedicated Prompt-to-Game Web Creators (Direct Prompt → Playable Browser Game)
+1. **Rosebud AI** (`https://rosebud.ai`):
+   - *Status:* Account active on **Newbie (Free)** tier (**8,000 credits/week budget**, ~20 prompts/week).
+   - *Engine:* Outputs clean, modular **Phaser.js** (2D) and **Three.js** (3D) code with an integrated browser canvas and live chat editor.
+   - *Falling Fit:* Highest priority for generating the initial 2D physics block-fusion web slice.
+2. **Google Playground** (`https://playground.google`):
+   - *Status:* Google's prompt-to-app/game generation environment (authenticated via Google Play Games profile). Free weekly compute tokens.
+   - *Falling Fit:* Rapid experimentation for physics interactions and clean WebGL shader tests.
+3. **Websim** (`https://websim.ai`):
+   - *Status:* Free tier (signed in via Google). Instant prompt-driven web ecosystem that generates full interactive browser apps/games and allows instant public sharing, cloning, and remixing.
+   - *Falling Fit:* Excellent for rapid community playtesting of weird mechanic variants.
+4. **Puter AI Builder** (`https://builder.puter.com`):
+   - *Status:* Free tier with **zero credit meters, no card required, and full code ownership** (signed in via Google).
+   - *Engine:* Browser-based OS environment that hosts, executes, and deploys HTML5/JS games instantly with permanent web links.
+5. **Star AI** (`https://star.ai`):
+   - *Status:* Free tier on default model (signed in via Google). Prompt-to-game builder that scaffolds arcade loops directly in the browser.
+6. **Astrocade** (`https://astrocade.com`):
+   - *Status:* Free tier (signed in via Google). Dedicated prompt-to-playable browser game platform designed for rapid arcade and puzzle iterations.
+7. **GDevelop Web Editor** (`https://editor.gdevelop.io`):
+   - *Status:* Free forever, **40 AI generative credits/month**, unlimited HTML5 web publishing. Full visual event sheet logic with 2D physics.
+
+#### B. General Web AI App & Game Builders (In-Browser Vibe Coding)
+8. **Bolt.new** (`https://bolt.new`):
+   - *Status:* Free tier with **1,000,000 tokens/month** (signed in via Google).
+   - *Engine:* Full-stack browser WebContainer running Vite, React, Canvas, and Matter.js physics. Instant live dev server in the browser.
+9. **Lovable** (`https://lovable.dev`):
+   - *Status:* Free tier (**5 builds/credits per day**, signed in via Google).
+   - *Engine:* High-velocity browser app/game builder with seamless GitHub sync and Supabase integration.
+10. **Replit** (`https://replit.com`):
+    - *Status:* Free Starter tier (signed in via Google). Cloud browser workspace and Replit Agent capable of scaffolding and hosting 2D physics games in JavaScript or Python (Pygame Web/Panda3D).
+11. **v0 by Vercel** (`https://v0.dev`):
+    - *Status:* Free monthly credits (verified active account).
+    - *Engine:* Generative React/Next.js and Canvas interface builder; ideal for rapidly drafting the Motherboard HUD, BIOS telemetry readouts, and iOS lockscreen Screenlife elements.
+12. **Base44** (`https://base44.com`):
+    - *Status:* Free tier (**25 generative messages/month**, signed in via Google). Generates lightweight web applications and interactive HTML5 games.
+
+#### C. Interactive AI Artifacts & Canvases (Immediate In-Chat Playability)
+13. **Claude Artifacts** (`https://claude.ai`):
+    - *Status:* Free plan. Renders self-contained single-file HTML5/Canvas/Matter.js games that run live in the right-hand preview panel. Instant copy-paste iteration.
+14. **Gemini Canvas** (`https://gemini.google.com`):
+    - *Status:* Free plan. Interactive dual-pane code and preview canvas for generating and immediately running web prototypes.
+
+#### D. Game Design Ideation & Generative Asset Tools (Vibe Coding Support)
+15. **Ludo.ai** (`https://ludo.ai` | `app.ludo.ai`):
+    - *Status:* Logged in via Google session.
+    - *Capabilities:* AI Game Design Document breakdown, mechanics ideation, competitive market benchmarking, and generative 2D sprite/icon concepts.
+16. **Meshy** (`https://meshy.ai`):
+    - *Status:* Free credits (signed in via Google). Text-to-3D and image-to-3D generator that exports game-ready GLB/OBJ models with textures.
+17. **Scenario** (`https://scenario.com`):
+    - *Capabilities:* Custom-trained style-consistent 2D game asset and texture generator.
+
+#### E. Game Jams & Playable Distribution Portals
+18. **Zoud GameLab** (`https://zoudgamelab.org`):
+    - *Opportunity:* **$140,000 prize pool** (Oct 15–Nov 15) in partnership with Global Game Jam. Focuses on financial literacy and economic stakes — directly aligning with Leo Vance's startup equity collapse and mortgage default narrative.
+19. **October Jam** ($30,000 pool, deadline Dec 31, 2026): Showcase competition for playable indie prototypes.
+20. **GitHub Game Off 2026** (November): Month-long itch.io jam, theme-agnostic, massive community visibility.
+21. **Web Portals:** **Poki** (`https://poki.com`), **CrazyGames** (`https://crazygames.com`), and **Itch.io** (`https://itch.io`) for instant public deployment of browser builds.
 
 ---
 
