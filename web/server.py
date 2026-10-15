@@ -26,8 +26,9 @@ class ThreadingServer(socketserver.ThreadingMixIn, http.server.HTTPServer):
 
 if __name__ == '__main__':
     with ThreadingServer(('0.0.0.0', PORT), Handler) as httpd:
-        print(f"Serving A.I.r Bubbles Web at http://0.0.0.0:{PORT}")
+        print(f"Serving Falling (Into The Darkness) at http://localhost:{PORT}")
         print(f"Local Wi-Fi Network Access: http://192.168.1.225:{PORT}")
+        print(f"Playable Game: http://localhost:{PORT}/darkness.html")
         sys.stdout.flush()
         try:
             httpd.serve_forever()

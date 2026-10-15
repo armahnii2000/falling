@@ -1,54 +1,115 @@
 # Falling (Into The Darkness)
 
-An existential, psychological physics puzzler set at 3:32 AM on a desk lit only by monitor glow and a dying smartphone. 
+A 2D physics puzzle game and screenlife narrative built with JavaScript/HTML5 Canvas and Godot 4.
 
-You play as Leo Vance, a tech worker navigating absolute professional collapse. While corporate credentials and reality revoke around him, Leo fixates on dropping, sliding, and fusing rigid monolith blocks inside an obsidian chamber, pursuing 100% Darkness Purity (`#000000`).
+You drop square processor blocks with downward gravity into a chamber, merging matching tiers and combining subtractive CMY pigments toward pure black (`#000000`). Behind the translucent frosted-glass chamber, a dying smartphone screen receives incoming messages and alerts in real time, telling the story of an overnight system outage and personal collapse.
 
----
-
-## Architecture & Design Suite
-
-* **[5-Part Wireframe Design System](docs/wireframe_design_system.md):** Complete specifications and mathematical proofs for the 5 vector wireframes maintained in Lunacy on the **Falling** page.
-* **The 24 × 36 Chamber Grid:**
-  * Mobile Viewport ($390 \times 844$): 14px unit scale ($336 \times 560\text{px}$ chamber).
-  * Desktop Steam Viewport ($1440 \times 900$): 20px unit scale ($480 \times 720\text{px}$ chamber).
-  * Constant Aspect Ratio: 1:1.5 chamber width-to-height across all platforms.
-  * Monolith Apex Ratio: The Tier 11 Titan Monolith ($11 \times 11$) always occupies 45.8% of the chamber width.
+![Falling Desktop Preview](web/into_the_darkness_preview.png)
 
 ---
 
-## 5 Core Wireframe Views (Lunacy)
+## Gameplay & Core Mechanics
 
-1. **Phone Screen Only:** iPhone lockscreen at 3:32 AM with 14% battery, Dynamic Island, and 4 native iOS notification bubbles with left-aligned app icons (Slack IT revocation, Wife message with avatar badge, Chase COBRA debit, HR Exit interview).
-2. **Game Board Only:** Pure black OLED chamber with dropper spigot, laser hairline, critical density limit, settled blocks, and the Titan Monolith.
-3. **Individual Blocks (11 Tiers):** Full progression catalog from Tier 1 Sub-Pixel Mote ($1 \times 1$, mass 1.0) up to Tier 11 Titan Monolith ($11 \times 11$, mass 121.0).
-4. **Blurred Reality Composite:** Game board in the foreground over a frosted-glass translucent background showing the blurred smartphone lockscreen.
-5. **Desktop Steam Edition:** Physical iPhone chassis standing on the left desk surface, the $24 \times 36$ dropping chamber in the center, and Queue & System Dynamics on the right.
-
----
-
-## 5 High-Fidelity Art Skins (Lunacy Row 3)
-
-Moving beyond wireframe placeholders, the **Falling** page in Lunacy features 5 production-grade art treatments for the translucent mobile chamber ($390 \times 844$):
-1. **Cyber Obsidian Pro:** Aerospace brushed titanium gantry, cyan laser drop, and beveled polymer cubes over borosilicate glass.
-2. **Sumi Ink & Washi:** Mulberry paper lantern, glass ink dropper, red enso brushstroke limit line, lapis/ochre stones, and a 24k gold leaf inkstone Titan.
-3. **Amber CRT Terminal:** 1980s curved cathode tube with P3 phosphor bloom, glowing vector wireframe meshes, tachometer density gauge, and Cherry MX mechanical keycap.
-4. **Nordic Brutalism:** Architectural cast concrete pillars, bead-blasted aluminum rolling score odometer, smoked sapphire plate, and diamond-beveled basalt Titan.
-5. **Optical Neon Gels:** Bioluminescent dye gels with interior luminescence, ambient rim glow, cyan laser, and deep ink wash dissolving background text.
+* **Downward Gravity Physics:** Blocks drop from an overhead gantry with natural downward gravity ($g = 980\text{ px/s}^2$). Blocks collide, settle, and stack with AABB box physics and restitution damping.
+* **Subtractive CMY Pigment Synthesis:** When two blocks of the same tier collide, they fuse into the next tier ($N + N \to N + 1$). Each merge accumulates Cyan ($C$), Magenta ($M$), and Yellow ($Y$) ink pigments, absorbing light until the inner die reaches pure black at Tier 11.
+* **Dual-Layer Screenlife Narrative:** A phone screen sits beneath the chamber bed. As your score rises, real-time message notifications pop up over the board. You can tap them to sink them into your phone tray, or press **SWAP** (or `S`) to cross-fade focus directly to the phone screen (which pauses the physics simulation so you can read).
+* **Buffer Overflow Limit:** An overvoltage hazard line sits near the top of the chamber. If settled blocks stack above this threshold continuously for 3.0 seconds, the hardware shuts down and triggers Game Over.
+* **Procedural Web Audio:** Interactive sound synthesized live via the Web Audio API—smooth drop clicks, low-frequency resonant merge chimes that deepen with higher tiers, and layer-swap audio sweeps—with zero external audio file dependencies.
 
 ---
 
-## Web Prototypes
+## 11-Tier Progression
 
-The `web/` folder contains interactive playable prototypes and canvas visualizations:
-* `web/index.html` — Interactive physics engine prototype.
-* `web/desktop_mockup.html` — Desktop 3-column layout view.
-* `web/layered_mockup.html` — Frosted-glass composite layer study.
-* `web/themes.html` — Visual theme studies (Sumi Ink, Amber CRT, Nordic Obsidian).
+Blocks scale strictly linearly by 1 unit ($14\text{px}$) per tier on a $24 \times 36$ chamber grid:
+
+| Tier | Dimensions | Pixel Size | Chamber Width % | Package Spec | Inner Die Color |
+|:---:|:---:|:---:|:---:|:---|:---|
+| **1** | $1 \times 1$ | $14 \times 14\text{px}$ | 4.2% | SOT-23 Micro-Chip Mote | Primary Cyan / Magenta / Yellow |
+| **2** | $2 \times 2$ | $28 \times 28\text{px}$ | 8.3% | QFN Dual-Pad Surface Mount | 2-unit blended pigment |
+| **3** | $3 \times 3$ | $42 \times 42\text{px}$ | 12.5% | SOIC Leaded Frame | Early secondary mix |
+| **4** | $4 \times 4$ | $56 \times 56\text{px}$ | 16.7% | BGA Dual-Core Processor | Solder-ball perimeter |
+| **5** | $5 \times 5$ | $70 \times 70\text{px}$ | 20.8% | Quad-Core Ceramic IC | Centered square die |
+| **6** | $6 \times 6$ | $84 \times 84\text{px}$ | 25.0% | Multi-Die Heterogeneous SoC | Dual-channel heat spreader |
+| **7** | $7 \times 7$ | $98 \times 98\text{px}$ | 29.2% | Octa-Core Server CPU | Chamfered nickel lid |
+| **8** | $8 \times 8$ | $112 \times 112\text{px}$ | 33.3% | Workstation Compute Carrier | Dense dark core |
+| **9** | $9 \times 9$ | $126 \times 126\text{px}$ | 37.5% | MCM Neural Processing Die | Deep shadow substrate |
+| **10** | $10 \times 10$ | $140 \times 140\text{px}$ | 41.7% | Multi-Socket Datacenter Module | Near-black core |
+| **11** | $11 \times 11$ | $154 \times 154\text{px}$ | 45.8% | Titan Enterprise Monolith | **Pure Black (`#000000`)** |
 
 ---
 
-## Repository & Development
+## Playable Web Prototypes
 
-* **Remote:** [https://github.com/armahnii2000/falling](https://github.com/armahnii2000/falling)
-* **Author:** George Armah (`@armahnii2000`)
+The `web/` directory contains self-contained interactive prototypes and design tools:
+
+| Experience | URL / Path | Description |
+|:---|:---|:---|
+| **Playable Game** | [`web/darkness.html`](web/darkness.html) | Primary playable game with downward gravity, CMY blending, live notifications, audio, and SWAP. |
+| **Theme Showcase** | [`web/themes.html`](web/themes.html) | Interactive switcher comparing 5 visual skins (Sumi Ink, Amber Phosphor CRT, Nordic Brutalism, Cyber Obsidian, Optical Neon Gels). |
+| **Narrative Storyboard** | [`web/storyboard.html`](web/storyboard.html) | Complete 11-stage screenlife narrative walkthrough and visual progression. |
+| **Phone Screen Prototype** | [`web/phone_story_prototype.html`](web/phone_story_prototype.html) | Standalone interactive iPhone lockscreen simulation with incoming alerts. |
+| **Chamber Grid Math** | [`web/presentation.html`](web/presentation.html) | Mathematical proofs and layout ratios for the $24 \times 36$ aspect-locked grid. |
+
+---
+
+## How to Run Locally
+
+### 1. Web Version (Quickest)
+Run the local lightweight Python server:
+```bash
+# Navigate to web directory and start the server
+cd web
+python3 server.py
+```
+Open **[http://localhost:8089/darkness.html](http://localhost:8089/darkness.html)** in your browser.
+
+Or use Python's built-in module from the repository root:
+```bash
+python3 -m http.server 8080
+# Open http://localhost:8080/web/darkness.html
+```
+
+### 2. Controls
+* **Aim Dropper:** Drag the slider, or press `A` / `D` (or Left / Right Arrow).
+* **Drop Block:** Click the board, or press `Space` / `W` (or Down Arrow).
+* **Layer SWAP:** Press `S` or click the illuminated **SWAP** button at the bottom right to pause simulation and inspect the phone screen.
+* **Melt Notification:** Click any incoming notification card to sink it into the background phone layer.
+
+### 3. Godot Engine Version
+Open [`project.godot`](project.godot) in **Godot 4.3+** or Summer Engine. The scene hierarchy and core scripts live in `scripts/game.gd` and `main.tscn`.
+
+---
+
+## Repository Structure
+
+```
+├── assets/                  # High-resolution UI textures, block frames, and themes
+├── docs/                    # Design documentation, wireframe specs, and exports
+│   ├── GDD.pdf              # Full Game Design Document (PDF export)
+│   ├── wireframe_design_system.md  # 5-part Lunacy wireframe math specifications
+│   └── archive/             # Archived early design notes and reference docs
+├── scripts/                 # Godot GDScript engine files
+├── tests/                   # Automated logic and physics test suites
+├── web/                     # Interactive HTML5/JS simulation and prototypes
+│   ├── darkness.html        # Main playable web game
+│   ├── darkness.js          # Downward gravity physics, collision, and CMY engine
+│   ├── darkness.css         # Responsive styling for mobile and desktop viewports
+│   └── server.py            # Zero-dependency local development server
+├── GDD.md                   # Canonical Game Design Document
+├── LICENSE                  # MIT License
+└── README.md                # Project overview and documentation
+```
+
+---
+
+## Documentation
+
+* **[Game Design Document (Markdown)](GDD.md)**: Full game mechanics, CMY pigment equations, narrative timeline, and audio synthesis design.
+* **[Game Design Document (PDF)](docs/GDD.pdf)**: Complete printable document.
+* **[Wireframe Design System](docs/wireframe_design_system.md)**: Mathematical specifications for the $24 \times 36$ chamber grid and multi-platform viewports.
+
+---
+
+## License
+
+This project is open-source under the [MIT License](LICENSE).
