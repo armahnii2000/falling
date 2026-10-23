@@ -421,3 +421,21 @@ Propose a branching narrative module for the phone:
 ---
 
 *Last revised: October 2026. Fully consolidated with Subtractive CMY Pigment Synthesis, Linear Headroom Architecture, Dual Tier 11 Singularity Annihilation, 11-Stage Screenlife Narrative, and Online Vibe Coding Platform Ingestion Guide.*
+
+---
+
+## Right Screen — Stellar Pursuit (added 2026-10-23)
+
+Falling gains a second, synchronized screen beside the fusion chamber:
+a **Stellar Pursuit** viewport (clean vector look, neon avionics HUD,
+streaming starfield) in which a starship chases a glowing shooting star.
+
+- **Points-driven gap:** the distance to the shooting star is shown in
+  metres and closes **exclusively** from points scored by merges in the
+  chamber. Idling never closes the gap; higher-tier merges score more and
+  close it faster.
+- **Capture:** when the gap reaches 0m the starship captures the shooting
+  star — a victory.
+- The chamber game itself is unchanged: same blocks, same CMY tier merges,
+  same hazard-line overflow defeat. The pursuit screen is a second view of
+  the same run's score, not a separate game.
