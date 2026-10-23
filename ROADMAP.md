@@ -1,19 +1,22 @@
 # Falling — Roadmap
 
-Falling (Into The Darkness) is a working 2D physics puzzle game with a
-screenlife narrative (see `README.md` and `GDD.md`). The work below is the
-planned continuation: finish the narrative implementation, tune the game
-feel, and get a polished, playable web build in front of testers.
+Falling (Into The Darkness) is a 2D physics puzzle game (see `README.md` and
+`GDD.md`): drop processor blocks into a chamber, merge matching tiers, and
+mix subtractive CMY pigments toward pure black at the top tier, without
+letting the stack sit above the hazard line. The core game is built and
+playable; the work below is completing it — finishing the remaining gameplay
+systems, tuning it across all 11 tiers, and shipping a polished web build.
 
-## Narrative implementation
+## Gameplay completion
 
-- [ ] Implement the full 11-stage screenlife storyboard from the GDD in the
-      phone layer (message sequences, alerts, timing against score)
-- [ ] Wire stage transitions to merge milestones so story beats land on
-      gameplay events, not timers alone
-- [ ] Final pass on message/alert copy for every stage
+- [ ] Finish the remaining core-loop systems: merge resolution at high
+      tiers, hazard-line pressure rules, and the game-over/restart flow
+- [ ] Complete tier progression content: block behaviour and pigment mixing
+      verified at every tier from 1 to 11
+- [ ] Edge cases: large-stack stability, simultaneous merges, and chamber
+      overflow behaviour
 
-## Gameplay and feel
+## Tuning and feel
 
 - [ ] Difficulty tuning: hazard-line pressure, merge pacing, and the buffer
       overflow window across the 11 tiers
