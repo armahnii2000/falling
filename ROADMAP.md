@@ -35,3 +35,16 @@ systems, tuning it across all 11 tiers, and shipping a polished web build.
 
 - [ ] Controls/how-to-play section in the README
 - [ ] Screenshot/GIF refresh for the current build
+
+## Right screen — Stellar Pursuit (Vertex Ascent)
+
+Design: `docs/vertex-ascent-stellar-pursuit.md`. A second, synchronized
+screen beside the chamber: a starship chasing a shooting star, where merge
+points are the only thing that close the distance gap.
+
+- [ ] Pursuit viewport: streaming starfield, ship, and comet with a live
+      distance readout
+- [ ] Points-driven gap: merge score feeds the closing speed; balanced
+      play holds the slipstream (1.25× closing efficiency)
+- [ ] Score-balance steering and chamber tilt (Red right / Blue left,
+      capsize at ±45°) wired to the fusion chamber's Red/Blue channels
