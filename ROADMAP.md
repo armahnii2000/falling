@@ -7,14 +7,12 @@ letting the stack sit above the hazard line. The core game is built and
 playable; the work below is completing it — finishing the remaining gameplay
 systems, tuning it across all 11 tiers, and shipping a polished web build.
 
-## Gameplay completion
+## Gameplay verification and hardening
 
-- [ ] Finish the remaining core-loop systems: merge resolution at high
-      tiers, hazard-line pressure rules, and the game-over/restart flow
-- [ ] Complete tier progression content: block behaviour and pigment mixing
-      verified at every tier from 1 to 11
+- [ ] Verify block behaviour and pigment mixing at every tier from 1 to 11
 - [ ] Edge cases: large-stack stability, simultaneous merges, and chamber
       overflow behaviour
+- [ ] Confirm the hazard-line, game-over and restart flow under long runs
 
 ## Tuning and feel
 
