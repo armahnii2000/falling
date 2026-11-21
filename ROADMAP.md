@@ -46,3 +46,13 @@ points are the only thing that close the distance gap.
       merges close it faster); no passive closing while idling
 - [ ] Capture at 0m as the run's victory, alongside the chamber's existing
       hazard-line overflow defeat
+
+## Realistic Coding Sessions branch
+
+This branch carries a scoped plan for the Realistic Coding Sessions
+evaluation, which runs on a provided desktop with no Godot and no sound:
+the work is the web version only, with a Node test suite, Stellar Pursuit
+built in full, deterministic seeded runs with replay checks, and a
+measured tuning pass. Full scope, milestones and the success bar are in
+`SUBMISSION-SCOPE.md`. The Godot project and procedural audio stay on
+`main` and are out of scope on this branch.
